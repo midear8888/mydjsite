@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        img{
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+<!--图片使用写法
+    1、头部无加载 <img src="static/xxx.jpg" alt="">  xxx.jpg放于app文件users/static下
+-->
+    <br>图片<br>
+    1:<img src="{% static 'users/images/3-1.jpg' %}" alt="">
+
+<!--
+    2、头顶加载{% load static %} img中的 src="{%  static 'users/images/3-1.jpg' %}"
+-->
+
+    2:<img src="{% static 'users/images/3-1.jpg' %}"><br>
+    {{ username }}
+
+</body>
+</html>

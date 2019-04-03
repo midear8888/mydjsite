@@ -1,0 +1,775 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="88db6712-7ae4-4acf-a61d-6da00f9cc37c" name="Default Changelist" comment="2019-4-2" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="ecg@localhost" type="feb32156:DbDataSourceImpl" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="ecg@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="ecg@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="ecg: schema" type="76f4a085:MysqlImplModel$Schema" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="ecg@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="ecg: schema" type="76f4a085:MysqlImplModel$Schema" />
+        <item name="hospital: table" type="285a2a93:MysqlImplModel$Table" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admins/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="68">
+              <caret line="4" selection-start-line="4" selection-end-line="4" />
+              <folding>
+                <element signature="e#0#29#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="listecg_img.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/admins/listecg_img.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="935">
+              <caret line="250" column="43" selection-start-line="250" selection-start-column="43" selection-end-line="250" selection-end-column="43" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/admins/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1518" />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="base_b.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/admins/base_b.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="221">
+              <caret line="106" column="19" selection-start-line="106" selection-start-column="19" selection-end-line="106" selection-end-column="19" />
+              <folding>
+                <element signature="n#style#0;n#h3#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="helper.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/users/helper.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-306">
+              <caret line="3" column="36" selection-start-line="3" selection-start-column="36" selection-end-line="3" selection-end-column="36" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="public_helper.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mydjsite/public_helper.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="187">
+              <caret line="11" column="4" selection-start-line="11" selection-start-column="4" selection-end-line="11" selection-end-column="4" />
+              <folding>
+                <element signature="e#0#27#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admins/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="85">
+              <caret line="5" selection-start-line="5" selection-end-line="5" />
+              <folding>
+                <element signature="e#0#24#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="helper.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/admins/helper.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="170">
+              <caret line="241" lean-forward="true" selection-start-line="241" selection-end-line="241" />
+              <folding>
+                <element signature="e#0#35#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admins/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="510">
+              <caret line="30" selection-start-line="30" selection-end-line="30" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>user_status</find>
+      <find>password1</find>
+      <find>user</find>
+      <find>'hospitals':</find>
+      <find>没有接收到status</find>
+      <find>原图路径存在</find>
+      <find>del</find>
+      <find>class Po</find>
+      <find>纸质</find>
+      <find>Pes</find>
+      <find>pesonal</find>
+      <find>Peso</find>
+      <find>{% url 'home' %}</find>
+      <find>home</find>
+      <find>did</find>
+      <find>fid</find>
+      <find>{% url 'home'</find>
+      <find>Client</find>
+      <find>UserFile</find>
+      <find>index</find>
+      <find>DIGT</find>
+      <find>DoctorInfo</find>
+      <find>client</find>
+      <find>hospital_id</find>
+      <find>获取医院名错误</find>
+      <find>添加管理员失败</find>
+      <find>医生注册出错</find>
+      <find>医生登陆</find>
+      <find>医生登录</find>
+      <find>status</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>history</replace>
+      <replace>user_status</replace>
+      <replace />
+      <replace>{% url 'listadmin' %}</replace>
+      <replace>{% url 'listdoctor' %}</replace>
+      <replace>{% url 'adddoctor' %}</replace>
+      <replace>{% url 'listecg_table' %}</replace>
+      <replace>{% url 'listecg_img' %}</replace>
+      <replace>{% url 'recycle' %}</replace>
+      <replace>{% url 'edit_doctor' %}</replace>
+      <replace>{% url 'del_doctor' %}</replace>
+      <replace>{% url 'addadmin' %}</replace>
+      <replace>{% url 'del_admin' %}</replace>
+      <replace>{% url 'home' %}</replace>
+      <replace>{% url 'signup' %}</replace>
+      <replace>{% url 'about' %}</replace>
+      <replace>{% url 'history' %}</replace>
+      <replace>{% url 'gallery' %}</replace>
+      <replace>{% url 'contact' %}</replace>
+      <replace>{% url 'user_center' %}</replace>
+      <replace>{% url 'upload' %}</replace>
+      <replace>{% url 'service' %}</replace>
+      <replace>{% url 'index' %}</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/templates/user_temps/home.html" />
+        <option value="$PROJECT_DIR$/templates/user_temps/services.html" />
+        <option value="$PROJECT_DIR$/templates/user_temps/test.html" />
+        <option value="$PROJECT_DIR$/templates/user_temps/upload.html" />
+        <option value="$PROJECT_DIR$/templates/user_temps/user_center.html" />
+        <option value="$PROJECT_DIR$/templates/users/pager.py" />
+        <option value="$PROJECT_DIR$/templates/users/aaaa.html" />
+        <option value="$PROJECT_DIR$/templates/admins/base1.html" />
+        <option value="$PROJECT_DIR$/templates/admins/deladmin.html" />
+        <option value="$PROJECT_DIR$/templates/admins/home.html" />
+        <option value="$PROJECT_DIR$/templates/commons/test.html" />
+        <option value="$PROJECT_DIR$/templates/admins/deldoctor.html" />
+        <option value="$PROJECT_DIR$/static/admins/assets/css/style.css" />
+        <option value="$PROJECT_DIR$/templates/users/services.html" />
+        <option value="$PROJECT_DIR$/qqq" />
+        <option value="$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/subprocess.py" />
+        <option value="$PROJECT_DIR$/templates/users/contact.html" />
+        <option value="$PROJECT_DIR$/templates/users/about.html" />
+        <option value="$PROJECT_DIR$/templates/users/user_center.html" />
+        <option value="$PROJECT_DIR$/templates/admins/base_b.html" />
+        <option value="$PROJECT_DIR$/templates/admins/editadmin.html" />
+        <option value="$PROJECT_DIR$/templates/admins/editdoctor.html" />
+        <option value="$PROJECT_DIR$/templates/admins/index.html" />
+        <option value="$PROJECT_DIR$/templates/users/base_a.html" />
+        <option value="$PROJECT_DIR$/admins/models.py" />
+        <option value="$PROJECT_DIR$/mydjsite/helper.py" />
+        <option value="$PROJECT_DIR$/mydjsite/commons.py" />
+        <option value="$PROJECT_DIR$/templates/admins/adddoctor.html" />
+        <option value="$PROJECT_DIR$/templates/admins/addadmin.html" />
+        <option value="$PROJECT_DIR$/templates/admins/listadmin.html" />
+        <option value="$PROJECT_DIR$/templates/admins/listdoctor.html" />
+        <option value="$PROJECT_DIR$/templates/admins/recycle.html" />
+        <option value="$PROJECT_DIR$/templates/users/upload.html" />
+        <option value="$PROJECT_DIR$/templates/users/gallery.html" />
+        <option value="$PROJECT_DIR$/mydjsite/settings.py" />
+        <option value="$PROJECT_DIR$/users/models.py" />
+        <option value="$PROJECT_DIR$/users/urls.py" />
+        <option value="$PROJECT_DIR$/mydjsite/urls.py" />
+        <option value="$PROJECT_DIR$/templates/users/home.html" />
+        <option value="$PROJECT_DIR$/templates/commons/signup.html" />
+        <option value="$PROJECT_DIR$/templates/commons/login.html" />
+        <option value="$PROJECT_DIR$/users/views.py" />
+        <option value="$PROJECT_DIR$/admins/views.py" />
+        <option value="$PROJECT_DIR$/admins/urls.py" />
+        <option value="$PROJECT_DIR$/templates/users/history.html" />
+        <option value="$PROJECT_DIR$/templates/admins/listecg_table.html" />
+        <option value="$PROJECT_DIR$/templates/admins/listecg_img.html" />
+        <option value="$PROJECT_DIR$/mydjsite/public_views.py" />
+        <option value="$PROJECT_DIR$/mydjsite/public_helper.py" />
+        <option value="$PROJECT_DIR$/users/helper.py" />
+        <option value="$PROJECT_DIR$/admins/helper.py" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodePackageJsonFileManager">
+    <packageJsonPaths />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="604" />
+    <option name="width" value="846" />
+    <option name="height" value="867" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="mydjsite" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mydjsite" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mydjsite" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mydjsite" type="462c0819:PsiDirectoryNode" />
+              <item name="admins" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mydjsite" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mydjsite" type="462c0819:PsiDirectoryNode" />
+              <item name="media" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mydjsite" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mydjsite" type="462c0819:PsiDirectoryNode" />
+              <item name="media" type="462c0819:PsiDirectoryNode" />
+              <item name="result" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mydjsite" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mydjsite" type="462c0819:PsiDirectoryNode" />
+              <item name="media" type="462c0819:PsiDirectoryNode" />
+              <item name="upload" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mydjsite" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mydjsite" type="462c0819:PsiDirectoryNode" />
+              <item name="mydjsite" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mydjsite" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mydjsite" type="462c0819:PsiDirectoryNode" />
+              <item name="users" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DatabaseDriversLRU" value="mysql" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://D:/SOS/mydjsite/templates/users/upload.html" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="database.console.LAST_STATE" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\newpro\mydjsite\users" />
+      <recent name="F:\newpro\mydjsite\mydjsite" />
+      <recent name="F:\newpro\mydjsite\admins" />
+      <recent name="D:\SOS\mydjsite\templates\users" />
+      <recent name="D:\SOS\mydjsite" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\SOS\mydjsite\templates\users" />
+      <recent name="D:\SOS\mydjsite\static\users\js" />
+      <recent name="D:\SOS\mydjsite\templates\admins" />
+      <recent name="D:\SOS\mydjsite\users" />
+      <recent name="D:\SOS\mydjsite\templates\admin_temps" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="mydjsite" type="Python.DjangoServer" factoryName="Django server" singleton="false">
+      <module name="mydjsite" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DJANGO_SETTINGS_MODULE" value="mydjsite.settings" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="port" value="8888" />
+      <option name="host" value="127.0.0.1" />
+      <option name="additionalOptions" value="" />
+      <option name="browserUrl" value="" />
+      <option name="runTestServer" value="false" />
+      <option name="runNoReload" value="false" />
+      <option name="useCustomRunCommand" value="false" />
+      <option name="customRunCommand" value="" />
+    </configuration>
+  </component>
+  <component name="StructureViewFactory">
+    <option name="AUTOSCROLL_FROM_SOURCE" value="true" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="88db6712-7ae4-4acf-a61d-6da00f9cc37c" name="Default Changelist" comment="" />
+      <created>1551579301210</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1551579301210</updated>
+      <workItem from="1551579720275" duration="10447000" />
+      <workItem from="1551673202296" duration="6641000" />
+      <workItem from="1551767007659" duration="13657000" />
+      <workItem from="1551797042442" duration="9175000" />
+      <workItem from="1551833698936" duration="23214000" />
+      <workItem from="1552008474536" duration="1123000" />
+      <workItem from="1552202077705" duration="66000" />
+      <workItem from="1552439289430" duration="4419000" />
+      <workItem from="1552816330092" duration="3588000" />
+      <workItem from="1552870969280" duration="19560000" />
+      <workItem from="1552897844606" duration="132000" />
+      <workItem from="1552921640448" duration="732000" />
+      <workItem from="1552957121661" duration="4666000" />
+      <workItem from="1552974307964" duration="4439000" />
+      <workItem from="1553078730360" duration="8853000" />
+      <workItem from="1553124935099" duration="27430000" />
+      <workItem from="1553163314396" duration="5289000" />
+      <workItem from="1553755140725" duration="1806000" />
+      <workItem from="1553926440384" duration="173000" />
+      <workItem from="1553926639070" duration="1236000" />
+      <workItem from="1554021008893" duration="10383000" />
+      <workItem from="1554031542932" duration="230000" />
+      <workItem from="1554038183882" duration="8859000" />
+      <workItem from="1554079452899" duration="635000" />
+      <workItem from="1554263697533" duration="483000" />
+    </task>
+    <task id="LOCAL-00001" summary="2019-3-18-14:24,界面80%">
+      <created>1552890319960</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1552890319960</updated>
+    </task>
+    <task id="LOCAL-00002" summary="2019-3-18 16：30">
+      <created>1552897901383</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1552897901383</updated>
+    </task>
+    <task id="LOCAL-00003" summary="2019-3-20 00：30">
+      <created>1553013124006</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1553013124006</updated>
+    </task>
+    <task id="LOCAL-00004" summary="2019-3-30">
+      <created>1553927115579</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1553927115579</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="167236000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1382" height="784" extended-state="7" />
+    <editor active="true" />
+    <layout>
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32798165" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.504298" side_tool="true" weight="0.29514825" />
+      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.32839838" />
+      <window_info anchor="bottom" id="Python Console" order="12" weight="0.53549385" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.495702" visible="true" weight="0.15123457" />
+      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49913645" weight="0.5123457" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.3463612" visible="true" weight="0.16414523" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="right" id="Database" order="6" weight="0.20200573" />
+      <window_info anchor="right" id="SciView" order="3" weight="0.32924527" />
+      <window_info id="Structure" order="1" sideWeight="0.65363884" side_tool="true" weight="0.19340974" />
+      <window_info id="Favorites" order="2" sideWeight="0.502193" side_tool="true" weight="0.076647565" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="right" id="R Packages" order="5" weight="0.32924527" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" id="R Graphics" order="4" weight="0.32830188" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Database Console" order="13" weight="0.32884097" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32253087" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="2019-3-18-14:24,界面80%" />
+    <MESSAGE value="2019-3-18 16：30" />
+    <MESSAGE value="2019-3-20 00：30" />
+    <MESSAGE value="2019-3-30" />
+    <MESSAGE value="2019-4-2" />
+    <option name="LAST_COMMIT_MESSAGE" value="2019-4-2" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="7" />
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$USER_HOME$/.PyCharm2018.1/system/python_stubs/863851132/time.py" />
+    <entry file="file://$PROJECT_DIR$/qqq" />
+    <entry file="file://$PROJECT_DIR$/static/users/js/jquery-2.2.3.min.js" />
+    <entry file="file://$PROJECT_DIR$/templates/users/upload.html.bak" />
+    <entry file="file://$PROJECT_DIR$/templates/users/aaaa.html" />
+    <entry file="file://$PROJECT_DIR$/templates/users/upload.html2.bak" />
+    <entry file="file://$PROJECT_DIR$/templates/users/upload1.html.bak" />
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/site-packages/django/core/paginator.py" />
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/subprocess.py" />
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/site-packages/django/core/mail/__init__.py" />
+    <entry file="file://$PROJECT_DIR$/templates/users/about.html" />
+    <entry file="file://$PROJECT_DIR$/templates/users/base1.html" />
+    <entry file="file://$PROJECT_DIR$/templates/users/contact.html" />
+    <entry file="file://$PROJECT_DIR$/templates/users/services.html" />
+    <entry file="file://$PROJECT_DIR$/templates/users/test.html" />
+    <entry file="file://$PROJECT_DIR$/templates/admins/admintest.html" />
+    <entry file="file://$PROJECT_DIR$/templates/admins/editadmin.html" />
+    <entry file="file://$PROJECT_DIR$/templates/admins/editdoctor.html" />
+    <entry file="file://$PROJECT_DIR$/templates/users/base_a.html" />
+    <entry file="file://$PROJECT_DIR$/templates/admins/addadmin.html" />
+    <entry file="file://$PROJECT_DIR$/templates/admins/deladmin.html" />
+    <entry file="file://$PROJECT_DIR$/templates/admins/deldoctor.html" />
+    <entry file="file://$PROJECT_DIR$/templates/admins/listadmin.html" />
+    <entry file="file://$PROJECT_DIR$/templates/admins/adddoctor.html" />
+    <entry file="file://$PROJECT_DIR$/templates/admins/recycle.html" />
+    <entry file="file://$PROJECT_DIR$/templates/users/upload.html" />
+    <entry file="file://$PROJECT_DIR$/templates/users/gallery.html" />
+    <entry file="file://$PROJECT_DIR$/users/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" column="17" selection-start-line="6" selection-start-column="17" selection-end-line="6" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mydjsite/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="308">
+          <caret line="101" column="25" lean-forward="true" selection-start-line="101" selection-start-column="25" selection-end-line="101" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/admins/listdoctor.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-540">
+          <caret line="110" column="54" selection-start-line="110" selection-start-column="54" selection-end-line="110" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/users/home.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1122">
+          <caret line="85" column="85" selection-start-line="85" selection-start-column="85" selection-end-line="85" selection-end-column="85" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/commons/login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1628">
+          <caret line="70" column="30" selection-start-line="70" selection-start-column="30" selection-end-line="70" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/users/user_center.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="65" column="70" selection-start-line="65" selection-start-column="70" selection-end-line="65" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/commons/signup.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="310">
+          <caret line="425" column="4" selection-start-line="425" selection-start-column="4" selection-end-line="425" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/users/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="36" column="29" selection-start-line="36" selection-start-column="29" selection-end-line="36" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/users/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="145">
+          <caret line="158" lean-forward="true" selection-start-line="158" selection-end-line="158" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mydjsite/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="30" column="30" selection-start-line="30" selection-start-column="30" selection-end-line="30" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/admins/listecg_table.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="588">
+          <caret line="188" column="50" lean-forward="true" selection-start-line="188" selection-start-column="50" selection-end-line="188" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/users/history.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2771">
+          <caret line="152" selection-start-line="152" selection-end-line="152" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admins/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/admins/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1518" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/admins/base_b.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="106" column="19" selection-start-line="106" selection-start-column="19" selection-end-line="106" selection-end-column="19" />
+          <folding>
+            <element signature="n#style#0;n#h3#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mydjsite/public_helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="4" selection-start-line="11" selection-start-column="4" selection-end-line="11" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#27#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/users/helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-306">
+          <caret line="3" column="36" selection-start-line="3" selection-start-column="36" selection-end-line="3" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/admins/listecg_img.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="935">
+          <caret line="250" column="43" selection-start-line="250" selection-start-column="43" selection-end-line="250" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admins/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admins/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="30" selection-start-line="30" selection-end-line="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#27#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-242" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admins/helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="241" lean-forward="true" selection-start-line="241" selection-end-line="241" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

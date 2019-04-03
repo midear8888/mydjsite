@@ -1,0 +1,174 @@
+{% extends 'users/base_a.html' %}
+
+{% block title %}About{%  endblock %}
+
+{% block nav %}
+    <li class="nav-item  mr-lg-3">
+        <a class="nav-link" href="{% url 'home' %}">Home
+            <span class="sr-only">(current)</span>
+        </a>
+    </li>
+    <li class="nav-item active mr-lg-3">
+        <a class="nav-link" href="about.html">About</a>
+    </li>
+    <li class="nav-item dropdown mr-lg-3">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Data</a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+             <a class="dropdown-item" href="{% url 'history' %}">Historys</a>
+             <a class="dropdown-item" href="{% url 'gallery' %}">Gallery</a>
+             <div class="dropdown-divider"></div>
+             <a class="dropdown-item" href="{% url 'home' %}">Analysis</a>
+        </div>
+    </li>
+    <li class="nav-item mr-lg-3">
+        <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'service' %}">Service</a>
+    </li>
+{% endblock %}
+{% block currentname %}About us{% endblock %}
+{% block content %}
+<!-- about -->
+	<section class="welcome py-5">
+		<div class="container py-md-4 mt-md-3">
+			<div class="w3ls-titles text-center">
+				<h3 class="title"><span class="hdng">About </span>Us</h3>
+				<span class="btmspn">
+					<i class="fas fa-bus"></i>
+				</span>
+				<p class="mt-2 mx-auto">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius eum inventore consectetur dolorum, voluptatum possimus temporibus vel ab, nesciunt quod!</p>
+			</div>
+
+			<div class="row about-tp mt-md-5 pt-5">
+				<div class="col-lg-6 welcome-left">
+					<h3>Welcome</h3>
+					<h4>We are committed to offering travel services of the highest quality, combining our energy and enthusiasm, with our years
+						of experience. Our greatest satisfaction comes in serving large numbers of satisfied clients who have experienced the
+						joys and inspiration of travel.</h4>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta erat sit amet eros sagittis, quis hendrerit
+						libero aliquam. Fusce semper augue ac dolor efficitur, a pretium metus pellentesque.</p>
+				</div>
+				<div class="col-lg-6 welcome-right">
+					<div class="welcome-right-top">
+						<img src="{% static 'users/images/g.jpg' %}" alt="" class="img-fluid" style="margin-left: 118px;">
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- //about -->
+	<!-- banner bottom -->
+	<div class="banner-bottom py-5">
+		<div class="container py-xl-3 py-lg-3">
+			<div class="row">
+				<div class="col-md-9 banner-left-bottom-w3ls">
+					<h3 class="text-white my-3">Fastest Way to Compare and Book over 450 Cheap Flights</h3>
+
+				</div>
+				<div class="col-md-3 button">
+					<a href="{% url 'about' %}" class="w3ls-button-agile">Read More
+						<i class="fas fa-hand-point-right"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- //banner bottom -->
+
+
+	<!-- about-team -->
+	<section class="team py-5">
+		<div class="container py-md-4 mt-md-3">
+			<div class="w3ls-titles text-center">
+				<h3 class="title"><span class="hdng">Our </span>Team</h3>
+				<span class="btmspn">
+					<i class="fas fa-bus"></i>
+				</span>
+				<p class="mt-2 mx-auto">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius eum inventore consectetur dolorum, voluptatum possimus temporibus vel ab, nesciunt quod!</p>
+			</div>
+
+			<div class="row team-row-agileinfo mt-md-5 pt-5">
+				<div class="col-lg-3 col-md-6 col-sm-6 team-grids">
+					<div class="thumbnail team-agileits">
+						<img src="{% static 'users/images/te1.jpg' %}" class="img-fluid" alt="" />
+						<div class="effectd-caption">
+							<h4 class="mb-3">duyiren</h4>
+							<div class="social-lsicon">
+								<a href="#" class="social-button twitter">
+									<span class="fab fa-twitter"></span>
+								</a>
+								<a href="#" class="social-button facebook">
+									<span class="fab fa-facebook-f"></span>
+								</a>
+								<a href="#" class="social-button google">
+									<span class="fab fa-google-plus-g"></span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 team-grids">
+					<div class="thumbnail team-agileits">
+						<img src="{% static 'users/images/te2.jpg' %}" class="img-fluid" alt="" />
+						<div class="effectd-caption">
+							<h4 class="mb-3">L V V</h4>
+							<div class="social-lsicon">
+								<a href="#" class="social-button twitter">
+									<span class="fab fa-twitter"></span>
+								</a>
+								<a href="#" class="social-button facebook">
+									<span class="fab fa-facebook-f"></span>
+								</a>
+								<a href="#" class="social-button google">
+									<span class="fab fa-google-plus-g"></span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 team-grids">
+					<div class="thumbnail team-agileits">
+						<img src="{% static 'users/images/te3.jpg' %}" class="img-fluid" alt="" />
+						<div class="effectd-caption">
+							<h4 class="mb-3">hetianfeng</h4>
+							<div class="social-lsicon">
+								<a href="#" class="social-button twitter">
+									<span class="fab fa-twitter"></span>
+								</a>
+								<a href="#" class="social-button facebook">
+									<span class="fab fa-facebook-f"></span>
+								</a>
+								<a href="#" class="social-button google">
+									<span class="fab fa-google-plus-g"></span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 team-grids">
+					<div class="thumbnail team-agileits">
+						<img src="{% static 'users/images/te4.jpg' %}" class="img-fluid" alt="" />
+						<div class="effectd-caption">
+							<h4 class="mb-3">jinagyiran</h4>
+							<div class="social-lsicon">
+								<a href="#" class="social-button twitter">
+									<span class="fab fa-twitter"></span>
+								</a>
+								<a href="#" class="social-button facebook">
+									<span class="fab fa-facebook-f"></span>
+								</a>
+								<a href="#" class="social-button google">
+									<span class="fab fa-google-plus-g"></span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- //about-team -->
+{% endblock %}
+
+

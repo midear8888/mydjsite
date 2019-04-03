@@ -1,0 +1,120 @@
+{% extends 'admins/base_b.html' %}
+
+{#标题#}
+{% block title %}管理员后台{% endblock %}
+{% block css %}
+    <!--Begin  Page Level  CSS -->
+    <link href="{% static 'admins/assets/plugins/morris-chart/morris.css' %}" rel="stylesheet">
+    <link href="{% static 'admins/assets/plugins/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet"/>
+    <!--End  Page Level  CSS -->
+{% endblock %}
+
+<!--
+{#左侧导航条#}
+{% block nav %}
+    <ul class="nav nav-pills nav-stacked custom-nav">
+        <li class="active">
+            <a href="{% url 'index' %}"><i class="icon-note"></i> <span>主页</span></a>
+        </li>
+
+        <li class="menu-list">
+            <a href="#"><i class="icon-envelope-open"></i> <span>管理员管理</span></a>
+            <ul class="sub-menu-list">
+                <li>
+                    <a href="{% url 'listadmin' %}"> 管理员列表</a>
+                </li>
+                <li>
+                    <a href="{% url 'addadmin' %}"> 添加管理员</a>
+                </li>
+                <li>
+                    <a href="{% url 'edit_admin' %}"> 编辑信息</a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-list">
+            <a href="{% url 'index' %}"><i class="icon-home"></i> <span>用户管理</span></a>
+            <ul class="sub-menu-list">
+                <li>
+                    <a href="{% url 'listdoctor' %}"> 医生列表 </a>
+                </li>
+                <li>
+                    <a href="{% url 'adddoctor' %}"> 添加医生 </a>
+                </li>
+                <li>
+                    <a href="{% url 'del_doctor' %}"> 删除医生 </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-list">
+            <a href="#"><i class="icon-layers"></i> <span>心电图管理</span></a>
+            <ul class="sub-menu-list">
+                <li>
+                    <a href="{% url 'listecg_table' %}"> 列表查看模式</a>
+                </li>
+                <li>
+                    <a href="{% url 'listecg_img' %}"> 图片查看模式</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="{% url 'recycle' %}"><i class="icon-note"></i> <span>心电图回收站</span></a>
+        </li>
+
+    </ul>
+
+{% endblock %}
+-->
+
+
+{#右侧定位标题#}
+{% block contenttitle %}
+    <h4 class="page-title">主页</h4>
+    <ol class="breadcrumb">
+
+        <li>
+            <a href="{% url 'index' %}">主页</a>
+        </li>
+        <li class="active">
+            主页
+        </li>
+    </ol>
+{% endblock %}
+
+{#主体内容#}
+{% block content %}
+    <div class="col-md-12">
+        <div class="white-box">
+            <h2 class="header-title " style="text-align: center;">
+                欢迎来到心电图数字化存储——管理员系统
+            </h2>
+            <blockquote>
+                <p>您可以管理的内容有</p>
+                <small>管理员用户、医生用户、心电图集</small>
+            </blockquote>
+            <blockquote>
+                <p>具体操作</p>
+                <small>请选择左边菜单栏进行操作</small>
+            </blockquote>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <!--Begin Page Level Plugin-->
+    <script src="{% static 'admins/assets/plugins/morris-chart/morris.js' %}"></script>
+    <script src="{% static 'admins/assets/plugins/morris-chart/raphael-min.js' %}"></script>
+    <script src="{% static 'admins/assets/plugins/jquery-sparkline/jquery.charts-sparkline.js' %}"></script>
+    <script src="{% static 'admins/assets/pages/dashboard.js' %}"></script>
+    <!--End Page Level Plugin-->
+
+    {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg.message }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+
+{% endblock %}

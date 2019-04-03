@@ -1,0 +1,300 @@
+{% extends 'users/base_a.html' %}
+
+{% block title %}Upload{% endblock %}
+
+{% block css %}
+    <style>
+        #msform {
+            height: 700px;
+        }
+    </style>
+
+{% endblock %}
+
+{% block nav %}
+    <li class="nav-item  mr-lg-3">
+        <a class="nav-link" href="{% url 'home' %}">Home
+            <span class="sr-only">(current)</span>
+        </a>
+    </li>
+    <li class="nav-item dropdown active mr-lg-3">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+           aria-haspopup="true" aria-expanded="false">
+            Data
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'history' %}">Historys</a>
+            <a class="dropdown-item" href="{% url 'gallery' %}">Gallery</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'home' %}">Analysis</a>
+        </div>
+    </li>
+    <li class="nav-item dropdown mr-lg-3">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+           aria-haspopup="true" aria-expanded="false">
+            Help
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'about'%}">About</a>
+            <a class="dropdown-item" href="{% url 'contact' %}">Contact</a>
+            <a class="dropdown-item" href="{% url 'service' %}">Service</a>
+        </div>
+    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+           aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user"></i>&nbsp;&nbsp;&nbsp;{{ truename }}
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'service' %}">Center</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'logout' %}">
+                <i class="fas fa-power-off"></i>&nbsp;&nbsp;&nbsp;logout
+            </a>
+        </div>
+    </li>
+{% endblock %}
+
+{% block currentname %}upload{% endblock %}
+
+{% block content %}
+    <div class="agileits-services py-sm-5" id="gallery">
+        <div class="container">
+            <div class="w3ls-titles text-center mb-3">
+                <h3 class="title">Upload</h3>
+                <span class="btmspn">
+                    <i class="fas fa-heartbeat"></i>
+				</span>
+                <p class="mt-2 mx-auto">upload paper ECG to digital storage</p>
+            </div>
+
+        </div>
+        <div class="container"><!--style="height: 550px;"-->
+            <div id="msform">
+                <!-- progressbar -->
+                <ul id="progressbar">
+                    <li class="active">上传原图</li>
+                    <li>信息录入</li>
+                    <li>确认数字化</li>
+                    <li>结果</li>
+                </ul>
+                <form class="form-horizontal" role="form" action="{% url 'upload' %}" enctype="multipart/form-data" method="post">
+                    <!-- fieldsets -->
+                    <fieldset>
+                        <h2 class="fs-title">上传原图</h2>
+                        <h3 class="fs-subtitle">上传您需要存储的心电图</h3>
+
+                        <input type="file" placeholder="" value="选择上传" name="avatar" id="avatar">
+                        <input type="button" name="next" class="next action-button" value="下一步"/>
+                    </fieldset>
+
+                    <fieldset>
+                        <h2 class="fs-title">信息录入</h2>
+                        <h3 class="fs-subtitle">输入该心电图患者信息</h3>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group clearfix">
+                                    <label for="username" class="col-md-2 control-label">患者姓名</label>
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" id="username" placeholder="请输入名字">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label for="details" class="col-md-2 control-label">患者状况</label>
+                                    <div class="col-md-10">
+                                        <textarea name="details" class="form-control" rows="3" id="details"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="button" name="previous" class="previous action-button" value="上一步"/>
+                        <input type="button" name="next" class="next action-button" value="下一步" id="submit"/>
+                    </fieldset>
+
+                    <fieldset>
+                        <h2 class="fs-title">确认数字化</h2>
+                        <h3 class="fs-subtitle"></h3>
+                        <a href="#" id="img_href"><img src="#" class="img-thumbnail" id="img_src" width="100%"></a>
+                        <input type="button" name="previous" class="previous action-button" value="上一步"/>
+                        <input type="button" name="next" class="process next action-button" value="下一步" id="process"/>
+
+
+                    </fieldset>
+                    <fieldset>
+                        <h2 class="fs-title">结果</h2>
+                        <h3 class="fs-subtitle"></h3>
+                        <a href="#" id="process_href"><img src="#" class="img-thumbnail" id="process_src" width="100%"></a>
+                        <input type="button" name="previous" class="previous action-button" value="上一步"/>
+                        <a href="{% url 'history' %}"><input type="button" name="submit" class="action-button" value="查看历史记录"/></a>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+
+    <script>
+        //进度条jQuery time
+        var current_fs, next_fs, previous_fs; //fieldsets
+        var left, opacity, scale; //fieldset properties which we will animate
+        var animating; //flag to prevent quick multi-click glitches
+
+        $(".next").click(function () {
+            if (animating) return false;
+            animating = true;
+
+            current_fs = $(this).parent();
+            next_fs = $(this).parent().next();
+
+            //activate next step on progressbar using the index of next_fs
+            $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+
+            //show the next fieldset
+            next_fs.show();
+            //hide the current fieldset with style
+            current_fs.animate({
+                opacity: 0
+            }, {
+                step: function (now, mx) {
+                    //as the opacity of current_fs reduces to 0 - stored in "now"
+                    //1. scale current_fs down to 80%
+                    scale = 1 - (1 - now) * 0.2;
+                    //2. bring next_fs from the right(50%)
+                    left = (now * 50) + "%";
+                    //3. increase opacity of next_fs to 1 as it moves in
+                    opacity = 1 - now;
+                    current_fs.css({
+                        'transform': 'scale(' + scale + ')',
+                        'position': 'absolute'
+                    });
+                    next_fs.css({
+                        'left': left,
+                        'opacity': opacity
+                    });
+                },
+                duration: 800,
+                complete: function () {
+                    current_fs.hide();
+                    animating = false;
+                },
+                //this comes from the custom easing plugin
+                easing: 'easeInOutBack'
+            });
+
+            var tag1 = $(this);  //触发提交的按钮所在的标签
+            if (tag1.attr("id") == "submit"){
+                //alert("触发了操作，提交文件并存储原图，并显示在页面");
+                //第二步触发操作：提交文件并存储原图，并显示在第三步页面
+                var formdata=new FormData();
+                //formdata.append("user",$("#user").val());   {#不断的append添加键值对#}
+                formdata.append("avatar",$("#avatar")[0].files[0]);
+                $.ajax({
+                    url:"{% url 'upload' %}",
+                    type:"POST",
+                    contentType:false, //加2个参数，只要有formdata就要有这两个参数。意思是不做编码了，对文件不做处理。
+                    processData:false,
+                    data:formdata,   //把整个formdata对象放到data里边
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        console.log(data);
+                        var tag1 = document.getElementById("img_href");
+                        var tag2 = document.getElementById("img_src");
+                        tag1.setAttribute("href", data["result"]);  //将src的值换成后台传过来的处理后的二值化图片的地址
+                        tag2.setAttribute("src", data["result"]);  //将src的值换成后台传过来的处理后的二值化图片的地址
+                    }
+                })
+            }
+
+            var tag2 = $(this);
+            if (tag2.attr("id") == "process"){
+                //alert("触发了操作，请求处理图片");
+                // 第三步触发操作：让后台处理这张图片，顺便要返回处理后的图片，并显示在第四步页面
+
+                var img_user = document.getElementById("username").value;
+                var img_details = document.getElementById("details").value;
+                console.log("用户名是："+img_user);
+
+                var tag = document.getElementById("img_href");
+                console.log("process");
+                console.log(tag.getAttribute('href'));
+                var data = {
+                    "status": "1", //
+                    "img_path": tag.getAttribute('href'),  //原图的地址，这样可以直接将该原图地址传给图像处理的函数，方便处理
+                    "img_user": img_user,                  //图片中患者的姓名
+                    "img_details": img_details,            //图片描述
+                };
+                $.ajax({
+                    url:"{% url 'process' %}",
+                    type:"POST",
+                    data: data,   //
+                    success: function (data) {
+                        var tag1 = document.getElementById("process_href");
+                        var tag2 = document.getElementById("process_src");
+                        data = JSON.parse(data);
+                        console.log(data);
+                        if (data["status"] = 1){
+                            console.log("成功处理了图片");
+                        }
+                        else{
+                            console.log("处理图片失败");
+                        }
+                        tag1.setAttribute("href", data['result']);  //将src的值换成后台传过来的处理后的二值化图片的地址
+                        tag2.setAttribute("src", data['result']);  //将src的值换成后台传过来的处理后的二值化图片的地址
+                    }
+                })
+            }
+        });
+
+        $(".previous").click(function () {
+            if (animating) return false;
+            animating = true;
+
+            current_fs = $(this).parent();
+            previous_fs = $(this).parent().prev();
+
+            //de-activate current step on progressbar
+            $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+
+            //show the previous fieldset
+            previous_fs.show();
+            //hide the current fieldset with style
+            current_fs.animate({
+                opacity: 0
+            }, {
+                step: function (now, mx) {
+                    //as the opacity of current_fs reduces to 0 - stored in "now"
+                    //1. scale previous_fs from 80% to 100%
+                    scale = 0.8 + (1 - now) * 0.2;
+                    //2. take current_fs to the right(50%) - from 0%
+                    left = ((1 - now) * 50) + "%";
+                    //3. increase opacity of previous_fs to 1 as it moves in
+                    opacity = 1 - now;
+                    current_fs.css({
+                        'left': left
+                    });
+                    previous_fs.css({
+                        'transform': 'scale(' + scale + ')',
+                        'opacity': opacity
+                    });
+                },
+                duration: 800,
+                complete: function () {
+                    current_fs.hide();
+                    animating = false;
+                },
+                //this comes from the custom easing plugin
+                easing: 'easeInOutBack'
+            });
+        });
+/*
+        $(".submit").click(function () {
+            return false;
+        })*/
+    </script>
+{% endblock %}
+
+
+

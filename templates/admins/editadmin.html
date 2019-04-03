@@ -1,0 +1,188 @@
+{% extends 'admins/base_b.html' %}
+
+{#标题#}
+{% block title %}编辑管理员{% endblock %}
+
+{#左侧导航条#}
+
+{% block nav %}
+    <ul class="nav nav-pills nav-stacked custom-nav">
+        <li>
+            <a href="{% url 'index' %}"><i class="icon-note"></i> <span>主页</span></a>
+        </li>
+
+        <li class="menu-list nav-active">
+            <a href="#"><i class="icon-envelope-open"></i> <span>管理员管理</span></a>
+            <ul class="sub-menu-list">
+                <li>
+                    <a href="{% url 'listadmin' %}"> 管理员列表</a>
+                </li>
+                <li>
+                    <a href="{% url 'addadmin' %}"> 添加管理员</a>
+                </li>
+                <li class="active">
+                    <a href="#"> 编辑信息</a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-list">
+            <a href="{% url 'index' %}"><i class="icon-home"></i> <span>用户管理</span></a>
+            <ul class="sub-menu-list">
+                <li>
+                    <a href="{% url 'listdoctor' %}"> 医生列表 </a>
+                </li>
+                <li>
+                    <a href="{% url 'adddoctor' %}"> 添加医生 </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-list">
+            <a href="#"><i class="icon-layers"></i> <span>心电图管理</span></a>
+            <ul class="sub-menu-list">
+                <li>
+                    <a href="{% url 'listecg_table' %}"> 列表查看模式</a>
+                </li>
+                <li>
+                    <a href="{% url 'listecg_img' %}"> 图片查看模式</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="{% url 'recycle' %}"><i class="icon-note"></i> <span>心电图回收站</span></a>
+        </li>
+
+    </ul>
+
+{% endblock %}
+
+{#右侧定位标题#}
+{% block contenttitle %}
+    <h4 class="page-title">管理员管理</h4>
+    <ol class="breadcrumb">
+        <li><a href="{% url 'index' %}">主页</a></li>
+        <li><a href="#">管理员管理</a></li>
+        <li class="active">编辑管理员</li>
+    </ol>
+{% endblock %}
+
+{#主体内容#}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="white-box">
+                <h2 class="header-title">编辑信息</h2>
+                <form id="example-form" class="js-validation-bootstrap form-horizontal" action="{% url 'edit_admin' %}" enctype="multipart/form-data" method="post">
+
+                    <div class="form-group clearfix">
+                        <label for="username" class="col-md-2 control-label">医院名称 *</label>
+                        <div class="col-md-8">
+                            <input id="username" name="username" type="text" class="required form-control"
+                                   value="数据库中读取到的值">
+                        </div>
+                    </div>
+
+                    <div class="form-group clearfix">
+                        <label for="password" class="col-md-2 control-label">密 码 *</label>
+                        <div class="col-md-8">
+                            <input id="password" name="password" type="password" class="required form-control"
+                                   value="数据库中读取的值">
+                        </div>
+                    </div>
+
+                    <div class="form-group clearfix">
+                        <label for="confirm" class="col-md-2 control-label">确认密码 *</label>
+                        <div class="col-md-8">
+                            <input id="confirm" name="confirm" type="password" class="required form-control"
+                                  value="数据库中读取的值">
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label for="level" class="col-md-2 control-label">医院等级 *</label>
+                        <div class="col-md-8">
+                            <input id="level" name="level" type="text" class="required form-control"
+                                   value="数据库中读取的值">
+                        </div>
+                    </div>
+
+                    <div class="form-group clearfix">
+                        <label class="col-md-2 control-label" for="address">医院地址 *</label>
+                        <div class="col-md-8">
+                            <input id="address" name="address" type="text" class="required form-control"
+                                   value="数据库中读取的值">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-8 col-md-offset-2">
+                            <button class="btn  btn-primary" type="submit">确认修改</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'admins/assets/pages/jquery.validate.min.js' %}"></script>
+    <script src="{% static 'admins/assets/pages/validation-custom.js' %}"></script>
+    <script>
+
+			var form = $("#example-form");
+			form.validate({
+				errorPlacement: function(error, e) {
+	                jQuery(e).parents('.form-group > div').append(error);
+	            },
+	            success: function(e) {
+	                jQuery(e).closest('.form-group').removeClass('has-error');
+	                jQuery(e).closest('.help-block').remove();
+	            },
+				rules: {
+					'username': {
+                        required: true,
+                        minlength: 3,
+                        {#havename:true#}
+	                },
+	                'email': {
+	                    required: true,
+	                    email: true
+	                },
+	                'phone': {
+	                    required: true,
+	                    minlength: 11,
+	                    phone: true
+	                },
+					'confirm': {
+						minlength:6,
+						equalTo: "#password"
+					},
+					'confirm1': {
+						minlength:6,
+						equalTo: "#password1"
+					},
+					'confirm2': {
+						minlength:6,
+						equalTo: "#password2"
+					},
+					'password': {
+						minlength:6,
+					},
+					'password1': {
+						minlength:6,
+					},
+					'password2': {
+						minlength:6,
+					}
+
+				},
+				messages: {
+					'phone': {
+	                    minlength: '手机格式不正确，请输入11位手机号',
+	                    phone: '手机格式不正确，非真正的手机号码'
+	                }
+	            },
+
+			});
+		</script>
+{% endblock %}

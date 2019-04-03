@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{% static 'admins/assets/images/3-1.jpg' %}" type="image/png">
+    <title>{% block title %}{% endblock %}</title>
+
+    {% block css %}{% endblock %}
+
+    <link href="{% static 'admins/assets/css/icons.css' %}" rel="stylesheet">
+    <link href="{% static 'admins/assets/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'admins/assets/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'admins/assets/css/responsive.css' %}" rel="stylesheet">
+
+</head>
+
+<body class="sticky-header">
+
+<!--左边导航条-->
+<div class="left-side sticky-left-side">
+
+    <!--导航栏logo-->
+    <div class="logo">
+        <a href="{% url 'index' %}"><img src="{% static 'admins/assets/images/logo.png' %}" alt=""></a>
+    </div>
+
+    <div class="logo-icon text-center">
+        <a href="{% url 'index' %}"><img src="{% static 'admins/assets/images/logo-icon2.png' %}" alt=""></a>
+    </div>
+    <!--logo-->
+
+    <!--导航栏内容-->
+    <div class="left-side-inner">
+        <!--nav-->
+        <!--{% block nav %}{% endblock %}-->
+        <!--nav End-->
+        <ul class="nav nav-pills nav-stacked custom-nav">
+            <li>
+                <a href="{% url 'index' %}"><i class="icon-note"></i> <span>主页</span></a>
+            </li>
+
+            <li class="menu-list  nav-active">
+                <a href="#"><i class="icon-envelope-open"></i> <span>管理员管理</span></a>
+                <ul class="sub-menu-list">
+                    <li class="active">
+                        <a href="{% url 'listadmin' %}"> 管理员列表</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'addadmin' %}"> 添加管理员</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'edit_admin' %}"> 编辑信息</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="menu-list">
+                <a href="{% url 'index' %}"><i class="icon-home"></i> <span>用户管理</span></a>
+                <ul class="sub-menu-list">
+                    <li>
+                        <a href="{% url 'listdoctor' %}"> 医生列表 </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'adddoctor' %}"> 添加医生 </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="menu-list">
+                <a href="#"><i class="icon-layers"></i> <span>心电图管理</span></a>
+                <ul class="sub-menu-list">
+                    <li>
+                        <a href="{% url 'listecg_table' %}"> 列表查看模式</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'listecg_img' %}"> 图片查看模式</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="{% url 'recycle' %}"><i class="icon-note"></i> <span>心电图回收站</span></a>
+            </li>
+
+        </ul>
+
+    </div>
+</div>
+<!--导航条End-->
+
+<!-- 主要内容-->
+<div class="main-content">
+
+    <!-- 头部栏-->
+    <div class="header-section">
+
+        <a class="toggle-btn"><i class="fa fa-bars"></i></a>
+
+        <!--<form class="searchform">
+            <input type="text" class="form-control" name="keyword" placeholder="搜索......"/>
+        </form>
+        -->
+        <h3 style="display: inline-block;margin-top: 11px;">{{ hospital }}</h3>  <!--医院名-->
+
+        <!--右侧菜单 -->
+        <div class="menu-right">
+            <!--消息通知-->
+            <ul class="notification-menu">
+                <li>
+                    <a href="#" class="btn btn-default dropdown-toggle info-number" data-toggle="dropdown">
+                        <i class="fa fa-tasks"></i>
+                        <span class="badge">3</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-head pull-right">
+                        <h5 class="title">你有3条消息</h5>
+                        <ul class="dropdown-list">
+                            <li class="notification-scroll-list notification-list ">
+                                <!-- list item-->
+                                <a href="javascript:void(0);" class="list-group-item">
+                                    <div class="media">
+                                        <div class="pull-left p-r-10">
+                                            <em class="fa  fa-shopping-cart noti-primary"></em>
+                                        </div>
+                                        <div class="media-body">
+                                            <h5 class="media-heading">消息1</h5>
+                                            <p class="m-0">
+                                                <small>29 min ago</small>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <!-- list item-->
+                                <a href="javascript:void(0);" class="list-group-item">
+                                    <div class="media">
+                                        <div class="pull-left p-r-10">
+                                            <em class="fa fa-check noti-success"></em>
+                                        </div>
+                                        <div class="media-body">
+                                            <h5 class="media-heading">消息2</h5>
+                                            <p class="m-0">
+                                                <small>12 min ago</small>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <!-- list item-->
+                                <a href="javascript:void(0);" class="list-group-item">
+                                    <div class="media">
+                                        <div class="pull-left p-r-10">
+                                            <em class="fa fa-user-plus noti-info"></em>
+                                        </div>
+                                        <div class="media-body">
+                                            <h5 class="media-heading">1111111</h5>
+                                            <p class="m-0">
+                                                <small>17 min ago</small>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+
+                            </li>
+                            <li class="last">
+                                <a href="#"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!--信息-->
+                <li>
+                    <a href="#" class="btn btn-default dropdown-toggle info-number" data-toggle="dropdown">
+                        <i class="fa fa-bell-o"></i>
+                        <!--右上小图标-->
+                        <span class="badge">2</span>
+                    </a>
+                    <!--具体-->
+                    <div class="dropdown-menu dropdown-menu-head pull-right">
+                        <h5 class="title">Notifications</h5>
+                        <ul class="dropdown-list normal-list">
+                            <li class="message-list message-scroll-list">
+                                <a href="#">
+                                    <span class="photo"> <img src="{% static 'admins/assets/images/users/avatar-8.jpg' %}"
+                                                              class="img-circle" alt="img"></span>
+                                    <span class="subject">John Doe</span>
+                                    <span class="message"> 11111111111</span>
+                                    <span class="time">15 minutes ago</span>
+                                </a>
+
+                                <a href="#">
+                                    <span class="photo"> <img
+                                            src="{% static 'admins/assets/images/users/avatar-7.jpg" class="img-circle' %}"
+                                            alt="img"></span>
+                                    <span class="subject">John Doe</span>
+                                    <span class="message"> 2222222222222</span>
+                                    <span class="time">10 minutes ago</span>
+                                </a>
+
+                            </li>
+                            <li class="last">
+                                <a href="#"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!--头像-->
+                <li>
+                    <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <img src="{% static 'admins/assets/images/users/avatar-6.jpg' %}" alt=""/> {{ curruser.h_name }}
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-usermenu pull-right">
+                        <li>
+                            <a href="#"> <i class="fa fa-wrench"></i> Settings </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'logout' %}"> <i class="fa fa-lock"></i> Logout </a> <!--注销实际上就是要重新登录-->
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+        <!--通知菜单 End -->
+
+    </div>
+    <!-- 头部菜单 End-->
+
+    <!--主体内容 start-->
+    <div class="wrapper">
+
+        <!--定位标题-->
+        <div class="page-title-box">
+            {% block contenttitle %}{% endblock %}
+            <div class="clearfix"></div>
+        </div>
+
+        <!--End 定位标题-->
+
+        <!--主题详细内容 row-->
+        <div class="row">
+            <div class="container">
+                <div class="analytics-box">
+
+                </div>
+            </div>
+        </div>
+
+        {% block content %}{% endblock %}
+        <!--/.col-md-4-->
+        <!--End row-->
+    </div>
+    <!-- End Wrapper-->
+
+    <!--Start  Footer -->
+    <footer class="footer-main">Copyright &copy; 2019.Company VV0 All rights reserved.
+        <a target="_blank" href="#">心电图数字化存储</a>
+    </footer>
+    <!--End footer -->
+
+</div>
+<!--End main content -->
+
+<!--Begin core plugin -->
+<script src="{% static 'admins/assets/js/jquery.min.js' %}"></script>
+<script src="{% static 'admins/assets/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'admins/assets/plugins/moment/moment.js' %}"></script>
+<script src="{% static 'admins/assets/js/jquery.slimscroll.js' %}"></script>
+<script src="{% static 'admins/assets/js/jquery.nicescroll.js' %}"></script>
+<script src="{% static 'admins/assets/js/functions.js' %}"></script>
+<!-- End core plugin -->
+
+{% block js %}{% endblock %}
+</body>
+
+</html>

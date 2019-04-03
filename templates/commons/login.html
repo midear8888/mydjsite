@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{% static 'admins/assets/images/3-1.jpg' %}" type="image/png">
+    <title>Login</title>
+    <link href="{% static 'admins/assets/css/icons.css' %}" rel="stylesheet">
+    <link href="{% static 'admins/assets/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'admins/assets/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'admins/assets/css/responsive.css' %}" rel="stylesheet">
+
+    <style>
+        body {
+            background: url({% static 'admins/assets/images/bg2.jpg' %}) no-repeat 0px 0px;
+            background-size: cover;
+        }
+    </style>
+</head>
+
+<body class="sticky-header">
+<div class="row">
+    <div class="col-md-12 logintitle">
+        欢迎使用心电图数字化存储系统--登陆
+    </div>
+</div>
+<section class="login-section">
+    <div class="container">
+        <div class="row">
+            <div class="login-wrapper">
+                <div class="login-inner">
+
+                    <div class="logo">
+                        <img src="{% static 'admins/assets/images/logo.png' %}" alt="logo"/>
+                    </div>
+                    <h2 class="header-title text-center">登陆</h2>
+
+                    <form enctype="multipart/form-data" class="js-validation-bootstrap" action="{% url 'login' %}" method="post">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label white" for="username">用 户 &nbsp;<span
+                                    class="text-danger">*</span></label>
+                            <div class="col-md-9">
+                                <input class="form-control" type="text" id="username" name="username" placeholder="您的用户名" onclick="ShowError('show_error')">
+                            </div>
+                            {% if status == "0" %}
+                            <p style="color: red;" id="show_error">{{ error }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label white" for="password">密 码 &nbsp;<span
+                                    class="text-danger">*</span></label>
+                            <div class="col-md-9">
+                                <input type="password" name="password" id="password" class="form-control" placeholder="密 码">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label white" for="">身 份 &nbsp;<span class="text-danger">*</span></label>
+                            <div class="col-md-9">
+                                <select class="form-control m-b-15" style="color:#999999" name="status" id="status">
+                                    <option value="" style="display: none;">您的身份</option>
+                                    <option value="1">我是医院级</option>
+                                    <option value="2">我是医生级</option>
+                                    <option value="3">我是患者用户</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="pull-left">
+                                <div class="checkbox primary">
+                                    <input id="checkbox-2" type="checkbox">
+                                    <label class="mywhitefont" for="checkbox-2">记住我</label>
+                                </div>
+                            </div>
+
+                            <div class="pull-right">
+                                <a href="#" class="a-link mya1">
+                                    <i class="fa fa-unlock-alt"></i> 忘记密码?
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" value="登 陆" class="btn btn-primary btn-block mybtn">
+                        </div>
+
+                        <div class="form-group text-center mywhitefont">
+                            没有账号?
+                            <a class="mya1" href="{% url 'signup' %}"> 注 册 </a>
+                        </div>
+
+                    </form>
+
+                    <div class="copy-text">
+                        <p class="m-0" style="color:#292a4b;">2019 &copy; VV0 admin</p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!--Begin core plugin -->
+<script src="{% static 'admins/assets/js/jquery.min.js' %}"></script>
+<script src="{% static 'admins/assets/js/bootstrap.min.js' %}"></script>
+<!-- End core plugin -->
+
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="{% static 'admins/assets/plugins/jquery-validation/jquery.validate.min.js' %}"></script>
+<script src="{% static 'admins/assets/pages/validation-custom.js' %}"></script>
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script>
+    function ShowError(tag_id) {
+        var tag = document.getElementById(tag_id);
+        tag.remove();  //当用户点击输入框，则将错误信息的标签隐藏
+    }
+</script>
+
+{% if messages %}
+    <script>
+        {% for msg in messages %}
+            alert('{{ msg.message }}');
+        {% endfor %}
+    </script>
+{% endif %}
+</body>
+
+</html>

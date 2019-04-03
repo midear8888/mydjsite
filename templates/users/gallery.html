@@ -1,0 +1,120 @@
+{% extends 'users/base_a.html' %}
+
+{% block title %}Gallery{%  endblock %}
+{% block css %} <!-- gallery smoothbox  -->
+    <link rel="stylesheet" href="{%  static 'users/css/smoothbox.css' %}" type='text/css' media="all" />{% endblock %}
+{% block nav %}
+    <li class="nav-item  mr-lg-3">
+        <a class="nav-link" href="{% url 'home' %}">Home
+            <span class="sr-only">(current)</span>
+        </a>
+    </li>
+    <li class="nav-item dropdown mr-lg-3">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									Data
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'history' %}">Historys</a>
+            <a class="dropdown-item" href="{% url 'gallery' %}">Gallery</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'home' %}">Analysis</a>
+        </div>
+    </li>
+    <li class="nav-item dropdown mr-lg-3">
+        <a class="nav-link dropdown-toggle" href="{% url 'about' %}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									Help
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'about' %}">About</a>
+            <a class="dropdown-item" href="{% url 'contact' %}">Contact</a>
+            <a class="dropdown-item" href="{% url 'service' %}">Service</a>
+        </div>
+    </li>
+    <li class="nav-item dropdown active ">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user"></i>&nbsp;&nbsp;&nbsp;{{ truename }}  <!--真实姓名-->
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'user_center' %}">Center</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'logout' %}">
+                <i class="fas fa-power-off"></i>&nbsp;&nbsp;&nbsp;logout
+            </a>
+        </div>
+    </li>
+{% endblock %}
+
+{% block currentname %}gallery{% endblock %}
+
+{% block content %}
+<!-- gallery -->
+    <div class="agileits-services py-sm-5" id="gallery">
+        <div class="container py-lg-5 pt-3 pb-5">
+
+            <div class="w3ls-titles text-center mb-3">
+				<h3 class="title">Gallery</h3>
+				<span class="btmspn">
+					<i class="fas fa-heartbeat"></i>
+				</span>
+				<p class="mt-2 mx-auto">All storage</p>
+			</div>
+            <div class="w3ls_gallery_grids pt-md-5 pt-3">
+                {% if status %}
+                        <div class="row agileits_w3layouts_gallery_grid">
+                            {% for img in results.object_list %}
+                            <div class="col-sm-4  agileits_w3layouts_gallery_grid1 w3layouts_gallery_grid1 hover14">
+                                <div class="w3_agile_gallery_effect">
+                                    {% if img.img_user %}
+                                        <a href="{{ img.upload_to }}" class="sb" title="于{{ img.upload_time }}上传'{{ img.img_user }}'的心电图">
+                                    {% else %}
+                                        <a href="{{ img.upload_to }}" class="sb" title="于{{ img.upload_time }}上传'未命名'的心电图">
+                                    {% endif %}
+                                        <figure>
+                                            <img src="{{ img.upload_to }}" alt="图片不存在了" height="280" width="280" class="img-fluid" />
+                                        </figure>
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                    <!--分页开始-->
+                    {% if results.has_previous %}  <!--判断是否有上一页-->
+                        <a href="?page={{ results.previous_page_number }}" title="下一页">上一页</a>
+                    {% endif %}
+                    {% for p in page_range %}
+                        {% ifequal p results.number %}
+                        <span>{{p}}</span>
+                        {% else %}
+                        <a href="?page={{p}}" title="第{{p}}页">{{p}}</a>
+                        {% endifequal %}
+                    {% endfor %}
+                    {% if results.has_next %}  <!--判断是否有下一页-->
+                        <a href="?page={{ results.next_page_number }}" title="下一页" style="display: inline;">下一页</a>
+                    {% endif %}
+                    <!--分页结束-->
+                {% else %}
+                    <p>您尚未上传过任何图片</p>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!--<div class="container text-dark">
+        	<ul class="pagination text-dark">
+			  	<li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+			  	<li class="page-item active"><a class="page-link border-dark bg-dark" href="#">1</a></li>
+			  	<li class="page-item"><a class="page-link text-dark" href="#">2</a></li>
+			  	<li class="page-item"><a class="page-link text-dark" href="#">3</a></li>
+			  	<li class="page-item"><a class="page-link text-dark" href="#">4</a></li>
+			  	<li class="page-item"><a class="page-link text-dark" href="#">5</a></li>
+			  	<li class="page-item"><a class="page-link text-dark" href="#">6</a></li>
+			  	<li class="page-item"><a class="page-link text-dark" href="#">Next</a></li>
+			</ul>
+		    </div>-->
+
+    <!-- //gallery -->
+{% endblock %}
+
+
+
