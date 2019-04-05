@@ -13,23 +13,38 @@ def get_truename(request):
     """得到用户的真实姓名"""
     username = request.COOKIES.get("username")
     status = request.COOKIES.get("status")
+    true_name = "Personal"
+    hospital = None  # 默认为None，如果是管理员的话，就是相应的医院名
     try:
+        if status == "0":
+            # 管理员
+            obj = HospitalAdmin.objects.filter(username=username).first()
+            true_name = obj.name  # 用户真实姓名
+            hospt_id = obj.hid  # 医院id
+            hospital = Hospital.objects.filter(id=hospt_id).first().h_name  # 医院名
+        if status == "1":
+            # 医院
+            obj = Hospital.objects.filter(username=username).first()
+            true_name = obj.h_name  # 医院名
         if status == "2":
             # 医生
             obj = Doctor.objects.filter(username=username).first()
-            INFO["truename"] = obj.name  # 真实姓名
+            true_name = obj.name  # 真实姓名
         if status == "3":
             # 患者
             obj = Patient.objects.filter(username=username).first()
-            INFO["truename"] = obj.name  # 真实姓名
-        if INFO.get("truename"):
-            return INFO
-        else:
-            INFO["truename"] = "Personal"
-            return INFO
+            true_name = obj.name  # 真实姓名
+        info = {
+            "truename": true_name,   # 用户名
+            "hospital": hospital,  # 医院名
+        }
+        return info
     except Exception as er:
         print("获取用户真名失败：", er)
-        return {"truename": "Personal"}
+        return {
+            "truename": true_name,
+            "hospital": hospital
+        }
 
 
 def get_page(request, data, page_count):
@@ -213,8 +228,9 @@ def login_handle(request):
         if status == "1":
             print("医院或者医院管理员登录")
             obj = Hospital.objects.filter(username=username)
+            print(obj)
             if obj:
-                """该医院存在"""
+                print("医生请求登录")
                 obj = obj.filter(password=password)
                 if not obj:
                     # 密码错误
@@ -224,7 +240,7 @@ def login_handle(request):
                 response = set_user_info(request, 'admins/index.html', status, username)
                 response.set_cookie('user_type', "Hospital")  # 给医院添加标记
             else:
-                # 看是否是管理员
+                print("是否是管理员")
                 obj = HospitalAdmin.objects.filter(username=username)
                 if not obj:
                     # 医院和管理中都找不到，说明没有注册

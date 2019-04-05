@@ -36,10 +36,11 @@ class AddDoctor(View):
 @method_decorator(admin_auth, name='dispatch')
 class EditAdmin(View):
     def get(self, request):
-        return render(request, 'admins/editadmin.html', INFO)
+        return render(request, 'admins/modify.html', INFO)
 
     def post(self, request):
-        return render(request, 'admins/editadmin.html', INFO)
+        response = edit_admin_handle(request)
+        return response
 
 
 @method_decorator(admin_auth, name='dispatch')
@@ -49,7 +50,21 @@ class EditDoctor(View):
         return render(request, 'admins/editdoctor.html', INFO)
 
     def post(self, request):
-        return render(request, 'admins/editdoctor.html', INFO)
+        response = edit_doctor_handle(request)
+        return response
+
+
+@method_decorator(admin_auth, name='dispatch')
+class Modify(View):
+    """医院或者管理员自己修改自己的信息"""
+    def get(self, request):
+        response = modify_get_handle(request)
+        return response
+
+    def post(self, request):
+        print("modify_post")
+        response = modify_post_handle(request)
+        return response
 
 
 @method_decorator(admin_auth, name='dispatch')
@@ -60,6 +75,7 @@ class ListAdmin(View):
         return response
 
     def post(self, request):
+        INFO["user_type"] = request.COOKIES.get("user_type")
         return render(request, 'admins/listadmin.html', INFO)
 
 
@@ -118,6 +134,7 @@ class DelAdmin(View):
         return render(request, 'admins/listadmin.html', INFO)
 
     def post(self, request):
+        # 这儿是ajax提交的， 网页并没有刷新，可以不用user_type
         response = del_admin(request)
         return response
 
@@ -142,6 +159,7 @@ class Logout(View):
         response = redirect('/login/')  # 重定向
         response.delete_cookie('status', path='/')
         response.delete_cookie('username', path='/')
+        response.delete_cookie('user_type', path='/')
         print("用户注销")
         return response
 

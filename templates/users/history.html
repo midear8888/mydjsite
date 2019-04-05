@@ -261,7 +261,7 @@
                                         </div>
 
                                     </div>
-                                  </div>
+                                </div>
                             </div>
                             <button type="button" class="btn btn-outline-info" onclick="DelHistory('{{ forloop.counter }}')">删除</button>
                             <button type="button" class="btn btn-outline-info"><a href="#" id="href{{ forloop.counter }}">导出</a></button>
@@ -458,7 +458,7 @@
                         success: function(arg) {
                             arg = JSON.parse(arg);
                             console.log("返回了："+arg);
-                            if (arg["status"] == 1){
+                            if (arg["status"]){
                                 tag.remove(); // 删去该行数据
                             }
                             else{
@@ -486,7 +486,7 @@
                             //var img_src = document.getElementById("src"+tag_id);
                             //var img_details = document.getElementById("details"+tag_id);  //图片描述
                             var img_user = document.getElementById("user"+tag_id);  //图片中患者的名字
-                            if (arg["status"] == 1){
+                            if (arg["status"]){
                                 $('#href'+tag_id).attr('href', arg["result"]["pic_path"]);   // 修改属性值，图片地址，作为导出时提供下载链接
                                 $('#src'+tag_id).attr('src', arg["result"]["pic_path"]);     //图片地址,作为img的src属性，显示图片
                                 $('#details'+tag_id).text("图片详情: "+arg["result"]["details"]);     //图片详情

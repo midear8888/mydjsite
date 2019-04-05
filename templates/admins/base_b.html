@@ -17,6 +17,7 @@
     <link href="{% static 'admins/assets/css/style.css' %}" rel="stylesheet">
     <link href="{% static 'admins/assets/css/responsive.css' %}" rel="stylesheet">
 
+
 </head>
 
 <body class="sticky-header">
@@ -35,59 +36,61 @@
     <!--logo-->
 
     <!--导航栏内容-->
+
     <div class="left-side-inner">
         <!--nav-->
-        <!--{% block nav %}{% endblock %}-->
+        {% block nav %}{% endblock %}
+{#        <ul class="nav nav-pills nav-stacked custom-nav">#}
+{#        <li class="active">#}
+{#            <a href="{% url 'index' %}"><i class="icon-note"></i> <span>主页</span></a>#}
+{#        </li>#}
+{##}
+{#        <li class="menu-list" id="admin_manage1">#}
+{#            <a href="#"><i class="" id="admin_manage2"></i> <span>管理员管理</span></a>#}
+{#            <ul class="sub-menu-list">#}
+{#                {% if user_type == "Hospital" %}#}
+{#                <li class="" id="admin_list">#}
+{#                    <a href="{% url 'listadmin' %}"> 管理员列表</a>#}
+{#                </li>#}
+{#                <li class="" id="add_admin">#}
+{#                    <a href="{% url 'addadmin' %}"> 添加管理员</a>#}
+{#                </li>#}
+{#                {% endif %}#}
+{#                <li class="" id="edit_admin">#}
+{#                    <a href="{% url 'edit_admin' %}"> 编辑信息</a>#}
+{#                </li>#}
+{#            </ul>#}
+{#        </li>#}
+{##}
+{#        <li class="menu-list" id="doctor_manage">#}
+{#            <a href="{% url 'index' %}"><i class="icon-home" ></i> <span>用户管理</span></a>#}
+{#            <ul class="sub-menu-list">#}
+{#                <li class="" id="doctor_list">#}
+{#                    <a href="{% url 'listdoctor' %}"> 医生列表 </a>#}
+{#                </li>#}
+{#                <li class="" id="add_doctor">#}
+{#                    <a href="{% url 'adddoctor' %}"> 添加医生 </a>#}
+{#                </li>#}
+{#            </ul>#}
+{#        </li>#}
+{##}
+{#        <li class="menu-list" id="ecg_manage">#}
+{#            <a href="#"><i class="icon-layers" ></i> <span>心电图管理</span></a>#}
+{#            <ul class="sub-menu-list">#}
+{#                <li class="" id="ecg_tb">#}
+{#                    <a href="{% url 'listecg_table' %}"> 列表查看模式</a>#}
+{#                </li>#}
+{#                <li class="" id="ecg_img">#}
+{#                    <a href="{% url 'listecg_img' %}"> 图片查看模式</a>#}
+{#                </li>#}
+{#            </ul>#}
+{#        </li>#}
+{#        <li class="" id="recycle">#}
+{#            <a href="{% url 'recycle' %}"><i class="icon-note"></i> <span>心电图回收站</span></a>#}
+{#        </li>#}
+{##}
+{#    </ul>#}
         <!--nav End-->
-        <ul class="nav nav-pills nav-stacked custom-nav">
-            <li>
-                <a href="{% url 'index' %}"><i class="icon-note"></i> <span>主页</span></a>
-            </li>
-
-            <li class="menu-list  nav-active">
-                <a href="#"><i class="icon-envelope-open"></i> <span>管理员管理</span></a>
-                <ul class="sub-menu-list">
-                    <li class="active">
-                        <a href="{% url 'listadmin' %}"> 管理员列表</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'addadmin' %}"> 添加管理员</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'edit_admin' %}"> 编辑信息</a>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="menu-list">
-                <a href="{% url 'index' %}"><i class="icon-home"></i> <span>用户管理</span></a>
-                <ul class="sub-menu-list">
-                    <li>
-                        <a href="{% url 'listdoctor' %}"> 医生列表 </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'adddoctor' %}"> 添加医生 </a>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="menu-list">
-                <a href="#"><i class="icon-layers"></i> <span>心电图管理</span></a>
-                <ul class="sub-menu-list">
-                    <li>
-                        <a href="{% url 'listecg_table' %}"> 列表查看模式</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'listecg_img' %}"> 图片查看模式</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="{% url 'recycle' %}"><i class="icon-note"></i> <span>心电图回收站</span></a>
-            </li>
-
-        </ul>
-
     </div>
 </div>
 <!--导航条End-->
@@ -100,10 +103,6 @@
 
         <a class="toggle-btn"><i class="fa fa-bars"></i></a>
 
-        <!--<form class="searchform">
-            <input type="text" class="form-control" name="keyword" placeholder="搜索......"/>
-        </form>
-        -->
         <h3 style="display: inline-block;margin-top: 11px;">{{ hospital }}</h3>  <!--医院名-->
 
         <!--右侧菜单 -->

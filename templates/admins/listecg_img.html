@@ -160,9 +160,13 @@
             background-color: #fff
         }
     </style>
+    <script>
+        $('#ecg_manage').addClass('nav-active');
+        $('#ecg_img').addClass('active');
+    </script>
 {% endblock %}
 
-{#左侧导航条#}
+左侧导航条
 
 {% block nav %}
     <ul class="nav nav-pills nav-stacked custom-nav">
@@ -173,29 +177,28 @@
         <li class="menu-list">
             <a href="#"><i class="icon-envelope-open"></i> <span>管理员管理</span></a>
             <ul class="sub-menu-list">
+                {% if user_type == "Hospital" %}
                 <li>
                     <a href="{% url 'listadmin' %}"> 管理员列表</a>
                 </li>
                 <li>
                     <a href="{% url 'addadmin' %}"> 添加管理员</a>
                 </li>
+                {% endif %}
                 <li>
-                    <a href="{% url 'del_admin' %}"> 删除管理员</a>
+                    <a href="{% url 'modify' %}"> 编辑信息</a>
                 </li>
             </ul>
         </li>
 
         <li class="menu-list">
-            <a href="{% url 'index' %}"><i class="icon-home"></i> <span>用户管理</span></a>
+            <a href="{% url 'index' %}"><i class="icon-home"></i> <span>医生管理</span></a>
             <ul class="sub-menu-list">
                 <li>
                     <a href="{% url 'listdoctor' %}"> 医生列表 </a>
                 </li>
                 <li>
                     <a href="{% url 'adddoctor' %}"> 添加医生 </a>
-                </li>
-                <li>
-                    <a href="{% url 'del_doctor' %}"> 删除医生 </a>
                 </li>
             </ul>
         </li>

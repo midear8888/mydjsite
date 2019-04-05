@@ -22,6 +22,7 @@ def admin_auth(func):
     def inner(request, *args, **kwargs):
         v = request.COOKIES.get("status")
         hospt_id = hospital_id(request)
+        INFO["user_type"] = request.COOKIES.get("user_type")
         try:
             hospital = Hospital.objects.filter(id=hospt_id).first().h_name  # 医院名
             INFO['hospital'] = hospital
@@ -47,13 +48,62 @@ def all_doctor(request):
     return obj
 
 
+def edit_admin_handle(request):
+    """编辑管理员信息"""
+    if request.COOKIES.get("user_type") is not "Hospital":
+        # 如果该登录用户不是医院，那么就没有修改权限
+        return HttpResponse(json.dumps({"status": False, "results": "没有修改权限"}))
+    username = request.POST.get("username")  # 这个username是要编辑的那个人的用户名
+    name = request.POST.get("name")
+    phone = request.POST.get("phone")
+    password = request.POST.get("pwd")
+    email = request.POST.get("email")
+    details = request.POST.get("details")
+    data = {}
+    if name:
+        data["name"] = name  # 姓名
+    if phone:
+        data["username"] = phone  # 修改用户名
+    if password:
+        data["password"] = password  # 修改密码
+    if email:
+        data["email"] = email  # 修改邮箱
+    if details:
+        data["details"] = details
+    print(data)
+    try:
+        if username:
+            HospitalAdmin.objects.filter(username=username).update(**data)  # 修改信息
+            results = {
+                "status": True,
+                "result": None,
+                "user_type": request.COOKIES.get("user_type")
+            }
+        else:
+            print("未找到用户名：", username)
+            results = {
+                "status": False,
+                "results": "当前用户的用户名未找到",
+                "user_type": request.COOKIES.get("user_type")
+            }
+    except Exception as er:
+        print("编辑管理员信息失败：", er)
+        results = {
+            "status": False,
+            "results": "服务器响应失败",
+            "user_type": request.COOKIES.get("user_type")
+        }
+    return HttpResponse(json.dumps(results))
+
+
 def list_admin_handle(request):
     """获取管理列表的post处理函数, 只能是后台人员能调用"""
-    user_info = get_truename(request)
-    INFO["truename"] = user_info.get("truename")  # 将用户真名信息放入INFO，然后返回
+    info = get_truename(request)
+    INFO["truename"] = info.get("truename")  # 将用户真名信息放入INFO，然后返回
     try:
         admins = all_admins(request)
         INFO["admins"] = admins
+        INFO["user_type"] = request.COOKIES.get('user_type')
         return render(request, 'admins/listadmin.html', INFO)
     except Exception as er:
         print("获取管理员列表失败: ", er)
@@ -63,6 +113,8 @@ def list_admin_handle(request):
 def add_admin_handle(request):
     user_info = get_truename(request)
     INFO["truename"] = user_info.get("truename")  # 将用户真名信息放入INFO，然后返回
+    INFO["hospital"] = user_info.get("hospital")  # 将医院名放入INFO，然后返回
+    INFO["user_type"] = request.COOKIES.get("user_type")
     hospt_id = hospital_id(request)
     username = request.POST.get("phone")  # 用户名，也就是手机号
     password = request.POST.get("password1")  # 密码，前端的name属性里就是password1
@@ -89,12 +141,12 @@ def add_admin_handle(request):
             }
             HospitalAdmin.objects.create(**info)  # 增加管理员
             admins = all_admins(request)
-            INFO["status"] = 1
+            INFO["status"] = True
             INFO["admins"] = admins
             return render(request, 'admins/listadmin.html', INFO)
         else:
             print("该用户已经存在")
-            INFO["status"] = 0  # 表示用户名被占用
+            INFO["status"] = False  # 表示用户名被占用
             INFO["add_error"] = "该用户已经存在"
             return render(request, 'admins/listadmin.html', INFO)
     except Exception as er:
@@ -106,8 +158,10 @@ def list_doctor_handle(request):
     """该医院的医生列表"""
     user_info = get_truename(request)
     INFO["truename"] = user_info.get("truename")  # 将用户真名信息放入INFO，然后返回
+    INFO["hospital"] = user_info.get("hospital")  # 将用户真名信息放入INFO，然后返回
     doctors = all_doctor(request)
     INFO['doctors'] = doctors
+    INFO["user_type"] = request.COOKIES.get('user_type')
     return render(request, 'admins/listdoctor.html', INFO)
 
 
@@ -115,6 +169,7 @@ def add_doctor_handle(request):
     """增加医生"""
     user_info = get_truename(request)
     INFO["truename"] = user_info.get("truename")  # 将用户真名信息放入INFO，然后返回
+    INFO["user_type"] = request.COOKIES.get('user_type')
     username = request.POST.get("phone")
     password = request.POST.get("password1")
     name = request.POST.get("truename")
@@ -153,6 +208,160 @@ def add_doctor_handle(request):
         return render(request, 'admins/index.html', INFO)
 
 
+def edit_doctor_handle(request):
+    """编辑医生,医院和管理员都有权限"""
+    username = request.POST.get("username")  # 这个username是要编辑的那个人的用户名
+    name = request.POST.get("name")
+    phone = request.POST.get("phone")
+    password = request.POST.get("pwd")
+    email = request.POST.get("email")
+    details = request.POST.get("details")
+    data = {}
+    if name:
+        data["name"] = name  # 姓名
+    if phone:
+        data["username"] = phone  # 修改用户名
+    if password:
+        data["password"] = password  # 修改密码
+    if email:
+        data["email"] = email  # 修改邮箱
+    if details:
+        data["details"] = details
+    print(data)
+    try:
+        if username:
+            Doctor.objects.filter(username=username).update(**data)  # 修改信息
+            results = {
+                "status": True,
+                "result": None,
+                "user_type": request.COOKIES.get("user_type")
+            }
+        else:
+            print("未找到用户名：", username)
+            results = {
+                "status": False,
+                "results": "当前用户的用户名未找到",
+                "user_type": request.COOKIES.get("user_type")
+            }
+    except Exception as er:
+        print("编辑医生信息失败：", er)
+        results = {
+            "status": False,
+            "results": "服务器响应失败",
+            "user_type": request.COOKIES.get("user_type")
+        }
+    return HttpResponse(json.dumps(results))
+
+
+def modify_get_handle(request):
+    user_type = request.COOKIES.get("user_type")
+    username = request.COOKIES.get("username")
+    INFO["user_type"] = user_type
+    if user_type == "Hospital":
+        #
+        try:
+            hospital = Hospital.objects.filter(username=username).first().h_name  # 医院名
+            obj = Hospital.objects.filter(username=username).first()  # 获取该医院的对象
+            results = {
+                "hospital": hospital,
+                "user_type": user_type,
+                "results": obj
+            }
+        except Exception as er:
+            print("医生查看edit.html失败", er)
+            results = {
+                "user_type": user_type
+            }
+    else:
+        try:
+            obj = HospitalAdmin.objects.filter(username=username).first()  # 该管理员对象
+            hospt_id = obj.hid  #
+            hospital = Hospital.objects.filter(id=hospt_id).first().h_name  # 医院名
+            results = {
+                "hospital": hospital,
+                "user_type": user_type,
+                "results": obj
+            }
+        except Exception as er:
+            print("管理员查看edit.html失败", er)
+            results = {
+                "user_type": user_type
+            }
+    return render(request, 'admins/modify.html', results)
+
+
+def modify_post_handle(request):
+    """医院或者管理员修改自己的信息"""
+    user_type = request.COOKIES.get("user_type")
+    current_user = request.COOKIES.get("username")
+    if user_type == "Hospital":
+        print("医院提交修改资料表单")
+        name = request.POST.get("name")
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        address = request.POST.get("address")
+        form = {}
+        if name:
+            form["h_name"] = name
+        if username:
+            form["username"] = username
+        if password:
+            form["password"] = password
+        if address:
+            form["h_add"] = address
+        print("form>>", form)
+        try:
+            Hospital.objects.filter(username=current_user).update(**form)
+            results = {
+                "status": True,
+                "results": "资料修改成功"
+            }
+        except Exception as er:
+            print(er)
+            results = {
+                "status": False,
+                "results": "资料修改失败"
+            }
+        return redirect('modify')
+        # return render(request, 'admins/modify.html', results)
+    if user_type == "Admin":
+        print("管理员提交修改资料表单")
+        name = request.POST.get('name')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        email = request.POST.get('email')
+        age = request.POST.get('age')
+        details = request.POST.get('details')
+        form = {}
+        if name:
+            form["name"] = name
+        if username:
+            form["username"] = username
+        if password:
+            form["password"] = password
+        if email:
+            form["email"] = email
+        if age:
+            form["age"] = age
+        if details:
+            form["details"] = details
+        print("form>>", form)
+        try:
+            HospitalAdmin.objects.filter(username=current_user).update(**form)
+            results = {
+                "status": True,
+                "results": "资料修改成功"
+            }
+        except Exception as er:
+            print("管理员修改信息失败", er)
+            results = {
+                "status": False,
+                "results": "资料修改失败"
+            }
+        # return render(request, 'admins/modify.html', results)
+        return HttpResponse(json.dumps(results))
+
+
 def ecg_img_handle(request):
     """图示展示医院图片"""
     user_info = get_truename(request)
@@ -165,7 +374,8 @@ def ecg_img_handle(request):
         "results": results,  # 图片的对象列表
         "truename": truename,
         "page_range": page_range,
-        "hospital": Hospital.objects.filter(id=hospt_id).first().h_name  # 医院名
+        "hospital": Hospital.objects.filter(id=hospt_id).first().h_name,  # 医院名
+        "user_type": request.COOKIES.get("user_type")
     }
     return render(request, 'admins/listecg_img.html', data)
 
@@ -174,6 +384,7 @@ def ecg_tb_handle(request):
     """get请求触发的操作，列表展示医院图库"""
     user_info = get_truename(request)
     INFO["truename"] = user_info.get("truename")  # 将用户真名信息放入INFO，然后返回
+    INFO["user_type"] = request.COOKIES.get("user_type")
     hospt_id = hospital_id(request)
     ecg = HospitalFile.objects.filter(hid=hospt_id, confirm_del=0)  # 以医院的id去查找与之有关的所有图片
     data = []
@@ -197,7 +408,8 @@ def ecg_tb_handle(request):
     return render(request, 'admins/listecg_table.html', INFO)
 
 
-def img_tb_base(pic_obj, command, pic_number):
+def img_tb_base(request, pic_obj, command, pic_number):
+    user_type = request.COOKIES.get('user_type')
     if command == "delete":
         try:
             print("用户要删除")
@@ -207,10 +419,11 @@ def img_tb_base(pic_obj, command, pic_number):
             except Exception as er:
                 # 不知道为什么，这一步老是会被连续请求两次，导致第二次删除时，文件已经不存在了，所以索性用异常处理来忽略
                 print("删除图片出错：", er)
-            return HttpResponse(json.dumps({"status": True, "result": "成功删除了图片"}))
+            user_type = request.COOKIES.get('user_type')
+            return HttpResponse(json.dumps({"status": True, "result": "成功删除了图片", "user_type": user_type}))
         except Exception as err:
             print("请求删除失败：", err)
-            return HttpResponse(json.dumps({"status": False, "result": "删除失败"}))
+            return HttpResponse(json.dumps({"status": False, "result": "删除失败", "user_type": user_type}))
     if command == "show":
         try:
             print("用户要查看")
@@ -223,12 +436,12 @@ def img_tb_base(pic_obj, command, pic_number):
                 "pic_path": pic_path,
                 "details": details
             }
-            return HttpResponse(json.dumps({"status": True, "result": data}))
+            return HttpResponse(json.dumps({"status": True, "result": data, "user_type": user_type}))
         except Exception as er:
             print("用户请求查看图片详情失败: ", er)
-            return HttpResponse(json.dumps({"status": False, "result": "未找到相关的信息"}))
+            return HttpResponse(json.dumps({"status": False, "result": "未找到相关的信息", "user_type": user_type}))
     print("出现未知错误, 用户既不是要显示图片，也不是要删除图片")
-    return HttpResponse(json.dumps({"status": False, "result": None}))  # 可能是程序出错，导致接收到的命令既不是delete，也不是show。
+    return HttpResponse(json.dumps({"status": False, "result": None, "user_type": user_type}))  # 可能是程序出错，导致接收到的命令既不是delete，也不是show。
 
 
 def img_tb_post_handle(request):
@@ -237,7 +450,7 @@ def img_tb_post_handle(request):
     command = request.POST.get("command")  # 根据这个结果来判断是要显示还是删除图片
     print("command, pic_number: ", command, pic_number)
     pic_obj = HospitalFile.objects.filter(number=pic_number).first()
-    response = img_tb_base(pic_obj, command, pic_number)
+    response = img_tb_base(request, pic_obj, command, pic_number)
     return response
 
 
@@ -267,6 +480,7 @@ def del_doctor(request):
 
 def get_recycle_info(request):
     """get请求回收站，将回收站的信息返回给用户"""
+    INFO["user_type"] = request.COOKIES.get('user_type')
     try:
         hospt_id = hospital_id(request)
         obj_list = HospitalFile.objects.filter(hid=hospt_id, confirm_del=1)  # 找到该医院在回收站中的图片
@@ -285,13 +499,14 @@ def get_recycle_info(request):
         return render(request, 'admins/recycle.html', INFO)
     except Exception as er:
         print("请求回收站失败: ", er)
-        return render(request, 'admins/index.html')
+        return render(request, 'admins/index.html', INFO)
 
 
 def recycle_handle(request):
     """处理回收站的信息（恢复还是删除）"""
     response = request.POST.get("handle")  # 判断用户是要删除还是恢复
     pic_number = request.POST.get("pic_number")  # 因为只有后台有回收站功能，所以，回收的都在HospitalFile里
+    INFO['user_type'] = request.COOKIES.get("user_type")
     if response == "delete":
         print("用户要删除文件")
         try:

@@ -8,6 +8,7 @@ urlpatterns = [
     path('index/', views.Index.as_view(), name="index"),
     path('addadmin/', views.AddAdmin.as_view(), name="addadmin"),
     path('adddoctor/', views.AddDoctor.as_view(), name="adddoctor"),
+    path('modify/', views.Modify.as_view(), name="modify"),
     path('edit_admin/', views.EditAdmin.as_view(), name="edit_admin"),
     path('edit_doctor/', views.EditDoctor.as_view(), name="edit_doctor"),
     path('listadmin/', views.ListAdmin.as_view(), name="listadmin"),

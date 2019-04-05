@@ -10,8 +10,7 @@ from django.urls import reverse
 class Login(View):
 
     def get(self, request):
-        user_info = get_truename(request)
-        return render(request, 'commons/login.html', user_info)
+        return render(request, 'commons/login.html', INFO)
 
     def post(self, request):
         response = login_handle(request)

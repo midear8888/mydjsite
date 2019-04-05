@@ -1,4 +1,4 @@
-from django.shortcuts import HttpResponse, render_to_response
+from django.shortcuts import HttpResponse, render_to_response, redirect
 from django.core.mail import send_mail
 from mydjsite.settings import EMAIL_FROM
 from mydjsite.public_helper import *
@@ -30,6 +30,28 @@ def user_auth(func):
             return func(request, *args, **kwargs)
         return render(request, 'commons/login.html')
     return inner
+
+
+def get_truename(request):
+    """得到普通用户的真实姓名"""
+    username = request.COOKIES.get("username")
+    status = request.COOKIES.get("status")
+    true_name = "Personal"
+    try:
+        if status == "2":
+            # 医生
+            obj = Doctor.objects.filter(username=username).first()
+            true_name = obj.name  # 真实姓名
+        if status == "3":
+            # 患者
+            obj = Patient.objects.filter(username=username).first()
+            true_name = obj.name  # 真实姓名
+        if true_name:
+            return true_name
+        return true_name
+    except Exception as er:
+        print("获取用户真名失败：", er)
+        return true_name
 
 
 def gallery_handle(request):
@@ -143,10 +165,10 @@ def history_base(pic_obj, command, pic_number, status):
             if status == "3":
                 PatientFile.objects.filter(number=pic_number).delete()
                 print("删除了数据库中相应的内容")
-            return HttpResponse(json.dumps({"status": 1, "result": "成功删除了图片"}))
+            return HttpResponse(json.dumps({"status": True, "result": "成功删除了图片"}))
         except Exception as err:
             print("请求删除失败：", err)
-            return HttpResponse(json.dumps({"status": 0, "result": "删除失败"}))
+            return HttpResponse(json.dumps({"status": False, "result": "删除失败"}))
     if command == "show":
         try:
             print("用户要查看")
@@ -159,11 +181,11 @@ def history_base(pic_obj, command, pic_number, status):
                 "pic_path": pic_path,
                 "details": details
             }
-            return HttpResponse(json.dumps({"status": 1, "result": data}))
+            return HttpResponse(json.dumps({"status": True, "result": data}))
         except Exception as er:
             print("用户请求查看图片详情失败: ", er)
-            return HttpResponse(json.dumps({"status": 0, "result": "未找到相关的信息"}))
-    return HttpResponse(json.dumps({"status": 0, "result": None}))  # 可能是程序出错，导致接收到的命令既不是delete，也不是show。
+            return HttpResponse(json.dumps({"status": False, "result": "未找到相关的信息"}))
+    return HttpResponse(json.dumps({"status": False, "result": None}))  # 可能是程序出错，导致接收到的命令既不是delete，也不是show。
 
 
 def history_post_handle(request):

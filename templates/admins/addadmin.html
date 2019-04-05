@@ -4,10 +4,15 @@
 {% block title %}添加管理员{% endblock %}
 
 {% block css %}
-  <link href="{% static 'admins/assets/css/style.css' %}" rel="stylesheet"/>
+    <link href="{% static 'admins/assets/css/style.css' %}" rel="stylesheet"/>
+    <script>
+        $('#admin_manage2').addClass('icon-envelope-open');
+        $('#admin_manage1').addClass('nav-active');
+        $('#add_doctor').addClass('active');
+    </script>
 {% endblock %}
 
-{#左侧导航条#}
+左侧导航条
 
 {% block nav %}
     <ul class="nav nav-pills nav-stacked custom-nav">
@@ -18,17 +23,22 @@
         <li class="menu-list nav-active">
             <a href="#"><i class="icon-envelope-open"></i> <span>管理员管理</span></a>
             <ul class="sub-menu-list">
+                {% if user_type == "Hospital" %}
                 <li>
                     <a href="{% url 'listadmin' %}"> 管理员列表</a>
                 </li>
                 <li class="active">
                     <a href="{% url 'addadmin' %}"> 添加管理员</a>
                 </li>
+                {% endif %}
+                <li>
+                    <a href="{% url 'modify' %}">编辑信息</a>
+                </li>
             </ul>
         </li>
 
         <li class="menu-list">
-            <a href="#"><i class="icon-home"></i> <span>用户管理</span></a>
+            <a href="#"><i class="icon-home"></i> <span>医生管理</span></a>
             <ul class="sub-menu-list">
                 <li>
                     <a href="{% url 'listdoctor' %}"> 医生列表 </a>
