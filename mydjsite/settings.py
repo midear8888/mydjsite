@@ -29,7 +29,7 @@ SECRET_KEY = '!3%_w-q&x%0i!+srk)vfyg+b@#chr4hsph$b^6zq)rf20b4)ve'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -80,6 +80,19 @@ WSGI_APPLICATION = 'mydjsite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+
+
+# 配置Session
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # 引擎（默认）
+SESSION_COOKIE_NAME = "sessionid"  # Session的cookie保存在浏览器上时的key，即：sessionid＝随机字符串（默认）
+SESSION_COOKIE_PATH = "/"  # Session的cookie保存的路径（默认）
+SESSION_COOKIE_DOMAIN = None  # Session的cookie保存的域名（默认）
+SESSION_COOKIE_SECURE = False  # 是否Https传输cookie（默认）
+SESSION_COOKIE_HTTPONLY = True  # 是否Session的cookie只支持http传输（默认）
+SESSION_COOKIE_AGE = 1209600  # Session的cookie失效日期（2周）（默认）
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # 是否关闭浏览器使得Session过期（默认）
+SESSION_SAVE_EVERY_REQUEST = False  # 是否每次请求都保存Session，默认修改之后才保存（默认）
+
 
 DATABASES = {
     'default': {
@@ -146,6 +159,7 @@ USE_TZ = False
 # 127.0.0.1/static/路径如：xxx.css
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'allstatic')  # 部署到服务器之后的静态文件路径
 # 与所有app都不挂钩的静态文件，与templates同级别
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
@@ -164,3 +178,6 @@ EMAIL_HOST_USER = '2925487981@qq.com'  # 你的 QQ 账号
 EMAIL_HOST_PASSWORD = '刚刚复制的授权码（不是你的 QQ 密码！！！）'
 EMAIL_USE_TLS = True  # 这里必须是 True，否则发送不成功
 EMAIL_FROM = '2925487981@qq.com'  # 你的 QQ 账号
+
+
+LOGIN_URL = "/login/"

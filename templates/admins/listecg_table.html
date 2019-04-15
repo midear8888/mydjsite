@@ -2,68 +2,12 @@
 
 {#标题#}
 {% block title %}查看心电图{% endblock %}
-
 {% block css %}
-    <script>
-        $('#ecg_manage').addClass('nav-active');
-        $('#ecg_tb').addClass('active');
-    </script>
-{% endblock %}
-
-左侧导航条
-
-{% block nav %}
-    <ul class="nav nav-pills nav-stacked custom-nav">
-        <li>
-            <a href="{% url 'index' %}"><i class="icon-note"></i> <span>主页</span></a>
-        </li>
-
-        <li class="menu-list">
-            <a href="#"><i class="icon-envelope-open"></i> <span>管理员管理</span></a>
-            <ul class="sub-menu-list">
-                {% if user_type == "Hospital" %}
-                <li>
-                    <a href="{% url 'listadmin' %}"> 管理员列表</a>
-                </li>
-                <li>
-                    <a href="{% url 'addadmin' %}"> 添加管理员</a>
-                </li>
-                {% endif %}
-                <li>
-                    <a href="{% url 'modify' %}"> 编辑信息</a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="menu-list">
-            <a href="{% url 'index' %}"><i class="icon-home"></i> <span>医生管理</span></a>
-            <ul class="sub-menu-list">
-                <li>
-                    <a href="{% url 'listdoctor' %}"> 医生列表 </a>
-                </li>
-                <li>
-                    <a href="{% url 'adddoctor' %}"> 添加医生 </a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="menu-list  nav-active">
-            <a href="#"><i class="icon-layers"></i> <span>心电图管理</span></a>
-            <ul class="sub-menu-list">
-                <li class="active">
-                    <a href="{% url 'listecg_table' %}"> 列表查看模式</a>
-                </li>
-                <li>
-                    <a href="{% url 'listecg_img' %}"> 图片查看模式</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a href="{% url 'recycle' %}"><i class="icon-note"></i> <span>回收站</span></a>
-        </li>
-
-    </ul>
-
+    <link href="{% static 'admins/assets/plugins/datatables/css/jquery.dataTables.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <link href="{% static 'admins/assets/plugins/datatables/css/jquery.dataTables-custom.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <link href="{% static 'admins/assets/plugins/sweetalert/sweetalert.css' %}" rel="stylesheet"/>
 {% endblock %}
 
 {#右侧定位标题#}
@@ -81,81 +25,79 @@
     <div class="row">
         <div class="col-md-12">
             <div class="white-box">
-                <h2 class="header-title">医院仓库</h2>
-                <div class="table-responsive">
-                    <a class="btn btn-primary" href="{% url 'addadmin' %}" style="margin:0 0 20px 0 ;">添加</a>
+                <h2 class="header-title">心电图列表——表格:</h2>
+                <div class="table-responsive" style="vertical-align:middle;">
                     <table id="example" class="display table">
                         <thead>
                         <tr>
                             <th>序号</th>
-                            <th>文件名</th>
-                            <th>编号</th>
+                            <th>图片编号</th>
                             <th>上传者</th>
-                            <th>上传者电话</th>
-                            <th>上传时间</th>
+                            <th>所在单位</th>
+                            <th>上传日期</th>
+                            <th>缩略图</th>
                             <th>操作</th>
                         </tr>
                         </thead>
 
                         <tbody>
-                        {% for ecg in ecg_list %}
+                        {% for ecg in ecg_list  %}
                         <tr id="img{{ forloop.counter }}">
                             <th>{{ forloop.counter }}</th>
-                            <th>{{ ecg.filename }}</th>
                             <th>{{ ecg.number }}</th>
-                            <th>{{ ecg.user }}</th>
-                            <th>{{ ecg.phone }}</th>
+                            <th>{{ ecg.name }}</th>
+                            <th>{{ ecg.position }}</th>
                             <th>{{ ecg.upload_time }}</th>
                             <th>
-                                <!--<a class="btn btn-primary" href="{{ ecg.upload_to }}">查看</a>-->
-                                <!--可用下方script里注释的ajax的方法，data里是字典型数据-->
-                            <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#myModal{{ forloop.counter }}"
-                                    onclick="ShowEcg('{{ forloop.counter }}')">查看</button>
-                            <div class="modal fade" id="myModal{{ forloop.counter }}">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <!-- 模态框底部 -->
-                                        <div class="modal-header">
-                                            <h4 class="modal-title text-center" id="user{{ forloop.counter }}">的心电图信息</h4>
-                                            <br /><button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        </div>
-                                        <!-- 模态框底部 -->
+                                <img src="{{ ecg.upload_to }}" class="img-thumbnail" alt="img" width="150">
+                            </th>
+                            <th>
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#modal{{ forloop.counter }}"
+                                        type="button">查看
+                                </button>
+                                <div id="modal{{ forloop.counter }}" class="modal fade" role="dialog">
+                                    <div class="modal-dialog modal-lg">
 
-                                        <div class="modal-body">
-                                            <img src="#" id="src{{ forloop.counter }}"/>
-                                            <p id="details{{ forloop.counter }}">图片详细描述</p>
-                                        </div>
+                                        <!-- Modal content-->
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal">&times;
+                                                </button>
+                                                <h4 class="modal-title">详情查看</h4>
+                                            </div>
+                                            <div class="modal-body">
 
-                                        <!-- 模态框底部 -->
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-info" data-dismiss="modal">关闭</button>
+                                                <img src="{{ ecg.upload_to }}" class="img-responsive" alt="img"
+                                                     width="100%">
+                                                <div class="white-box">
+                                                    <h2 class="header-title">描述</h2>
+                                                    <p>上传者：{{ ecg.name }}</p>
+                                                    <p>上传时间：{{ ecg.upload_time }}</p>
+                                                    <p>上传者单位：{{ ecg.position }}</p>
+                                                    {% if ecg.details %}
+                                                    <p>图片信息：{{ ecg.details }}</p>
+                                                    {% else %}
+                                                    <p>图片信息：无</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal">关闭
+                                                </button>
+                                            </div>
                                         </div>
 
                                     </div>
-                                  </div>
-                            </div>
-                                <button class="btn btn-primary" id="sa-delete" onclick="DelEcgImg('img{{ forloop.counter }}')">删除</button>
+                                </div>
+
+                                <button class="btn btn-primary" onclick="DelEcgImg('img{{ forloop.counter }}')" id="sa-delete1">删除</button>
+
                             </th>
+
                         </tr>
                         {% endfor %}
                         </tbody>
                     </table>
-                    {# 分页标签的HTML代码 #}
-                    <div class="pagination">
-                        <span class="step-links">
-                            {% if admins.has_previous %}
-                                <a href="?page={{ admins.previous_page_number }}">上一页</a>
-                            {% endif %}
-
-                            <span class="current">
-                               第 {{ admins.number }} / {{ admins.paginator.num_pages }} 页
-                            </span>
-
-                            {% if admins.has_next %}
-                                <a href="?page={{ admins.next_page_number }}">下一页</a>
-                            {% endif %}
-                        </span>
-                    </div>
                 </div>
             </div>
         </div>
@@ -167,6 +109,9 @@
     <script src="{% static 'admins/assets/pages/table-data.js' %}"></script>
     <script src="{% static 'admins/assets/plugins/sweetalert/sweet-alert.js' %}"></script>
     <script>
+        $('#ecg_manage').addClass('nav-active');
+        $('#ecg_tb').addClass('active');  //导航栏样式
+
         function DelEcgImg(a_id) {
             var tag = document.getElementById(a_id);
 
@@ -188,58 +133,23 @@
                         url: "{% url 'listecg_table' %}",
                         type: "POST",
                         data: {
-                            "pic_number": tag.children[2].textContent,
+                            "pic_number": tag.children[1].textContent,
                             "command": "delete",
                         },
-                        success: function(arg) {
+                        success: function (arg) {
                             arg = JSON.parse(arg);
-                            console.log("返回了："+arg);
-                            if (arg["status"]){
+                            console.log("返回了：" + arg);
+                            if (arg["status"]) {
                                 tag.remove(); // 删去该行数据
                             }
-                            else{
+                            else {
                                 alert("删除图片失败")
                             }
                         }
                     });
                     swal("删除", "你已成功删除", "success");
                 });
-            }
-        function ShowEcg(tag_id) {
-            var tag = document.getElementById("img"+tag_id);
-            //alert(tag.children[2].textContent);
-            $.ajax({
-                        url: "{% url 'listecg_table' %}",
-                        type: "POST",
-                        data: {
-                            "pic_number": tag.children[2].textContent,  //图片编号
-                            "command": "show",
-                        },
-                        success: function(arg) {
-                            console.log("返回了："+arg);
-                            arg = JSON.parse(arg);
-                            var img_user = document.getElementById("user"+tag_id);  //图片中患者的名字
-                            if (arg["status"]){
-                                //$('#href'+tag_id).attr('href', arg["result"]["pic_path"]);   // 修改属性值，图片地址，作为导出时提供下载链接
-                                $('#src'+tag_id).attr('src', arg["result"]["pic_path"]);     //图片地址,作为img的src属性，显示图片
-                                $('#details'+tag_id).text("图片详情: "+arg["result"]["details"]);     //图片详情
-
-                                console.log("user: "+arg["result"]["img_user"]);
-                                if (arg["result"]["img_user"]){
-                                    img_user.textContent = arg["result"]["img_user"]+"的心电图信息";
-                                }
-                                else {
-                                    img_user.textContent = "一位不愿透露姓名者的心电图信息";
-                                }
-
-                                console.log("图片路径："+arg["result"]["pic_path"]);
-                                console.log("图片描述："+arg["result"]["details"]);
-                            }
-                            else{
-                                $('#details'+tag_id).text("查看图片失败");     //图片详情
-                            }
-                        }
-                    });
         }
+
     </script>
 {% endblock %}

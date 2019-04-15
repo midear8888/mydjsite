@@ -46,7 +46,7 @@
                             <div class="col-md-9">
                                 <input class="form-control" type="text" id="username" name="username" placeholder="您的用户名" onclick="ShowError('show_error')">
                             </div>
-                            {% if status == "0" %}
+                            {% if not status %}
                             <p style="color: red;" id="show_error">{{ error }}</p>
                             {% endif %}
                         </div>

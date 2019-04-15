@@ -11,50 +11,6 @@
 
 {% endblock %}
 
-{% block nav %}
-    <li class="nav-item  mr-lg-3">
-        <a class="nav-link" href="{% url 'home' %}">Home
-            <span class="sr-only">(current)</span>
-        </a>
-    </li>
-    <li class="nav-item dropdown active mr-lg-3">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-           aria-haspopup="true" aria-expanded="false">
-            Data
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'history' %}">Historys</a>
-            <a class="dropdown-item" href="{% url 'gallery' %}">Gallery</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{% url 'home' %}">Analysis</a>
-        </div>
-    </li>
-    <li class="nav-item dropdown mr-lg-3">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-           aria-haspopup="true" aria-expanded="false">
-            Help
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'about'%}">About</a>
-            <a class="dropdown-item" href="{% url 'contact' %}">Contact</a>
-            <a class="dropdown-item" href="{% url 'service' %}">Service</a>
-        </div>
-    </li>
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-           aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-user"></i>&nbsp;&nbsp;&nbsp;{{ truename }}
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'service' %}">Center</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{% url 'logout' %}">
-                <i class="fas fa-power-off"></i>&nbsp;&nbsp;&nbsp;logout
-            </a>
-        </div>
-    </li>
-{% endblock %}
-
 {% block currentname %}upload{% endblock %}
 
 {% block content %}
@@ -114,18 +70,17 @@
                     <fieldset>
                         <h2 class="fs-title">确认数字化</h2>
                         <h3 class="fs-subtitle"></h3>
-                        <a href="#" id="img_href"><img src="#" class="img-thumbnail" id="img_src" width="100%"></a>
+                        <img src="#" class="img-thumbnail" id="img_src" width="100%">
                         <input type="button" name="previous" class="previous action-button" value="上一步"/>
                         <input type="button" name="next" class="process next action-button" value="下一步" id="process"/>
-
 
                     </fieldset>
                     <fieldset>
                         <h2 class="fs-title">结果</h2>
                         <h3 class="fs-subtitle"></h3>
-                        <a href="#" id="process_href"><img src="#" class="img-thumbnail" id="process_src" width="100%"></a>
+                        <img src="#" class="img-thumbnail" id="process_src" width="100%">
                         <input type="button" name="previous" class="previous action-button" value="上一步"/>
-                        <a href="{% url 'history' %}"><input type="button" name="submit" class="action-button" value="查看历史记录"/></a>
+                        <a href="{% url 'history' %}"><input type="button" name="submit" class="action-button" value="确认保存"/></a>
 
                     </fieldset>
                 </form>
@@ -137,6 +92,8 @@
 {% block js %}
 
     <script>
+        $('#Data').addClass('active');  //给当页的Data添加颜色
+
         //进度条jQuery time
         var current_fs, next_fs, previous_fs; //fieldsets
         var left, opacity, scale; //fieldset properties which we will animate
@@ -189,21 +146,23 @@
                 //alert("触发了操作，提交文件并存储原图，并显示在页面");
                 //第二步触发操作：提交文件并存储原图，并显示在第三步页面
                 var formdata=new FormData();
-                //formdata.append("user",$("#user").val());   {#不断的append添加键值对#}
                 formdata.append("avatar",$("#avatar")[0].files[0]);
                 $.ajax({
                     url:"{% url 'upload' %}",
                     type:"POST",
                     contentType:false, //加2个参数，只要有formdata就要有这两个参数。意思是不做编码了，对文件不做处理。
                     processData:false,
-                    data:formdata,   //把整个formdata对象放到data里边
-                    success: function (data) {
-                        data = JSON.parse(data);
-                        console.log(data);
-                        var tag1 = document.getElementById("img_href");
-                        var tag2 = document.getElementById("img_src");
-                        tag1.setAttribute("href", data["result"]);  //将src的值换成后台传过来的处理后的二值化图片的地址
-                        tag2.setAttribute("src", data["result"]);  //将src的值换成后台传过来的处理后的二值化图片的地址
+                    data:formdata,  //把整个formdata对象放到data里边
+                    success: function (arg) {
+                        arg = JSON.parse(arg);
+                        console.log(arg);
+                        if (arg['upload_status']){
+                            $('#img_src').attr('src', arg['result']);  //将src的值换成后台传过来的处理后的二值化图片的地址
+                        }
+                        else{
+                            alert(arg['upload_error']);  //显示错误信息
+                        }
+
                     }
                 })
             }
@@ -213,16 +172,13 @@
                 //alert("触发了操作，请求处理图片");
                 // 第三步触发操作：让后台处理这张图片，顺便要返回处理后的图片，并显示在第四步页面
 
-                var img_user = document.getElementById("username").value;
-                var img_details = document.getElementById("details").value;
+                var img_user = $('#username').val();
+                var img_details = $('#details').val();
                 console.log("用户名是："+img_user);
-
-                var tag = document.getElementById("img_href");
-                console.log("process");
-                console.log(tag.getAttribute('href'));
+                var pic_path = $('#img_src').attr('src'); //获取图片的路径，返回给服务器，让服务器知道要处理哪张图片
                 var data = {
                     "status": "1", //
-                    "img_path": tag.getAttribute('href'),  //原图的地址，这样可以直接将该原图地址传给图像处理的函数，方便处理
+                    "img_path": pic_path,   //原图的地址，这样可以直接将该原图地址传给图像处理的函数，方便处理
                     "img_user": img_user,                  //图片中患者的姓名
                     "img_details": img_details,            //图片描述
                 };
@@ -230,19 +186,19 @@
                     url:"{% url 'process' %}",
                     type:"POST",
                     data: data,   //
-                    success: function (data) {
+                    success: function (arg) {
                         var tag1 = document.getElementById("process_href");
                         var tag2 = document.getElementById("process_src");
-                        data = JSON.parse(data);
-                        console.log(data);
-                        if (data["status"] = 1){
+                        arg = JSON.parse(arg);
+                        console.log(arg);
+                        if (arg["process_status"]){
                             console.log("成功处理了图片");
+                            $('#process_src').attr('src', arg['result']);
                         }
                         else{
-                            console.log("处理图片失败");
+                            //console.log("处理图片失败");
+                            alert(arg["process_error"]);
                         }
-                        tag1.setAttribute("href", data['result']);  //将src的值换成后台传过来的处理后的二值化图片的地址
-                        tag2.setAttribute("src", data['result']);  //将src的值换成后台传过来的处理后的二值化图片的地址
                     }
                 })
             }

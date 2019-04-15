@@ -7,68 +7,10 @@
     <link href="{% static 'admins/assets/plugins/morris-chart/morris.css' %}" rel="stylesheet">
     <link href="{% static 'admins/assets/plugins/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet"/>
     <!--End  Page Level  CSS -->
-    <script>
-        $('#').addClass('icon-envelope-open');
-        $('#').addClass('active');
-    </script>
 {% endblock %}
 
 
-左侧导航条
-{% block nav %}
-    <ul class="nav nav-pills nav-stacked custom-nav">
-        <li class="active">
-            <a href="{% url 'index' %}"><i class="icon-note"></i> <span>主页</span></a>
-        </li>
-
-        <li class="menu-list">
-            <a href="#"><i class="icon-envelope-open"></i> <span>管理员管理</span></a>
-            <ul class="sub-menu-list">
-                {% if user_type == "Hospital" %}
-                <li>
-                    <a href="{% url 'listadmin' %}"> 管理员列表</a>
-                </li>
-                <li id="no_show">
-                    <a href="{% url 'addadmin' %}"> 添加管理员</a>
-                </li>
-                {% endif %}
-                <li>
-                    <a href="{% url 'modify' %}"> 编辑信息</a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="menu-list">
-            <a href="{% url 'index' %}"><i class="icon-home"></i> <span>医生管理</span></a>
-            <ul class="sub-menu-list">
-                <li>
-                    <a href="{% url 'listdoctor' %}"> 医生列表 </a>
-                </li>
-                <li>
-                    <a href="{% url 'adddoctor' %}"> 添加医生 </a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="menu-list">
-            <a href="#"><i class="icon-layers"></i> <span>心电图管理</span></a>
-            <ul class="sub-menu-list">
-                <li>
-                    <a href="{% url 'listecg_table' %}"> 列表查看模式</a>
-                </li>
-                <li>
-                    <a href="{% url 'listecg_img' %}"> 图片查看模式</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a href="{% url 'recycle' %}"><i class="icon-note"></i> <span>心电图回收站</span></a>
-        </li>
-
-    </ul>
-
-{% endblock %}
-
+左侧导航
 
 
 {#右侧定位标题#}
@@ -111,20 +53,6 @@
     <script src="{% static 'admins/assets/plugins/jquery-sparkline/jquery.charts-sparkline.js' %}"></script>
     <script src="{% static 'admins/assets/pages/dashboard.js' %}"></script>
     <!--End Page Level Plugin-->
-    <script>
-        //读取cookies
-        function getCookie(name) {
-            var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
-
-            if (arr = document.cookie.match(reg))
-
-                return unescape(arr[2]);
-            else
-                return null;
-        }
-
-    </script>
-
     {% if messages %}
         <script>
             {% for msg in messages %}
@@ -134,3 +62,4 @@
     {% endif %}
 
 {% endblock %}
+

@@ -5,9 +5,10 @@ class Doctor(models.Model):
     # 医生
     hid = models.IntegerField(null=False)  # 医生所属医院的id
     username = models.CharField(max_length=50, null=False, unique=True)  # 手机号码, 作为用户名登录
-    password = models.CharField(max_length=50, null=False)  # 密码
+    password = models.CharField(max_length=100, null=False)  # 密码
     gender = models.CharField(max_length=10, null=False)  # 性别
     age = models.IntegerField(null=False)  # 年纪
+    position = models.CharField(default="", max_length=50)
     email = models.CharField(max_length=50, null=False)  # 邮箱
     name = models.CharField(max_length=50, null=False)  # 用户的真实姓名，允许为空
     details = models.TextField(null=True)  # 详细描述
@@ -20,7 +21,7 @@ class Patient(models.Model):
     # 普通用户/患者
     id = models.AutoField(primary_key=True)  # 主键、自增
     username = models.CharField(max_length=50, unique=True)  # 手机号,登录名
-    password = models.CharField(max_length=50)  # 密码
+    password = models.CharField(max_length=100)  # 密码
     gender = models.CharField(max_length=20, null=False)  # 性别
     email = models.CharField(max_length=50, default="null")  # 邮箱
     name = models.CharField(max_length=50, default="null")  # 真实姓名

@@ -22,7 +22,7 @@
         <li class="menu-list">
             <a href="#"><i class="icon-envelope-open"></i> <span>管理员管理</span></a>
             <ul class="sub-menu-list">
-                {% if user_type == "Hospital" %}
+                {% if user_type == "1" %}
                 <li>
                     <a href="{% url 'listadmin' %}"> 管理员列表</a>
                 </li>
@@ -92,6 +92,7 @@
                             <th>真实姓名</th>
                             <th>性别</th>
                             <th>年龄</th>
+                            <th>职位</th>
                             <th>电话</th>
                             <th>邮箱</th>
                             <th>操作</th>
@@ -109,6 +110,7 @@
                                 <th>女</th>
                             {% endif %}
                             <th>{{ doctor.age }}</th>
+                            <th>{{ doctor.position }}</th>
                             <th>{{ doctor.username }}</th>
                             <th>{{ doctor.email }}</th>
                             <th>
@@ -128,6 +130,9 @@
                                             <div class="modal-body">
                                                 <form action="{% url 'edit_admin' %}" method="post">
                                                 <div style="line-height: 28px;margin:0 auto;width:400px">
+                                                    <label style="display: none;">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
+                                                        <input type="text" name="number" id="number{{ forloop.counter }}" value="{{ doctor.id }}"></label>
+                                                    <!--该标签只是为了存取当前选中的管理员的id，以便返回返回到后台时可以用这个id找到该用户，进行资料的修改。但是该标签无法修改，也不能显示给用户看-->
                                                     <br>
                                                     <label>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：
                                                         <input type="text" name="name" id="name{{ forloop.counter }}" placeholder="{{ doctor.name }}"></label>
@@ -136,10 +141,13 @@
                                                         <input type="text" name="phone" id="phone{{ forloop.counter }}" placeholder="{{ doctor.username }}"></label>
                                                     <br>
                                                     <label>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码：
-                                                        <input type="password" name="pwd" id="pwd{{ forloop.counter }}" onmouseout = "mouseout('{{ forloop.counter }}')" placeholder="******"></label>
+                                                        <input type="password" name="pwd" id="pwd{{ forloop.counter }}" onmouseout = "mouseout('{{ forloop.counter }}')" placeholder=""></label>
                                                     <br>
                                                     <label class="" id="is_show{{ forloop.counter }}" style="display: none;">确认密码：
-                                                        <input type="password" name="pwd_again" id="pdw_again{{ forloop.counter }}" placeholder="******"><br></label>
+                                                        <input type="password" name="pwd_again" id="pdw_again{{ forloop.counter }}" placeholder=""><br></label>
+                                                    <label>职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位：
+                                                        <input type="text" name="position" id="position{{ forloop.counter }}" placeholder="{{ doctor.position }}"></label>
+                                                    <br>
                                                     <label>邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱：
                                                         <input type="email" name="email" id="email{{ forloop.counter }}" placeholder="{{ doctor.email }}"></label>
                                                     <br>
@@ -167,22 +175,6 @@
                         {% endfor %}
                         </tbody>
                     </table>
-                    {# 分页标签的HTML代码 #}
-                    <div class="pagination">
-                        <span class="step-links">
-                            {% if admins.has_previous %}
-                                <a href="?page={{ admins.previous_page_number }}">上一页</a>
-                            {% endif %}
-
-                            <span class="current">
-                               第 {{ admins.number }} / {{ admins.paginator.num_pages }} 页
-                            </span>
-
-                            {% if admins.has_next %}
-                                <a href="?page={{ admins.next_page_number }}">下一页</a>
-                            {% endif %}
-                        </span>
-                    </div>
                 </div>
             </div>
         </div>
@@ -194,6 +186,9 @@
     <script src="{% static 'admins/assets/pages/table-data.js' %}"></script>
     <script src="{% static 'admins/assets/plugins/sweetalert/sweet-alert.js' %}"></script>
     <script>
+        $('#doctor_manage').addClass('nav-active');
+        $('#doctor_list').addClass('active');  //导航栏样式
+
         function mouseout(pid){
             if ($('#pwd'+pid).val()){
                 //如果用户在密码框内输入了内容，那么就显示确认密码框
@@ -207,8 +202,7 @@
         }
 
         function Modify(a_id) {
-            var tag = document.getElementById(a_id);
-            var username = tag.children[4].textContent;
+            //后台人员修改医生信息
 
             swal({
                     title: "你确定修改吗？",
@@ -222,29 +216,28 @@
                     showLoaderOnConfirm: true // 显示删除的状态
                 },
                 function () {
-                    // 向后端发送删除的请求
+                    // 向后端发送修改的请求
                     $.ajax({
                         url: "{% url 'edit_doctor' %}",
                         async: false,  // 同步：也就是只有后端返回了数据时才显示后面的内容
                         type: "POST",
                         data: {
-                            "username": username,  //用户名，后台修改谁的信息，就是依赖这个值去确定的。
+                            "id": $("#number"+a_id).val(),  //用户id，后台修改谁的信息，就是依赖这个值去确定的。
                             "name": $('#name'+a_id).val(),
                             "phone": $('#phone'+a_id).val(),
                             "pwd": $('#pwd'+a_id).val(),
+                            "position": $('#position'+a_id).val(),
                             "email": $('#email'+a_id).val(),
                             "details": $('#details'+a_id).val(),
                         },
                         success: function(arg) {
                             arg = JSON.parse(arg);
                             if (arg["status"]){
-                                //alert("修改成功");
-                                swal("修改", "你已成功修改", "success");
+                                swal("修改成功", "你已成功修改", "success");
                                 window.location.href = '{% url 'listdoctor' %}' //修改成功后跳转到该页
                             }
                             else {
-                                swal("修改", "修改失败", "fails");
-                                //alert("删除医生失败")
+                                swal("修改失败", arg["edit_error"], "fails");  //显示错误信息
                             }
                         }
                     });
@@ -254,8 +247,6 @@
 
         function deladmin(a_id) {
             var tag = document.getElementById(a_id);
-            var username = tag.children[4].textContent;
-
             swal({
                     title: "你确定删除吗？",
                     text: "删除不能恢复哦",
@@ -274,19 +265,23 @@
                         url: "{% url 'del_doctor' %}",
                         type: "POST",
                         data: {
-                            "username": username,
+                            "id": $('#number'+a_id).val(),
+                        },
+                        fails: function(arg) {
+                            arg = JSON.parse(arg);
+                            swal("删除失败", arg["del_error"], "fails");
                         },
                         success: function(arg) {
                             arg = JSON.parse(arg);
-                            if (arg["status"] == 1){
+                            if (arg["status"]){
                                 tag.remove(); // 删去该行数据
+                                swal("删除成功", "你已成功删除", "success");
                             }
                             else {
-                                alert("删除医生失败");
+                                swal("删除失败", arg["del_error"], "fails"); // 显示错误信息
                             }
                         }
                     });
-                    swal("删除", "你已成功删除", "success");
                 });
             }
     </script>

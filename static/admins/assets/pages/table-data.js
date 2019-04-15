@@ -34,7 +34,7 @@ $(document).ready(function() {
         response: function(settings) {
             this.responseText = [ 
              {value: 0, text: 'Guest'},
-             {value: 1, text: 'Service'},
+             {value: 1, text: 'upload'},
              {value: 2, text: 'Customer'},
              {value: 3, text: 'Operator'},
              {value: 4, text: 'Support'},

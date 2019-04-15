@@ -4,47 +4,12 @@
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'users/css/smoothbox.css' %}" type='text/css' media="all" />
-{% endblock %}
-
-{% block nav %}
-    <li class="nav-item  mr-lg-3">
-        <a class="nav-link" href="{% url 'home' %}">Home
-            <span class="sr-only">(current)</span>
-        </a>
-    </li>
-    <li class="nav-item dropdown active mr-lg-3">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									Data
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'history' %}">Historys</a>
-            <a class="dropdown-item" href="{% url 'gallery' %}">Gallery</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{% url 'home' %}">Analysis</a>
-        </div>
-    </li>
-    <li class="nav-item dropdown mr-lg-3">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									Help
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'about' %}">About</a>
-            <a class="dropdown-item" href="{% url 'contact' %}">Contact</a>
-            <a class="dropdown-item" href="{% url 'service' %}">Service</a>
-        </div>
-    </li>
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-user"></i>&nbsp;&nbsp;&nbsp;{{ truename }}
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'user_center' %}">Center</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{% url 'logout' %}">
-                <i class="fas fa-power-off"></i>&nbsp;&nbsp;&nbsp;logout
-            </a>
-        </div>
-    </li>
+    <script>
+        {% if results %}
+        alert("{{ results }}");
+        //如果是get请求，那么这个地方不会执行；如果是提交之后，那么就要显示修改的情况。所以get请求不要返回results这个字典
+        {% endif %}
+    </script>
 {% endblock %}
 
 {% block currentname %}center{% endblock %}
@@ -63,10 +28,14 @@
             <div class="row agileits_w3layouts_gallery_grid">
                 <div class="col-sm-4 mt-">
                     <div class="card card-light col-12" >
-                    <img class="card-img-top" src="/media/result/338906827/" alt="Card image" style="width:100%;margin-top:15px">
+                    <img class="card-img-top" src="/media/result/2034442699.jfif/" alt="Card image" style="width:100%;margin-top:15px">
                     <div class="card-body">
-                        <h4 class="card-title">You You </h4>
-                        <p class="card-text">Some example text some example text.Some example text some example text.Some example text some example text. </p>
+                        <h4 class="card-title">{{ data.name }}</h4>
+                        {% if data.details %}
+                            <p class="card-text">座右铭：{{ data.details }} </p>
+                        {% else %}
+                            <p class="card-text">没有更多的信息了</p>
+                        {% endif %}
                     </div>
                     </div>
                 </div>
@@ -89,7 +58,6 @@
                                         其他
                                     </a>
                                 </li>
-
                             </ul>
                         </section>
                         <section class="cards-container">
@@ -97,23 +65,23 @@
                                 <h3>个人信息</h3>
                                 <br />
                                 <p>
-                                    <span>姓名：{{ data.truename }}</span>
+                                    <span>姓名：{{ data.name }}</span>
                                 </p>
                                 <br />
                                 <p>
-                                    {% if "f" in data.gender %}
-                                    <span>性别：女</span>
+                                    {% if data.gender == "female" %}
+                                        <span>性别：女</span>
                                     {% else %}
-                                    <span>性别：男</span>
+                                        <span>性别：男</span>
                                     {% endif %}
                                 </p>
                                 <br />
                                 <p>
-                                    <span>年龄：{{ data.age }}</span>
+                                    <span>年龄：{{ data.age }}岁</span>
                                 </p>
                                 <br />
                                 <p>
-                                    <span>电话号码：{{ data.phone }}</span>
+                                    <span>电话号码：{{ data.username }}</span>
                                 </p>
                                 <br />
                                 <p>
@@ -135,13 +103,13 @@
                                 <form action="{% url 'user_center' %}" method="post">
                                     <br>
                                     <div class="form-group">
-                                        <input type="text" name="name" class="form-control" id="name" placeholder="姓名：{{ data.truename }}">
+                                        <input type="text" name="name" class="form-control" id="name" placeholder="姓名：{{ data.name }}">
                                     </div>
                                     <div class="form-group">
                                         <input type="text" name="age" class="form-control" id="age" placeholder="年龄：{{ data.age }}岁">
                                     </div>
                                     <div class="form-group">
-                                        <input type="text" name="phone" class="form-control" id="phone" placeholder="手机号：{{ data.phone }}">
+                                        <input type="text" name="phone" class="form-control" id="phone" placeholder="手机号：{{ data.username }}">
                                     </div>
                                     <div class="form-group">
                                         <input type="password" name="password" class="form-control" id="pdw" placeholder="新密码：******">
@@ -174,6 +142,8 @@
 
 {% block js %}
     <script>
+        $('#user_center').addClass('active');  //给当页的Data添加颜色
+
         $(document).ready(function() {
             var oldId = null;
 
@@ -215,8 +185,8 @@
 
         });
 
-        /* 有这个js的存在，切换成修改资料的效果就出不来，所以就直接用form提交了
-        function Modify() {
+        //有这个js的存在，切换成修改资料的效果就出不来，所以就直接用form提交了
+        /*function Modify() {
             swal({
                     title: "你确定修改吗？",
                     type: "warning",
@@ -241,18 +211,22 @@
                             "email": $(#email).val(),
                             "details": $(#details).val()
                         },
+                        fails: function(arg) {
+                            alert('修改失败');
+                        },
                         success: function(arg) {
                             arg = JSON.parse(arg);
                             console.log("返回了："+arg);
-                            if (arg["status"] == 1){
+                            if (arg["status"]){
+                                //swal("成功", "你已成功修改个人资料", "success");
                                 alert("成功修改");
+                                //window.location.href = '{% url 'user_center' %}';
                             }
                             else{
                                 alert("修改失败");
                             }
                         }
                     });
-                    swal("成功", "你已成功修改个人资料", "success");
                 });
         }*/
     </script>

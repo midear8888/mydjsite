@@ -2,32 +2,8 @@
 
 {% block title %}About{%  endblock %}
 
-{% block nav %}
-    <li class="nav-item  mr-lg-3">
-        <a class="nav-link" href="{% url 'home' %}">Home
-            <span class="sr-only">(current)</span>
-        </a>
-    </li>
-    <li class="nav-item active mr-lg-3">
-        <a class="nav-link" href="about.html">About</a>
-    </li>
-    <li class="nav-item dropdown mr-lg-3">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Data</a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-             <a class="dropdown-item" href="{% url 'history' %}">Historys</a>
-             <a class="dropdown-item" href="{% url 'gallery' %}">Gallery</a>
-             <div class="dropdown-divider"></div>
-             <a class="dropdown-item" href="{% url 'home' %}">Analysis</a>
-        </div>
-    </li>
-    <li class="nav-item mr-lg-3">
-        <a class="nav-link" href="{% url 'contact' %}">Contact</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'service' %}">Service</a>
-    </li>
-{% endblock %}
 {% block currentname %}About us{% endblock %}
+
 {% block content %}
 <!-- about -->
 	<section class="welcome py-5">
@@ -169,6 +145,12 @@
 		</div>
 	</section>
 	<!-- //about-team -->
+{% endblock %}
+
+{% block js %}
+    <script>
+        $('#Help').addClass('active');  //给当页的Data添加颜色
+    </script>
 {% endblock %}
 
 

@@ -12,62 +12,61 @@
         $('#admin_manage').addClass('icon-envelope-open');
         $('#admin_list').addClass('active');
     </script>
+    <style>
+			body {
+				background: url({% static 'admins/assets/images/bg2.jpg' %}) no-repeat 0px 0px;
+				background-size: cover;
+			}
+			/*.doctortab{
+				display: none;
+			}*/
+            .mymark {
+                display: none;
+                position: fixed;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                margin: auto;
+                z-index: 999;
+                height: 40px;
+                line-height: 0.88rem;
+                width: 200px;
+                text-align: center;
+                font-size: 16px;
+                line-height: 40px;
+                color: #fff;
+                background: rgb(248, 106, 94);
+                border-radius: 0.1rem;
+                box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.3);
+            }
+	</style>
+    <script>
+        {% if add_true %}
+            myalert('{{ add_success }}');  //添加管理员成功之后就会跳到这个页面，这儿是显示添加成功
+        {% endif %}
+        function myalert(str) {
+            var div = '<div class="mymark"></div>';
+            $('body').append(div);
+            $('.mymark').html(str);
+            $('.mymark').show();
+            setTimeout(function () {
+                $('.mymark').fadeTo(2800, 0.01, function () {//fade
+                    $(this).remove();
+                });
+            })
+        }
+
+        window.onload = function () {
+            {% if add_error %}
+                myalert('{{ add_error }}');
+            {% endif %}
+        };
+
+    </script>
+
 {% endblock %}
 左侧导航条
-{% block nav %}
-<ul class="nav nav-pills nav-stacked custom-nav">
-        <li>
-            <a href="{% url 'index' %}"><i class="icon-note"></i> <span>主页</span></a>
-        </li>
-
-        <li class="menu-list  nav-active">
-            <a href="#"><i class="icon-envelope-open"></i> <span>管理员管理</span></a>
-            <ul class="sub-menu-list">
-                {% if user_type == "Hospital" %}
-                <li class="active">
-                    <a href="{% url 'listadmin' %}"> 管理员列表</a>
-                </li>
-                <li>
-                    <a href="{% url 'addadmin' %}"> 添加管理员</a>
-                </li>
-                {% endif %}
-                <li>
-                    <a href="{% url 'modify' %}"> 编辑信息</a>
-                </li>
-
-            </ul>
-        </li>
-
-        <li class="menu-list">
-            <a href="#"><i class="icon-home"></i> <span>医生管理</span></a>
-            <ul class="sub-menu-list">
-                <li>
-                    <a href="{% url 'listdoctor' %}"> 医生列表 </a>
-                </li>
-                <li>
-                    <a href="{% url 'adddoctor' %}"> 添加医生 </a>
-                </li>
-
-            </ul>
-        </li>
-
-        <li class="menu-list">
-            <a href="#"><i class="icon-layers"></i> <span>心电图管理</span></a>
-            <ul class="sub-menu-list">
-                <li>
-                    <a href="{% url 'listecg_table' %}"> 列表查看模式</a>
-                </li>
-                <li>
-                    <a href="{% url 'listecg_img' %}"> 图片查看模式</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a href="{% url 'recycle' %}"><i class="icon-note"></i> <span>回收站</span></a>
-        </li>
-
-    </ul>
-{% endblock %}
 
 {#右侧定位标题#}
 {% block contenttitle %}
@@ -113,7 +112,7 @@
                                 <th>{{ admin.username }}</th>
                                 <th>
                                     <!--编辑功能所在模态框开始-->
-                                    {% if user_type == "Hospital" %}  <!--只有医院才有权编辑-->
+                                    {% if user_type == "1" %}  <!--只有医院才有权编辑-->
                                         <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#myModal{{ forloop.counter }}">编辑</button>
                                     {% endif %}
 
@@ -130,20 +129,26 @@
                                                 <div class="modal-body">
                                                     <form action="{% url 'edit_admin' %}" method="post">
                                                     <div style="line-height: 28px;margin:0 auto;width:400px">
-                                                        <br>
+
+                                                        <label style="display: none;">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
+                                                            <input type="text" name="number" id="number{{ forloop.counter }}" value="{{ admin.id }}"></label>
+                                                        <br>  <!--该标签只是为了存取当前选中的管理员的id，以便返回返回到后台时可以用这个id找到该用户，进行资料的修改。但是该标签无法修改，也不能显示给用户看-->
                                                         <label>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：
-                                                            <input type="text" name="name" id="name{{ forloop.counter }}" placeholder="{{ admin.name }}"></label>
+                                                            <input type="text" name="name" id="name{{ forloop.counter }}" value="{{ admin.name }}"></label>
                                                         <br>
                                                         <label>电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：
-                                                            <input type="text" name="phone" id="phone{{ forloop.counter }}" placeholder="{{ admin.username }}"></label>
+                                                            <input type="text" name="phone" id="phone{{ forloop.counter }}" value="{{ admin.username }}"></label>
                                                         <br>
                                                         <label>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码：
-                                                            <input type="password" name="pwd" id="pwd{{ forloop.counter }}" onmouseout = "mouseout('{{ forloop.counter }}')" placeholder="******"></label>
+                                                            <input type="password" name="pwd" id="pwd{{ forloop.counter }}" onmouseout = "mouseout('{{ forloop.counter }}')" placeholder=""></label>
                                                         <br>
                                                         <label class="" id="is_show{{ forloop.counter }}" style="display: none;">确认密码：
-                                                            <input type="password" name="pwd_again" id="pdw_again{{ forloop.counter }}" placeholder="******"><br></label>
+                                                            <input type="password" name="pwd_again" id="pdw_again{{ forloop.counter }}" placeholder=""><br></label>
+                                                        <label>职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位：
+                                                            <input type="text" name="position" id="position{{ forloop.counter }}" value="{{ admin.position }}"></label>
+                                                        <br>
                                                         <label>邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱：
-                                                            <input type="email" name="email" id="email{{ forloop.counter }}" placeholder="{{ admin.email }}"></label>
+                                                            <input type="email" name="email" id="email{{ forloop.counter }}" value="{{ admin.email }}"></label>
                                                         <br>
                                                         <label>自我介绍：
                                                             <textarea type="text" name="details" id="details{{ forloop.counter }}" placeholder="{{ admin.details }}"></textarea></label>
@@ -180,6 +185,9 @@
     <script src="{% static 'admins/assets/pages/table-data.js' %}"></script>
     <script src="{% static 'admins/assets/plugins/sweetalert/sweet-alert.js' %}"></script>
     <script>
+        $('#admin_manage').addClass('nav-active');
+        $('#admin_list').addClass('active');  //导航栏样式
+
         function mouseout(pid){
             if ($('#pwd'+pid).val()){
                 //如果用户在密码框内输入了内容，那么就显示确认密码框
@@ -194,7 +202,6 @@
 
         function Modify(a_id) {
             var tag = document.getElementById(a_id);
-            var username = tag.children[4].textContent;
 
             swal({
                     title: "你确定修改吗？",
@@ -214,10 +221,11 @@
                         async: false,  // 同步：也就是只有后端返回了数据时才显示后面的内容
                         type: "POST",
                         data: {
-                            "username": username,  //用户名，后台修改谁的信息，就是依赖这个值去确定的。
+                            "id": $('#number'+a_id).val(),  //用户id，后台修改谁的信息，就是依赖这个值去确定的。
                             "name": $('#name'+a_id).val(),
                             "phone": $('#phone'+a_id).val(),
                             "pwd": $('#pwd'+a_id).val(),
+                            "position": $("#position"+a_id).val(),
                             "email": $('#email'+a_id).val(),
                             "details": $('#details'+a_id).val(),
                         },
@@ -229,7 +237,7 @@
                                 window.location.href = '{% url 'listadmin' %}' //修改成功后跳转到该页
                             }
                             else {
-                                swal("修改", "修改失败", "fails");
+                                swal("修改", arg["edit_error"], "fails");
                                 //alert("删除管理员失败")
                             }
                         }
@@ -240,7 +248,6 @@
 
         function DelAdmin(a_id) {
             var tag = document.getElementById(a_id);
-            var username = tag.children[4].textContent;
 
             swal({
                     title: "你确定删除吗？",
@@ -260,20 +267,24 @@
                         url: "{% url 'del_admin' %}",
                         type: "POST",
                         data: {
-                            "username": username,
+                            "id": $('#number'+a_id).val()  // 要删除的的用户的id
+                        },
+                        fails: function(arg) {
+                            arg = JSON.parse(arg);
+                            swal("删除", arg["del_error"], "fails");
                         },
                         success: function(arg) {
                             arg = JSON.parse(arg);
                             if (arg["status"]){
                                 tag.remove(); // 删去该行数据
+                                swal("删除", "你已成功删除", "success");
                             }
                             else {
-                                alert("删除管理员失败")
+                                swal("删除", arg["del_error"], "fails");
                             }
-
                         }
                     });
-                    swal("删除", "你已成功删除", "success");
+
                 });
             }
     </script>

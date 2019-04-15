@@ -53,7 +53,48 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-lg-auto text-center">
-                        {% block nav %}{% endblock %}
+
+                        <li class="nav-item  mr-lg-3" id="Home">
+                            <a class="nav-link" href="{% url 'home' %}">Home
+                                <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown mr-lg-3" id="Data">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                               aria-expanded="false">
+                                Data
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{% url 'history' %}">Historys</a>
+                                <a class="dropdown-item" href="{% url 'gallery' %}">Gallery</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'upload' %}">Analysis</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown mr-lg-3" id="Help">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                               aria-expanded="false">
+                                Help
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{% url 'about' %}">About</a>
+                                <a class="dropdown-item" href="{% url 'contact' %}">Contact</a>
+                                <a class="dropdown-item" href="{% url 'service' %}">Service</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown" id="user_center">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                               aria-expanded="false">
+                                <i class="fas fa-user"></i>&nbsp;&nbsp;&nbsp;{{ truename }}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{% url 'user_center' %}">Center</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'logout' %}">
+                                    <i class="fas fa-power-off"></i>&nbsp;&nbsp;&nbsp;logout
+                                </a>
+                            </div>
+                        </li>
 
                     </ul>
                 </div>
@@ -96,7 +137,7 @@
 				<ul class="links">
 					<li><a href="{% url 'home' %}">Home</a></li>
 					<li><a href="{% url 'about' %}">About</a></li>
-					<li><a href="{% url 'service' %}">Services</a></li>
+					<li><a href="{% url 'upload' %}">Services</a></li>
 					<li><a href="{% url 'gallery' %}">Gallery</a></li>
 					<li><a href="{% url 'contact' %}">Contact Us</a></li>
 				</ul>

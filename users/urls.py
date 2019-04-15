@@ -2,39 +2,21 @@ from users import views
 from django.urls import path
 
 
-# urlpatterns = [
-#     url(r'^login', views.Login.as_view(), name="login"),
-#     url(r'^signup', views.Signup.as_view(), name="signup"),
-#     url(r'^about', views.AboutUs.as_view(), name="about"),
-#     url(r'^home', views.Home.as_view(), name="home"),
-#     url(r'^gallery', views.Gallery.as_view(), name="gallery"),
-#     url(r'^history', views.History.as_view(), name="history"),
-#     url(r'^test', views.Test.as_view(), name="test"),
-#     url(r'^contact', views.Contact.as_view(), name="contact"),
-#     url(r'^service', views.Services.as_view(), name="service"),
-#     url(r'^user_center', views.UserCenter.as_view(), name="user_center"),
-#     url(r'^upload', views.Upload.as_view(), name="upload"),
-#     url(r'^process', views.Process.as_view(), name="process"),
-#     url(r'^save_img', views.SaveImg.as_view(), name="save_img"),
-#     # url(r'^analyse')
-#
-# ]
-
 urlpatterns = [
-    path('login/', views.Login.as_view(), name="login"),
-    path('signup/', views.Signup.as_view(), name="signup"),
-    path('about/', views.AboutUs.as_view(), name="about"),
-    path('', views.Home.as_view(), name="home"),
+    path('login/', views.Login.as_view(), name="login"),  # 登录
+    path('signup/', views.Signup.as_view(), name="signup"),  # 注册
+    path('about/', views.AboutUs.as_view(), name="about"),  # 关于我们
+    path('', views.Home.as_view(), name="home"),  # 主页
     # path('home/', views.Home.as_view(), name="home"),
-    path('gallery/', views.Gallery.as_view(), name="gallery"),
-    path('history/', views.History.as_view(), name="history"),
+    path('gallery/', views.Gallery.as_view(), name="gallery"),  # 画廊
+    path('history/', views.History.as_view(), name="history"),  # 历史记录
     path('test/', views.Test.as_view(), name="test"),
-    path('contact/', views.Contact.as_view(), name="contact"),
+    path('contact/', views.Contact.as_view(), name="contact"),  # 联系我们
     path('service/', views.Services.as_view(), name="service"),
-    path('user_center/', views.UserCenter.as_view(), name="user_center"),
-    path('upload/', views.Upload.as_view(), name="upload"),
-    path('process/', views.Process.as_view(), name="process"),
-    path('logout/', views.Logout.as_view(), name="logout"),
+    path('user_center/', views.UserCenter.as_view(), name="user_center"),  # 用户中心
+    path('upload/', views.Upload.as_view(), name="upload"),  # 上传图片
+    path('process/', views.Process.as_view(), name="process"),  # 处理图片
+    path('logout/', views.Logout.as_view(), name="logout"),  # 注销
     # url(r'^analyse')
 
 ]

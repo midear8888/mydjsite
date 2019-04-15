@@ -7,64 +7,12 @@
     <script>
        // $('#recycle').attr('class', 'icon-envelope-open');
         $('#recycle').addClass('class', 'active');
+        var data = $("#cccc").textContent;
+        console.log(data);
     </script>
 {% endblock %}
 
 左侧导航条
-
-{% block nav %}
-    <ul class="nav nav-pills nav-stacked custom-nav">
-        <li>
-            <a href="{% url 'index' %}"><i class="icon-note"></i> <span>主页</span></a>
-        </li>
-
-        <li class="menu-list">
-            <a href="#"><i class="icon-envelope-open"></i> <span>管理员管理</span></a>
-            <ul class="sub-menu-list">
-                {% if user_type == "Hospital" %}
-                <li>
-                    <a href="{% url 'listadmin' %}"> 管理员列表</a>
-                </li>
-                <li>
-                    <a href="{% url 'addadmin' %}"> 添加管理员</a>
-                </li>
-                {% endif %}
-                <li>
-                    <a href="{% url 'modify' %}"> 编辑信息</a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="menu-list">
-            <a href="{% url 'index' %}/"><i class="icon-home"></i> <span>医生管理</span></a>
-            <ul class="sub-menu-list">
-                <li>
-                    <a href="{% url 'listdoctor' %}"> 医生列表 </a>
-                </li>
-                <li>
-                    <a href="{% url 'adddoctor' %}"> 添加医生 </a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="menu-list">
-            <a href="#"><i class="icon-layers"></i> <span>心电图管理</span></a>
-            <ul class="sub-menu-list">
-                <li>
-                    <a href="{% url 'listecg_table' %}"> 列表查看模式</a>
-                </li>
-                <li>
-                    <a href="{% url 'listecg_img' %}"> 图片查看模式</a>
-                </li>
-            </ul>
-        </li>
-        <li class="active">
-            <a href="{% url 'recycle' %}"><i class="icon-note"></i> <span>回收站</span></a>
-        </li>
-
-    </ul>
-
-{% endblock %}
 
 {#右侧定位标题#}
 {% block contenttitle %}
@@ -77,59 +25,116 @@
 
 {#主体内容#}
 {% block content %}
-    <div class="row">
-        <div class="col-md-12">
+    <div class="row" id="bb">
+        <!--for循环count次col-md-4的内容,count为后端传上来的get值,可参照分页方法-->
+        {% for ecg in results %}
+        <div class="col-md-4" id="del{{ forloop.counter }}">
             <div class="white-box">
-                <h2 class="header-title">回收站内容</h2>
-                <div class="table-responsive">
-                    <table id="example" class="display table">
-                        <thead>
-                        <tr>
-                            <th>序号</th>
-                            <th>图片编号</th>
-                            <th>文件名</th>
-                            <th>所属者</th>
-                            <th>所属者手机号</th>
-                            <th>上传时间</th>
-                            <th>操作</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for recycle in recycles %}
-                            <tr id="{{ forloop.counter }}">  <!--保证每一行的id不同，count1,count2.....-->
-                                <th>{{ forloop.counter }}</th>
-                                <th>{{ recycle.number }}</th>
-                                <th>{{ recycle.filename }}</th>
-                                <th>{{ recycle.img_user }}</th>
-                                <th>{{ recycle.phone }}</th>
-                                <th>{{ recycle.upload_time }}</th>
-                                <th>
-                                    <button class="btn btn-primary" onclick="Restore({{ forloop.counter }})">恢复</button>
-                                    <!--可用下方script里注释的ajax的方法，data里是字典型数据-->
-                                    <button class="btn btn-primary" onclick="Delete({{ forloop.counter }})">彻底删除</button>
-                                </th>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                <img src="{{ ecg.upload_to }}" class="img-responsive" alt="img" width="100%">
+                <div class="text-center">{{ ecg.upload_time }} "{{ ecg.owner }}"上传</div>
+                <div class="row" style="margin: 15px 0px 0px 0px ;">
+                    <div class="col-md-4">
+                        <!--这里data-targets设置为modal{{img_id}},别忘改下面模态框的id-->
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#modal{{ forloop.counter }}" type="button">查看
+                        </button>
+                        <!--点击查看的模态框 , id与上面的button对应哦-->
+                        <div id="modal{{ forloop.counter }}" class="modal fade" role="dialog">
+                            <div class="modal-dialog modal-lg">
+                                <!-- 内容-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">详情查看</h4>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <img src="{{ ecg.upload_to }}" class="img-responsive" alt="img"
+                                             width="100%">
+                                        <div class="white-box">
+                                            <h2 class="header-title">描述</h2>
+                                            <p>图片编号：<span id="img{{ forloop.counter }}">{{ ecg.number }}</span></p>
+                                            <p>上传者：{{ ecg.owner }}</p>
+                                            <p>上传时间：{{ ecg.upload_time }}</p>
+                                            <p>上传者单位：{{ ecg.position }}</p>
+                                            {% if ecg.details %}
+                                                <p>图片信息：{{ ecg.details }}</p>
+                                            {% else %}
+                                                <p>图片信息：无</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">关闭</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!--模态框结束-->
+                    </div>
+                   <!--彻底删除-->
+                    <div class="col-md-4">
+                        <button class="btn btn-primary" id="sa-delete3" onclick="Delete({{ forloop.counter }})">彻底删除</button>
+                    </div>
+                    <!--还原-->
+                    <div class="col-md-4">
+                        <button class="btn btn-primary" type="button" id="back" onclick="Restore({{ forloop.counter }})">还原</button>
+                    </div>
                 </div>
             </div>
         </div>
+        {% endfor %}
     </div>
-{% endblock %}
+        <!--for循环结束-->
+    <!-------------一行结束------------>
+    <!--分页开始-->
+    {% if results %}
+        <ul class="pagination">
+        {% if results.has_previous %}  <!--判断是否有上一页-->
+            <li><a href="?page={{ results.previous_page_number }}" title="上一页">上一页</a></li>
+        {% else %}
+            <li class="disabled"><a href="javascript:void(0);"  title="上一页">上一页</a></li>
+        {% endif %}
 
+        {% for page in page_range %}
+            {% ifequal page results.number %}  <!--当前页-->
+            <li class="active"><a href="javascript:void(0);">{{ page }}</a></li>
+            {% else %}
+            <li><a href="?page={{page}}" title="第{{page}}页">{{page}}</a></li>
+            {% endifequal %}
+        {% endfor %}
+
+        {% if results.has_next %}  <!--判断是否有下一页-->
+            <li><a href="?page={{ results.next_page_number }}" title="下一页">下一页</a></li>
+        {% else %}
+            <li class="disabled"><a href="javascript:void(0);" title="下一页">下一页</a></li>
+
+        {% endif %}
+        </ul>
+        <!--分页结束-->
+    {% else %}
+        <div><h4 style="color: red;">空空如也</h4></div>
+    {% endif %}
+{% endblock %}
 {% block js %}
     <script src="{% static 'admins/assets/plugins/datatables/js/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'admins/assets/pages/table-data.js' %}"></script>
     <script src="{% static 'admins/assets/plugins/sweetalert/sweet-alert.js' %}"></script>
     <script>
+        $('#recycle').addClass('active');  //导航栏样式
+
+        //var data = $("#cccc").text;
+        //var data = document.getElementById('cccc');
+        //console.log(data.textContent);
+
         function Delete(a_id) {
-            var tag = document.getElementById(a_id);
-            var pic_number = tag.children[1].textContent;
+            var number = document.getElementById("img"+a_id).textContent;  //图片编号
+            var del_tag = document.getElementById("del"+a_id);  //恢复或者彻底删除之后，都要该张图从当前页面中消失
+            var none_tag = $('.col-md-4');  //如果该标签没了，那么就说明当前内容为空了
 
             swal({
                     title: "你确定删除吗？",
-                    text: "删除不能恢复哦",
+                    text: "删除后无法找回哦",
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonClass: "btn-warning",
@@ -146,19 +151,23 @@
                         type: "POST",
                         data: {
                             "handle": "delete",  //删除
-                            "pic_number": pic_number,  //图片编号
+                            "pic_number": number,  //图片编号
                         },
                         success: function(arg) {
                             //swal(arg, "你可以跑路了！", "success");
-                            tag.remove(); // 删去该行数据
+                            del_tag.remove(); // 删去该行数据
+                            if (none_tag.length==0){
+                                window.location('{% url 'recycle' %}');  //说明当前已经没有东西了，那么就自动刷新当前页面，来提示为空
+                            }
                         }
                     });
                     swal("删除", "你已成功删除", "success");
                 });
             }
         function Restore(a_id) {
-            var tag = document.getElementById(a_id);
-            var pic_number = tag.children[1].textContent;
+            var number = document.getElementById("img"+a_id).textContent;  //图片编号
+            var del_tag = document.getElementById("del"+a_id);  //恢复或者彻底删除之后，都要该张图从当前页面中消失
+            var none_tag = $('.col-md-4');  //如果该标签没了，那么就说明当前内容为空了
 
             swal({
                     title: "你确定恢复吗？",
@@ -179,10 +188,13 @@
                         type: "POST",
                         data: {
                             "handle": "restore",  //恢复
-                            "pic_number": pic_number,  //图片编号
+                            "pic_number": number,  //图片编号
                         },
                         success: function(arg) {
-                            tag.remove(); // 删去该行数据,因为数据已经恢复，不在回收站
+                            del_tag.remove(); // 删去该行数据,因为数据已经恢复，不在回收站
+                            if (none_tag.length==0){
+                                window.location('{% url 'recycle' %}');  //说明当前已经没有东西了，那么就自动刷新当前页面，来提示为空
+                            }
                         }
                     });
                     swal("恢复", "你已成功恢复了文件", "success");

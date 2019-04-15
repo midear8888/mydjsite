@@ -5,6 +5,8 @@ from mydjsite.public_helper import *
 import os
 import time
 import json
+import re
+from django.contrib.auth.decorators import login_required
 
 """
 所有用户，登录成功之后，都会有以下四个标记来验明身份
@@ -24,125 +26,97 @@ def user_auth(func):
     """用来装饰，在每一个类之上，用于验证用户是否已经登录过，并且还判断用户类型"""
 
     def inner(request, *args, **kwargs):
-        v = request.COOKIES.get('status')
-        if v == "2" or v == "3":
-            # 是医院或者患者
-            return func(request, *args, **kwargs)
-        return render(request, 'commons/login.html')
+        v = request.COOKIES.get('flag')
+        try:
+            is_login = request.session.get('user').get('is_login')  # 查看登录状态
+            print("is_login: ", is_login)
+            if is_login and v == "2" or v == "3":
+                # 前台，所以只允许医生和患者登录
+                return func(request, *args, **kwargs)
+            return render(request, 'commons/login.html', {"status": False, "error": "请先登录"})
+        except Exception as er:
+            print("用户尚未登录: ", er)
+            return render(request, 'commons/login.html', {"status": False, "error": "请先登录"})
     return inner
 
 
-def get_truename(request):
-    """得到普通用户的真实姓名"""
-    username = request.COOKIES.get("username")
-    status = request.COOKIES.get("status")
-    true_name = "Personal"
-    try:
-        if status == "2":
-            # 医生
-            obj = Doctor.objects.filter(username=username).first()
-            true_name = obj.name  # 真实姓名
-        if status == "3":
-            # 患者
-            obj = Patient.objects.filter(username=username).first()
-            true_name = obj.name  # 真实姓名
-        if true_name:
-            return true_name
-        return true_name
-    except Exception as er:
-        print("获取用户真名失败：", er)
-        return true_name
+def all_username():
+    """得到前台所有人员的手机号，用户在修改资料时，验证修改的手机号是否已经存在"""
+    phones = []
+    hospital_phones = Doctor.objects.all()
+    for phone in hospital_phones:
+        phones.append(phone.username)  # 所有医生的账号
+    admin_phones = Patient.objects.all()
+    for phone in admin_phones:
+        phones.append(phone.username)  # 所有患者的账号
+    return phones
 
 
 def gallery_handle(request):
     """画廊处理函数; 医生看到的是医院的库，患者看到的是自己的库"""
-    user_info = get_truename(request)
-    truename = user_info.get("truename")  # 将用户真名信息放入INFO，然后返回
-    status = request.COOKIES.get("status")
+    flag = request.COOKIES.get('flag')
+    user_info = get_truename(request, flag)
+    truename = user_info.get('truename')  # 将用户真名信息放入INFO，然后返回
+    user_id = request.session.get('user').get('user_id')  # 用户id
     try:
-        if status == "2":
+        if flag == "2":
             # 医生
-            hospt_id = hospital_id(request)  # 该医生的医院id
+            hospt_id = Doctor.objects.filter(id=user_id).first().hid  # 该医生的医院id
             ecg_obj = HospitalFile.objects.filter(hid=hospt_id)  # list，该医院的所有ecg图片
         else:
             # 患者
-            username = request.COOKIES.get("username")  # 用户名
-            user_id = Patient.objects.filter(username=username).first().id  # 该患者的id
             ecg_obj = PatientFile.objects.filter(pid=user_id)  # list, 患者的所有ecg图片
-        results, page_range = get_page(request, ecg_obj, 9)  # 最多显示9张图
+        results, page_range = get_page(request, ecg_obj, 6)  # 最多显示9张图
         response = {
             "results": results,
             "page_range": page_range,
             "truename": truename,
             "status": True
-
         }
-        print(INFO.get("truename"))
         return render(request, 'users/gallery.html', response)
     except Exception as err:
         print("用户获取画廊信息失败: ", err)
         response = {
             "status": False,
-            "truename": truename
+            "truename": truename,
+            "results": None
         }
         return render(request, 'users/gallery.html', response)
 
 
 def history_get_handle(request):
     """控制get历史记录显示"""
-    user_info = get_truename(request)
-    truename = user_info.get("truename")  # 将用户真名信息放入INFO，然后返回
-    user_status = request.COOKIES.get("status")
-    username = request.COOKIES.get("username")  # 用户名
-    data = []
-    if user_status == "2":
+    flag = request.COOKIES.get('flag')
+    user_info = get_truename(request, flag)
+    truename = user_info.get('truename')  # 获取用户真实姓名
+    user_id = request.session.get('user').get('user_id')  # 用户id
+    position = None
+    if flag == "2":
         # 医生
         print("显示医生的上传历史")
-        obj = Doctor.objects.filter(username=username).first()  # 获取用户对象
-        user_id = obj.id  # 用户id
         pic_obj = HospitalFile.objects.filter(owner_id=user_id)  # 获取该医生上传的所有图片对象
-        for pic in pic_obj:
-            filename = pic.filename  # 文件名
-            pic_id = pic.number  # 图片编号
-            upload_time = pic.upload_time  # 图片上传时间
-            details = pic.details
-
-            if len(details) > 15:
-                details = details[0:15]+"..."  # 如果长度太大，那么就剪掉一些
-            data.append({"filename": filename,  # 文件名
-                         "pic_number": pic_id,  # 图片编号
-                         "time": upload_time,  # 上传时间
-                         "details": details  # 图片描述
-                         })
-    elif user_status == "3":
+        data = pic_obj
+        user_obj = Doctor.objects.filter(id=user_id).first()  # 用户对象
+        position = user_obj.position
+    else:
         # 患者
         print("显示患者的上传历史")
-        obj = Patient.objects.filter(username=username).first()
-        user_id = obj.id  # 用户id
         pic_obj = PatientFile.objects.filter(pid=user_id)  # 得到图片库中该用户的所有图片,list
-        for pic in pic_obj:
-            filename = pic.filename  # 文件名
-            pic_id = pic.number  # 图片编号
-            upload_time = pic.upload_time  # 图片上传时间
-            details = pic.details
-            if len(details) > 15:
-                details = details[0:15]+"..."  # 如果长度太大，那么就剪掉一些
-            data.append({"filename": filename,  # 文件名
-                         "pic_number": pic_id,  # 图片编号
-                         "time": upload_time,  # 上传时间
-                         "details": details  # 图片描述
-                         })
-    results, page_range = get_page(request, data, 10)  # 最多显示10条数据
-    response = {
+        data = pic_obj
+    results, page_range = get_page(request, data, 8)  # 最多显示10条数据
+    info = {
         "truename": truename,
         "results": results,
         "page_range": page_range,
-        "status": True
+        "status": True,
+        "user_type": request.COOKIES.get('flag'),
+        "position": position  # 职位，只有医生有这个字段，患者的没有
     }
-    return render_to_response('users/history.html', response)
+    # print(info)
+    return render(request, 'users/history.html', info)
 
 
-def history_base(pic_obj, command, pic_number, status):
+def history_base(pic_obj, command, pic_number, flag):
     if command == "delete":
         try:
             print("用户要删除")
@@ -159,32 +133,16 @@ def history_base(pic_obj, command, pic_number, status):
             except Exception as er:
                 # 不知道为什么，这一步老是会被连续请求两次，导致第二次删除时，文件已经不存在了，所以索性用异常处理来忽略
                 print("删除图片出错：", er)
-            if status == "2":
+            if flag == "2":
                 HospitalFile.objects.filter(number=pic_number).delete()
                 print("删除了数据库中相应的内容")
-            if status == "3":
+            if flag == "3":
                 PatientFile.objects.filter(number=pic_number).delete()
                 print("删除了数据库中相应的内容")
             return HttpResponse(json.dumps({"status": True, "result": "成功删除了图片"}))
         except Exception as err:
             print("请求删除失败：", err)
             return HttpResponse(json.dumps({"status": False, "result": "删除失败"}))
-    if command == "show":
-        try:
-            print("用户要查看")
-            # pic_path = pic_obj.result_to  # 经过处理的图片路径,由于还未经处理，所以为空，那么就先用下面的原图代替
-            pic_path = pic_obj.upload_to
-            details = pic_obj.details
-            img_user = pic_obj.img_user  # 图片中患者的名字
-            data = {
-                "img_user": img_user,
-                "pic_path": pic_path,
-                "details": details
-            }
-            return HttpResponse(json.dumps({"status": True, "result": data}))
-        except Exception as er:
-            print("用户请求查看图片详情失败: ", er)
-            return HttpResponse(json.dumps({"status": False, "result": "未找到相关的信息"}))
     return HttpResponse(json.dumps({"status": False, "result": None}))  # 可能是程序出错，导致接收到的命令既不是delete，也不是show。
 
 
@@ -192,15 +150,15 @@ def history_post_handle(request):
     """控制用户post请求历史记录。即可能是要查看图片详情，也可能是要删除某张图片"""
     pic_number = request.POST.get("pic_number")  # 返回图片的编号
     command = request.POST.get("command")  # 根据这个结果来判断是要显示还是删除图片
-    status = request.COOKIES.get("status")
+    flag = request.COOKIES.get("flag")
     print("command, pic_number: ", command, pic_number)
-    if status == "2":
+    if flag == "2":
         pic_obj = HospitalFile.objects.filter(number=pic_number).first()  # 获取该图片编号的对象[0]
-        response = history_base(pic_obj, command, pic_number, status)
+        response = history_base(pic_obj, command, pic_number, flag)
         return response
-    if status == "3":
+    if flag == "3":
         pic_obj = PatientFile.objects.filter(number=pic_number).first()
-        response = history_base(pic_obj, command, pic_number, status)
+        response = history_base(pic_obj, command, pic_number, flag)
         return response
 
 
@@ -208,61 +166,78 @@ def upload_handle(request):
     """接收第一步的操作，并存储上传的原图，并返回路径，在用户界面显示"""
     file_obj = request.FILES.get("avatar")  # 把文件下载来
     if file_obj:
-        username = request.COOKIES.get("username")  # 登录者的用户名
+        # username = request.COOKIES.get("username")  # 登录者的用户名
+        user_id = request.session.get('user').get('user_id')  # 用户id
         now_time = time.time()
-        file_number = username + str(now_time) + file_obj.name  # 用户名+当前时间+文件名
-        number = str(hash(file_number))[1:]  # 上传文件的编号，因为有时候结果中会含有负号，所以不管是否有负号，统一去掉第一个字符
-        print("hash的结果为：", hash(file_number), type(number), number)
-        status = request.COOKIES.get("status")  # 判断登录的用户类型
-        if status == "2":
+        flag = request.COOKIES.get("flag")  # 判断登录的用户类型
+        if flag == "2":
             # 医生
             try:
-                obj = Doctor.objects.filter(username=username).first()  # 根据用户名找到他所在的医院id
+                obj = Doctor.objects.filter(id=user_id).first()  # 根据用户名找到他所在的医院id
+                username = obj.username  # 获取用户名
+                file_number = username + str(now_time) + file_obj.name  # 文件的初始编号，用户名+当前时间+文件名
+                number = str(hash(file_number))[1:]  # 上传文件的编号，因为有时候结果中会含有负号，所以不管是否有负号，统一去掉第一个字符
+                print("hash的结果为：", hash(file_number), type(number), number)
                 hospt_id = obj.hid  # 得到医院id
-                user_id = obj.id  # 得到用户id
+                try:
+                    hz = re.compile('.*(\..*)').findall(file_obj.name)[0]  # 获取文件的后缀名
+                    filename = number+hz
+                except Exception as er:
+                    print("获取文件名{}的后缀失败{} ".format(file_obj.name, er))
+                    filename = number+'.jpg'  # 默认转化为jpg
                 info = {
                     "hid": hospt_id,  # 医生上传的图片，归医院所有，该hid就是医院的id
                     "owner_id": user_id,  # 上传者id
                     "number": number,  # 图片编号
                     "filename": file_obj.name,
-                    "upload_to": r"/media/upload/"+number,  # 只记录相对路径就可以
+                    "upload_to": r"/media/upload/"+filename,  # 只记录相对路径就可以
                     "img_user": "",   # 图片患者姓名
                     "details": ""  # 图片详细信息
                 }
                 HospitalFile.objects.create(**info)  # 存入数据
-                save_path = os.path.join(BASE_DIR, r'media/upload/'+number)
+                save_path = os.path.join(BASE_DIR, r'media/upload/'+filename)
                 with open(save_path, "wb") as f:    # 在数据存入数据库成功后再写入文件，避免中途出错，致使两个地方的数据不一致
                     for block in file_obj.chunks():
                         f.write(block)  # 分块写入文件
+                return HttpResponse(json.dumps({"upload_status": True, "result": r'/media/upload/'+filename}))
             except Exception as er:
                 print("医生上传文件失败: ", er)
-                return HttpResponse(json.dumps({"status": 0}))  # 表示失败
-        if status == "3":
+                return HttpResponse(json.dumps({"upload_status": False, "upload_error": er}))  # 表示失败
+        if flag == "3":
             # 患者
             try:
-                obj = Patient.objects.filter(username=username).first()
-                user_id = obj.id  # 用户id
+                obj = Patient.objects.filter(id=user_id).first()
+                username = obj.username  # 获取用户名
+                file_number = username + str(now_time) + file_obj.name  # 文件的初始编号，用户名+当前时间+文件名
+                number = str(hash(file_number))[1:]  # 上传文件的编号，因为有时候结果中会含有负号，所以不管是否有负号，统一去掉第一个字符
+                print("hash的结果为：", hash(file_number), type(number), number)
+                try:
+                    hz = re.compile('.*(\..*)').findall(file_obj.name)[0]  # 获取文件的后缀名
+                    filename = number + hz
+                except Exception as er:
+                    print("获取文件名{}的后缀失败{} ".format(file_obj.name, er))
+                    filename = number + 'jpg'  # 默认转化为jpg
                 info = {
                     "pid": user_id,
                     "number": number,
                     "filename": file_obj.name,
-                    "upload_to": r'/media/upload/'+number,
-                    "upload_time": time.ctime(),
+                    "upload_to": r'/media/upload/'+filename,
                     "img_user": "",
                     "details": ""
                 }
                 PatientFile.objects.create(**info)  # 存入数据
-                save_path = os.path.join(BASE_DIR, r'media/upload/' + number)
+                save_path = os.path.join(BASE_DIR, r'media/upload/' + filename)
                 with open(save_path, "wb") as f:  # 在数据存入数据库成功后再写入文件，避免中途出错，致使两个地方的数据不一致
                     for block in file_obj.chunks():
                         f.write(block)  # 分块写入文件
+                return HttpResponse(json.dumps({"upload_status": True, "result": r'/media/upload/'+filename}))
             except Exception as err:
                 print("患者上传文件失败: ", err)
-                return HttpResponse(json.dumps({"status": 0}))  # 表示失败
-        print("给用户返回原图路径：", r'/media/upload/'+number)
-        return HttpResponse(json.dumps({"status": 1, "result": r'/media/upload/' + number}))
+                return HttpResponse(json.dumps({"upload_status": False}))  # 表示失败
+        return HttpResponse(json.dumps({"upload_status": False, "upload_error": "未知用户类型错误"}))
     else:
-        return HttpResponse(json.dumps({"status": 0}))
+        print("上传图片不能为空")
+        return HttpResponse(json.dumps({"upload_status": False, "upload_error": "上传图片不能为空"}))
 
 
 def process_handle(request):
@@ -270,6 +245,7 @@ def process_handle(request):
     img_user = request.POST.get("img_user")  # 图片中患者的姓名
     img_details = request.POST.get("img_details")  # 图片描述
     img_path = request.POST.get("img_path")  # 原图地址
+    flag = request.COOKIES.get('flag')
     print("查看结果：", img_user, img_path, img_details)
     if not img_user:
         img_user = ""
@@ -278,17 +254,16 @@ def process_handle(request):
     if not img_path:
         img_path = ""
     # 上面三个if判断是防止有些数据没有获取到，即值为None，存入数据库出错
-    status = request.COOKIES.get("status")
     info = {
         "img_user": img_user,
         "details": img_details
     }
     try:
-        if status == "2":
+        if flag == "2":
             HospitalFile.objects.filter(upload_to=img_path).update(**info)
             # 为什么不是用.first()获取到一个值，然后在进行upload呢？原因请对比数据库命令: upload HospitalFile set **info where upload_to=img_path
             print("数据库更新成功")
-        if status == "3":
+        if flag == "3":
             PatientFile.objects.filter(upload_to=img_path).update(**info)
             # obj.update(**info)
             print("数据库更新成功")
@@ -297,35 +272,34 @@ def process_handle(request):
             print("原图路径存在: ", img_path)
             """这儿调用程序并返回处理后的图片, 处理后的图片理应是已经保存了，所以算法函数应该还要返回相应的路径，文件名等信息"""
             img = r"\media\result\599307627"
-            return HttpResponse(json.dumps({"status": 1, "result": img}))
+            return HttpResponse(json.dumps({"process_status": True, "result": img}))
         else:
-            return HttpResponse(json.dumps({"status": 0, "result": "原图路径丢失"}))
+            return HttpResponse(json.dumps({"process_status": False, "process_error": "原图路径丢失"}))
     except Exception as er:
         print("查看结果图失败：", er)
-        return HttpResponse(json.dumps({"status": 0, "result": "查看结果失败"}))
+        return HttpResponse(json.dumps({"process_status": False, "process_error": "查看结果失败"}))
 
 
 def contact_handle(request):
-    """控制邮件的发送"""
+    """控制邮件的发送,用户是ajax提交的"""
     name = request.POST.get("name")  # 用户姓名, 邮件标题就是这个
     email = request.POST.get("email")  # 用户的邮箱
     # subject = request.POST.get("subject")  # 这个是干嘛的？邮件类型？
     message = request.POST.get("message")  # 邮件内容
     try:
-        print(type(EMAIL_FROM), EMAIL_FROM)
+        # print(type(EMAIL_FROM), EMAIL_FROM)
         send_status = send_mail(name, message, email, [EMAIL_FROM])  # EMAIL_FROM是你的QQ邮箱
         if send_status:
             print("发送成功了")
             data = {
-                "send_status": 1,
+                "send_status": True,
                 "result": "发送成功！"
             }
             return HttpResponse(json.dumps(data))
     except Exception as err:
         print("用户发送邮件失败: ", err)
-        INFO["send_status"] = "发送失败"
         data = {
-            "send_status": 0,
+            "send_status": False,
             "result": err  # 将错误信息返回给用户
         }
         return HttpResponse(json.dumps(data))
@@ -333,24 +307,16 @@ def contact_handle(request):
 
 def get_userinfo(request):
     """用户get请求用户中心，要将用户信息返回"""
-    user_info = get_truename(request)
-    username = request.COOKIES.get("username")
-    status = request.COOKIES.get("status")
-    if status == "2":
+    user_id = request.session.get('user').get('user_id')
+    flag = request.COOKIES.get("flag")
+    if flag == "2":
         # 医生
-        obj = Doctor.objects.filter(username=username).first()  # 获取用户对象
+        obj = Doctor.objects.filter(id=user_id).first()  # 获取用户对象
     else:
         # 患者
-        obj = Patient.objects.filter(username=username).first()  # 获取用户对象
-    data = {
-        "truename": obj.name,  # 真实姓名
-        "gender": obj.gender,
-        "age": obj.age,
-        "phone": obj.username,  # 手机号
-        "details": obj.details,  # 自我描述
-        "email": obj.email  # 邮箱
-    }
-    return render(request, 'users/user_center.html', {"data": data, "truename": user_info.get("truename")})
+        obj = Patient.objects.filter(id=user_id).first()  # 获取用户对象
+    return obj  # 之所以不直接用render返回，是因为用户修改资料后，render之后页面也要显示用户的信息，所以就把这个data作为一个值传过去
+    # return render(request, 'users/user_center.html', data)
     # 为了统一，这儿的truename单独分开来用。因为每一页的前端都是这样用的{{ truename }}
 
 
@@ -363,32 +329,76 @@ def post_userinfo(request):
     email = request.POST.get("email")
     details = request.POST.get("details")
     data = {}
+    print("name:", name)
+    print("age:", age)
+    print("username:", username)
+    print("pwd:", pwd)
+    print("email:", email)
+    print("details:", details)
     if name:
         data["name"] = name
     if age:
         data["age"] = age
     if username:
         data["username"] = username
+        phones = all_username()
+        user_obj = get_userinfo(request)  # 得到当前用户的信息
+        phones.remove(user_obj.username)  # 排除自己的账号，与其他账号做对比
+        if username in phones:
+            print("用户将自己的用户名修改为别人的用户名，冲突了，返回错误信息")
+            info = {
+                "status": False,
+                "data": user_obj,
+                "truename": user_obj.name,
+                "results": '修改失败：因为账号{}已经存在'.format(username)
+            }
+            return render(request, 'users/user_center.html', info)
     if pwd:
-        data["password"] = pwd
+        data["password"] = make_password(pwd)  # 加密密码
     if email:
         data["email"] = email
     if details:
         data["details"] = details
-    status = request.COOKIES.get("status")
-    current_user = request.COOKIES.get("username")
+    flag = request.COOKIES.get("flag")
+    user_id = request.session.get('user').get('user_id')  # 获取用户id
     try:
-        if status == "2":
-            # 医生
-            Doctor.objects.filter(username=current_user).update(**data)
-        if status == "3":
-            # 患者
-            Patient.objects.filter(username=current_user).update(**data)
-        return redirect('user_center')  # 重定向
+        if data:
+            if flag == "2":
+                # 医生
+                Doctor.objects.filter(id=user_id).update(**data)
+            else:
+                # 患者
+                Patient.objects.filter(id=user_id).update(**data)
+            user_obj = get_userinfo(request)  # 要在修改之后重新获取用户信息
+            info = {
+                "status": True,
+                "results": "修改成功！",
+                "data": user_obj,
+                "truename": user_obj.name  # 用户真实姓名
+            }
+            return render(request, 'users/user_center.html', info)
+            # return HttpResponse(json.dumps({"status": True, "result": "成功"}))
+        else:
+            user_obj = get_userinfo(request)
+            info = {
+                "status": False,
+                "results": "不能提交空表单",
+                "truename": user_obj.name,
+                "data": user_obj
+            }
+            return render(request, 'users/user_center.html', info)
     except Exception as er:
+        """正常来说，应该是要先验证旧密码，如果正确才修改，但现在还没有增加这个功能，所以出错的信息也就不完整，只能先用'修改失败来敷衍了'"""
         print("用户修改资料出错：", er)
-        return redirect('user_center')
-
+        user_obj = get_userinfo(request)
+        info = {
+            "status": False,
+            "results": "修改失败：{}".format(er),
+            "data": user_obj,
+            "truename": user_obj.name
+        }
+        return render(request, 'users/user_center.html', info)
+        # return HttpResponse(json.dumps({"status": False, "result": er}))
 
 
 

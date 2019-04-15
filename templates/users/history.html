@@ -1,6 +1,6 @@
 {% extends 'users/base_a.html' %}
 
-{% block title %}History{%  endblock %}
+{% block title %}History{% endblock %}
 
 {% block css %}
     <link href="{% static 'admins/assets/plugins/sweetalert/sweetalert.css' %}" rel="stylesheet"/>
@@ -162,266 +162,130 @@
     </style>
 {% endblock %}
 
-{% block nav %}
-    <li class="nav-item  mr-lg-3">
-        <a class="nav-link" href="{% url 'home' %}">Home
-            <span class="sr-only">(current)</span>
-        </a>
-    </li>
-    <li class="nav-item dropdown active mr-lg-3">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									Data
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'history' %}">Historys</a>
-            <a class="dropdown-item" href="{% url 'gallery' %}">Gallery</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{% url 'home' %}">Analysis</a>
-        </div>
-    </li>
-    <li class="nav-item dropdown mr-lg-3">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									Help
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'about' %}">About</a>
-            <a class="dropdown-item" href="{% url 'contact' %}">Contact</a>
-            <a class="dropdown-item" href="{% url 'service' %}">Service</a>
-        </div>
-    </li>
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-user"></i>&nbsp;&nbsp;&nbsp;{{ truename }}
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'user_center' %}">Center</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{% url 'logout' %}">
-                <i class="fas fa-power-off"></i>&nbsp;&nbsp;&nbsp;logout
-            </a>
-        </div>
-    </li>
-{% endblock %}
-
 {% block currentname %}history{% endblock %}
 
 {% block content %}
-<section class="wthree-row pt-sm-3  pb-sm-5 pb-3">
+    <section class="wthree-row pt-sm-3  pb-sm-5 pb-3">
         <div class="container py-sm-5 py-3">
             <!-- section title -->
-			 <div class="w3ls-titles text-center mb-5">
-				<h3 class="title">Historys</h3>
-				<span class="btmspn">
+            <div class="w3ls-titles text-center mb-5">
+                <h3 class="title">Historys</h3>
+                <span class="btmspn">
 					<i class="fas fa-heartbeat"></i>
 				</span>
-				<p class="mt-2 mx-auto"></p>
-			</div>
+                <p class="mt-2 mx-auto"></p>
+            </div>
             {% if status %}
-			<table class="table table-striped text-center">
-			    <thead class="bg-info text-white">
-	                <tr>
-				        <th>序号</th>
-				        <th>图片名</th>
-				        <th>图片编号</th>
-				        <th>上传日期</th>
+                <table class="table table-striped text-center">
+                    <thead class="bg-info text-white">
+                    <tr>
+                        <th>序号</th>
+                        <th>图片名</th>
+                        <th>图片编号</th>
+                        <th>上传日期</th>
                         <th>描述</th>
-				        <th>操作</th>
-				    </tr>
-			    </thead>
-			    <tbody>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in results.object_list %}
+                        <tr id="{{ forloop.counter }}">
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ item.filename }}</td>
+                            <td>{{ item.number }}</td>
+                            <td>{{ item.upload_time }}</td>
+                            {% if item.details|length > 15 %}  <!--如果长度过大，则要进行切片显示切片-->
+                                <td>{{ item.details|truncatechars:15 }}...</td>
+                            {% else %}
+                                <td>{{ item.details }}</td>
+                            {% endif %}
+                            <td>
+                                <!--<button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#myModal{{ forloop.counter }}"
+                                    onclick="ShowHistory('{{ forloop.counter }}')">查看</button>-->
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#myModal{{ forloop.counter }}">查看
+                                </button>
+                                <div class="modal fade" id="myModal{{ forloop.counter }}" role="dialog">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal">&times;
+                                                </button>
+                                                <h4 class="modal-title">详情查看</h4>
+                                            </div>
+                                            <div class="modal-body">
 
-                {% for item in results.object_list %}
-                    <tr id="{{ forloop.counter }}">
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ item.filename }}</td>
-                        <td>{{ item.pic_number }}</td>
-                        <td>{{ item.time }}</td>
-                        <td>{{ item.details }}</td>
-                        <td>
-                            <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#myModal{{ forloop.counter }}"
-                                    onclick="ShowHistory('{{ forloop.counter }}')">查看</button>
-                            <div class="modal fade" id="myModal{{ forloop.counter }}">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <!-- 模态框底部 -->
-                                        <div class="modal-header">
-                                            <h4 class="modal-title text-center" id="user{{ forloop.counter }}">的心电图信息</h4>
-                                            <br /><button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                <img src="{{ item.upload_to }}" class="img-responsive" alt="img" width="100%">
+                                                <div class="white-box">
+                                                    <h2 class="header-title">描述</h2>
+                                                    {% if item.img_user %}
+                                                        <p>上传者：{{ item.img_user }}</p>
+                                                    {% else %}
+                                                        <p>上传者：未知名</p>
+                                                    {% endif %}
+                                                    <p>上传时间：{{ item.upload_time }}</p>
+                                                    {% if user_type == "Doctor" %}
+                                                        <p>上传者单位：{{ position }}</p>
+                                                    {% endif %}
+                                                    {% if item.details %}
+                                                        <p>图片信息：{{ item.details }}</p>
+                                                    {% else %}
+                                                        <p>图片信息：没有详细信息</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal">关闭
+                                                </button>
+                                            </div>
                                         </div>
-                                        <!-- 模态框底部 -->
-
-                                        <div class="modal-body">
-                                            <img src="#" id="src{{ forloop.counter }}"/>
-                                            <p id="details{{ forloop.counter }}">图片详细描述</p>
-                                        </div>
-
-                                        <!-- 模态框底部 -->
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-info" data-dismiss="modal">关闭</button>
-                                        </div>
-
                                     </div>
                                 </div>
-                            </div>
-                            <button type="button" class="btn btn-outline-info" onclick="DelHistory('{{ forloop.counter }}')">删除</button>
-                            <button type="button" class="btn btn-outline-info"><a href="#" id="href{{ forloop.counter }}">导出</a></button>
-                        </td>
-                    </tr>
-                {% endfor %}
-			    </tbody>
-			</table>
+                                <button type="button" class="btn btn-outline-info" onclick="DelHistory('{{ forloop.counter }}')">
+                                    删除
+                                </button>
+                                <button type="button" class="btn btn-outline-info"><a href="{{ item.upload_to }}" download="">下载</a></button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                <!--分页开始-->
+                <ul class="pagination">
+                    {% if results.has_previous %}  <!--判断是否有上一页-->
+                        <li><a href="./?page=1">首页</a></li> <!--链接到首页-->
+                        <li><a href="?page={{ results.previous_page_number }}" title="上一页">上一页</a></li>
+                        <!--<li><a>...</a></li>-->
+                    {% else %}
+                        <li class="disabled"><a href="javascript:void(0);" title="上一页">上一页</a></li>
+                    {% endif %}
+
+                    {% for page in page_range %}
+                        {% ifequal page results.number %}  <!--当前页-->
+                            <li class="active"><a href="javascript:void(0);">{{ page }}</a></li>
+                        {% else %}
+                            <li><a href="?page={{ page }}" title="第{{ page }}页">{{ page }}</a></li>
+                        {% endifequal %}
+                    {% endfor %}
+
+                    {% if results.has_next %}  <!--判断是否有下一页-->
+                        <!--<li><a>...</a></li>  <!--如果还有下一页，那么说明页数超过当前显示的页码数，那么就用省略号提示-->
+                        <li><a href="?page={{ results.next_page_number }}" title="下一页">下一页</a></li>
+                        <li><a>{{ results.number }}/{{ page_range | length | add:"1" }}</a></li>
+{#                        <li><a>{{ results.number }}/{{ page_range.stop }}</a></li>#}
+                        <li><a href="./?page={{ page_range | length | add:"1"}}">尾页</a></li> <!--链接到尾页-->
+
+                    {% else %}
+                        <li class="disabled"><a href="javascript:void(0);" title="下一页">下一页</a></li>
+                    {% endif %}
+                </ul>
+                <!--分页结束-->
+
             {% else %}
                 <p>您尚未上传过任何图片</p>
             {% endif %}
-
-            <!--分页开始-->
-            <ul class="pagination">
-            {% if results.has_previous %}  <!--判断是否有上一页-->
-                <li><a href="?page={{ results.previous_page_number }}" title="上一页">上一页</a></li>
-            {% endif %}
-
-            {% for page in page_range %}
-                {% ifequal page results.number %}  <!--当前页-->
-                <li class="active"><a href="javascript:void(0);">{{ page }}</a></li>
-                {% else %}
-                <li><a href="?page={{page}}" title="第{{page}}页">{{page}}</a></li>
-                {% endifequal %}
-            {% endfor %}
-
-            {% if results.has_next %}  <!--判断是否有下一页-->
-                <li><a href="?page={{ results.next_page_number }}" title="下一页">下一页</a></li>
-            {% endif %}
-            </ul>
-            <!--分页结束-->
-
         </div>
-            <!-- //section title -->
-            <!--<div class="pb-5 typo-wthree">
-                <h4 class="mt-5 mb-3">Lists</h4>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5 class="pt-4 pb-3">List Group</h5>
-                        <ul class="list-group">
-                            <li class="list-group-item">Cras justo odio</li>
-                            <li class="list-group-item">Dapibus ac facilisis in</li>
-                            <li class="list-group-item">Morbi leo risus</li>
-                            <li class="list-group-item">Porta ac consectetur ac</li>
-                            <li class="list-group-item">Vestibulum at eros</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6">
-                        <h5 class="pt-4 pb-3">Active items</h5>
-                        <ul class="list-group">
-                            <li class="list-group-item active">Cras justo odio</li>
-                            <li class="list-group-item">Dapibus ac facilisis in</li>
-                            <li class="list-group-item">Morbi leo risus</li>
-                            <li class="list-group-item">Porta ac consectetur ac</li>
-                            <li class="list-group-item">Vestibulum at eros</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6 my-3">
-                        <h5 class="pt-4 pb-3">Disabled items</h5>
-                        <ul class="list-group">
-                            <li class="list-group-item disabled">Cras justo odio</li>
-                            <li class="list-group-item">Dapibus ac facilisis in</li>
-                            <li class="list-group-item">Morbi leo risus</li>
-                            <li class="list-group-item">Porta ac consectetur ac</li>
-                            <li class="list-group-item">Vestibulum at eros</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6 my-3">
-                        <h5 class="pt-4 pb-3">Flush</h5>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Cras justo odio</li>
-                            <li class="list-group-item">Dapibus ac facilisis in</li>
-                            <li class="list-group-item">Morbi leo risus</li>
-                            <li class="list-group-item">Porta ac consectetur ac</li>
-                            <li class="list-group-item">Vestibulum at eros</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6">
-                        <h5 class="pt-4 pb-3">Contextual Classes</h5>
-                        <ul class="list-group">
-                            <li class="list-group-item">Dapibus ac facilisis in</li>
-                            <li class="list-group-item list-group-item-primary">This is a primary list group item</li>
-                            <li class="list-group-item list-group-item-secondary">This is a secondary list group item</li>
-                            <li class="list-group-item list-group-item-success">This is a success list group item</li>
-                            <li class="list-group-item list-group-item-danger">This is a danger list group item</li>
-                            <li class="list-group-item list-group-item-warning">This is a warning list group item</li>
-                            <li class="list-group-item list-group-item-info">This is a info list group item</li>
-                            <li class="list-group-item list-group-item-light">This is a light list group item</li>
-                            <li class="list-group-item list-group-item-dark">This is a dark list group item</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6 mt-md-0 mt-4">
-                        <h5 class="pt-4 pb-3">With Badges</h5>
-                        <ul class="list-group">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Cras justo odio
-                                <span class="badge badge-primary badge-pill">14</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Dapibus ac facilisis in
-                                <span class="badge badge-primary badge-pill">2</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Morbi leo risus
-                                <span class="badge badge-primary badge-pill">1</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <h4 class="pt-4 pb-3 mt-sm-5 mt-3">Color</h4>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5 class="my-4">Text color</h5>
-                        <p class="text-primary mb-2">.text-primary</p>
-                        <p class="text-secondary mb-2">.text-secondary</p>
-                        <p class="text-success mb-2">.text-success</p>
-                        <p class="text-danger mb-2">.text-danger</p>
-                        <p class="text-warning mb-2">.text-warning</p>
-                        <p class="text-info mb-2">.text-info</p>
-                        <p class="text-light bg-dark mb-2">.text-light</p>
-                        <p class="text-dark mb-2">.text-dark</p>
-                        <p class="text-muted mb-2">.text-muted</p>
-                        <p class="text-white bg-dark">.text-white</p>
-                    </div>
-                    <div class="col-md-6">
-                        <h5 class="my-4">Anchors with the provided hover and focus states.</h5>
-                        <p>
-                            <a href="#" class="text-primary">Primary link</a>
-                        </p>
-                        <p class="mb-2">
-                            <a href="#" class="text-secondary">Secondary link</a>
-                        </p>
-                        <p class="mb-2">
-                            <a href="#" class="text-success">Success link</a>
-                        </p>
-                        <p class="mb-2">
-                            <a href="#" class="text-danger">Danger link</a>
-                        </p>
-                        <p class="mb-2">
-                            <a href="#" class="text-warning">Warning link</a>
-                        </p>
-                        <p class="mb-2">
-                            <a href="#" class="text-info">Info link</a>
-                        </p>
-                        <p>
-                            <a href="#" class="text-light bg-dark">Light link</a>
-                        </p>
-                        <p class="mb-2">
-                            <a href="#" class="text-dark">Dark link</a>
-                        </p>
-                        <p class="mb-2">
-                            <a href="#" class="text-muted">Muted link</a>
-                        </p>
-                        <p>
-                            <a href="#" class="text-white bg-dark">White link</a>
-                        </p>
-                    </div>
-                </div>
-            </div>-->
-        <!-- //typo container -->
     </section>
     <!-- //typography -->
 {% endblock %}
@@ -431,6 +295,7 @@
     <script src="{% static 'admins/assets/pages/table-data.js' %}"></script>
     <script src="{% static 'admins/assets/plugins/sweetalert/sweet-alert.js' %}"></script>
     <script>
+        $('#Data').addClass('active');  //给当页的Data添加颜色
         function DelHistory(a_id) {
             var tag = document.getElementById(a_id);
 
@@ -455,63 +320,21 @@
                             "pic_number": tag.children[2].textContent,
                             "command": "delete",
                         },
-                        success: function(arg) {
+                        success: function (arg) {
                             arg = JSON.parse(arg);
-                            console.log("返回了："+arg);
-                            if (arg["status"]){
+                            console.log("返回了：" + arg);
+                            if (arg["status"]) {
                                 tag.remove(); // 删去该行数据
                             }
-                            else{
+                            else {
                                 alert("删除图片失败")
                             }
                         }
                     });
                     swal("删除", "你已成功删除", "success");
                 });
-            }
-        function ShowHistory(tag_id) {
-            var tag = document.getElementById(tag_id);
-
-            $.ajax({
-                        url: "{% url 'history' %}",
-                        type: "POST",
-                        data: {
-                            "pic_number": tag.children[2].textContent,
-                            "command": "show",
-                        },
-                        success: function(arg) {
-                            console.log("返回了："+arg);
-                            arg = JSON.parse(arg);
-                            //var img_href = document.getElementById("href"+tag_id);
-                            //var img_src = document.getElementById("src"+tag_id);
-                            //var img_details = document.getElementById("details"+tag_id);  //图片描述
-                            var img_user = document.getElementById("user"+tag_id);  //图片中患者的名字
-                            if (arg["status"]){
-                                $('#href'+tag_id).attr('href', arg["result"]["pic_path"]);   // 修改属性值，图片地址，作为导出时提供下载链接
-                                $('#src'+tag_id).attr('src', arg["result"]["pic_path"]);     //图片地址,作为img的src属性，显示图片
-                                $('#details'+tag_id).text("图片详情: "+arg["result"]["details"]);     //图片详情
-
-                                //img_href.setAttribute("href", arg["result"]["pic_path"]);
-                                //img_details.textContent = "图片详情: "+arg["result"]["details"];
-                                //img_src.setAttribute("src", arg["result"]["pic_path"]);
-
-                                console.log("user: "+arg["result"]["img_user"]);
-                                if (arg["result"]["img_user"]){
-                                    img_user.textContent = arg["result"]["img_user"]+"的心电图信息";
-                                }
-                                else {
-                                    img_user.textContent = "一位不愿透露姓名者的心电图信息";
-                                }
-
-                                console.log("图片路径："+arg["result"]["pic_path"]);
-                                console.log("图片描述："+arg["result"]["details"]);
-                            }
-                            else{
-                                $('#details'+tag_id).text("查看图片失败");     //图片详情
-                            }
-                        }
-                    });
         }
+
     </script>
 {% endblock %}
 

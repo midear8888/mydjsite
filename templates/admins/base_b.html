@@ -39,57 +39,56 @@
 
     <div class="left-side-inner">
         <!--nav-->
-        {% block nav %}{% endblock %}
-{#        <ul class="nav nav-pills nav-stacked custom-nav">#}
-{#        <li class="active">#}
-{#            <a href="{% url 'index' %}"><i class="icon-note"></i> <span>主页</span></a>#}
-{#        </li>#}
-{##}
-{#        <li class="menu-list" id="admin_manage1">#}
-{#            <a href="#"><i class="" id="admin_manage2"></i> <span>管理员管理</span></a>#}
-{#            <ul class="sub-menu-list">#}
-{#                {% if user_type == "Hospital" %}#}
-{#                <li class="" id="admin_list">#}
-{#                    <a href="{% url 'listadmin' %}"> 管理员列表</a>#}
-{#                </li>#}
-{#                <li class="" id="add_admin">#}
-{#                    <a href="{% url 'addadmin' %}"> 添加管理员</a>#}
-{#                </li>#}
-{#                {% endif %}#}
-{#                <li class="" id="edit_admin">#}
-{#                    <a href="{% url 'edit_admin' %}"> 编辑信息</a>#}
-{#                </li>#}
-{#            </ul>#}
-{#        </li>#}
-{##}
-{#        <li class="menu-list" id="doctor_manage">#}
-{#            <a href="{% url 'index' %}"><i class="icon-home" ></i> <span>用户管理</span></a>#}
-{#            <ul class="sub-menu-list">#}
-{#                <li class="" id="doctor_list">#}
-{#                    <a href="{% url 'listdoctor' %}"> 医生列表 </a>#}
-{#                </li>#}
-{#                <li class="" id="add_doctor">#}
-{#                    <a href="{% url 'adddoctor' %}"> 添加医生 </a>#}
-{#                </li>#}
-{#            </ul>#}
-{#        </li>#}
-{##}
-{#        <li class="menu-list" id="ecg_manage">#}
-{#            <a href="#"><i class="icon-layers" ></i> <span>心电图管理</span></a>#}
-{#            <ul class="sub-menu-list">#}
-{#                <li class="" id="ecg_tb">#}
-{#                    <a href="{% url 'listecg_table' %}"> 列表查看模式</a>#}
-{#                </li>#}
-{#                <li class="" id="ecg_img">#}
-{#                    <a href="{% url 'listecg_img' %}"> 图片查看模式</a>#}
-{#                </li>#}
-{#            </ul>#}
-{#        </li>#}
-{#        <li class="" id="recycle">#}
-{#            <a href="{% url 'recycle' %}"><i class="icon-note"></i> <span>心电图回收站</span></a>#}
-{#        </li>#}
-{##}
-{#    </ul>#}
+{#        <!--{% block nav %}{% endblock %}-->#}
+            <ul class="nav nav-pills nav-stacked custom-nav">
+            <li class="active">
+                <a href="{% url 'index' %}"><i class="icon-note"></i> <span>主页</span></a>
+            </li>
+
+            <li class="menu-list" id="admin_manage">
+                <a href="#"><i class=""></i> <span>管理员管理</span></a>
+                <ul class="sub-menu-list">
+                    {% if user_type == "1" %}
+                    <li class="" id="admin_list">
+                        <a href="{% url 'listadmin' %}"> 管理员列表</a>
+                    </li>
+                    <li class="" id="add_admin">
+                        <a href="{% url 'addadmin' %}"> 添加管理员</a>
+                    </li>
+                    {% endif %}
+                    <li class="" id="edit_admin">
+                        <a href="{% url 'modify' %}"> 修改资料</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="menu-list" id="doctor_manage">
+                <a href="{% url 'index' %}"><i class="icon-home" ></i> <span>用户管理</span></a>
+                <ul class="sub-menu-list">
+                    <li class="" id="doctor_list">
+                        <a href="{% url 'listdoctor' %}"> 医生列表 </a>
+                    </li>
+                    <li class="" id="add_doctor">
+                        <a href="{% url 'adddoctor' %}"> 添加医生 </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="menu-list" id="ecg_manage">
+                <a href="#"><i class="icon-layers" ></i> <span>心电图管理</span></a>
+                <ul class="sub-menu-list">
+                    <li class="" id="ecg_tb">
+                        <a href="{% url 'listecg_table' %}"> 列表查看模式</a>
+                    </li>
+                    <li class="" id="ecg_img">
+                        <a href="{% url 'listecg_img' %}"> 图片查看模式</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="" id="recycle">
+                <a href="{% url 'recycle' %}"><i class="icon-note"></i> <span>心电图回收站</span></a>
+            </li>
+        </ul>
         <!--nav End-->
     </div>
 </div>
@@ -103,7 +102,7 @@
 
         <a class="toggle-btn"><i class="fa fa-bars"></i></a>
 
-        <h3 style="display: inline-block;margin-top: 11px;">{{ hospital }}</h3>  <!--医院名-->
+        <h3 style="display: inline-block;margin-top: 11px;" id="leftname">{{ hospital }}</h3>  <!--医院名-->
 
         <!--右侧菜单 -->
         <div class="menu-right">
@@ -208,8 +207,8 @@
                 </li>
                 <!--头像-->
                 <li>
-                    <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        <img src="{% static 'admins/assets/images/users/avatar-6.jpg' %}" alt=""/> {{ curruser.h_name }}
+                    <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="rightname">
+                        <img src="{% static 'admins/assets/images/users/avatar-6.jpg' %}" alt=""/> {{ truename }}
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-usermenu pull-right">
@@ -217,7 +216,7 @@
                             <a href="#"> <i class="fa fa-wrench"></i> Settings </a>
                         </li>
                         <li>
-                            <a href="{% url 'logout' %}"> <i class="fa fa-lock"></i> Logout </a> <!--注销实际上就是要重新登录-->
+                            <a href="{% url 'back_logout' %}"> <i class="fa fa-lock"></i> Logout </a> <!--注销实际上就是要重新登录-->
                         </li>
                     </ul>
                 </li>

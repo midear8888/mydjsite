@@ -5,68 +5,63 @@
 
 {% block css %}
     <link href="{% static 'admins/assets/css/style.css' %}" rel="stylesheet"/>
+    <style>
+			body {
+				background: url({% static 'admins/assets/images/bg2.jpg' %}) no-repeat 0px 0px;
+				background-size: cover;
+			}
+			/*.doctortab{
+				display: none;
+			}*/
+            .mymark {
+                display: none;
+                position: fixed;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                margin: auto;
+                z-index: 999;
+                height: 40px;
+                line-height: 0.88rem;
+                width: 200px;
+                text-align: center;
+                font-size: 16px;
+                line-height: 40px;
+                color: #fff;
+                background: rgb(248, 106, 94);
+                border-radius: 0.1rem;
+                box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.3);
+            }
+	</style>
     <script>
-        $('#admin_manage2').addClass('icon-envelope-open');
-        $('#admin_manage1').addClass('nav-active');
-        $('#add_doctor').addClass('active');
+        {% if add_success %}
+            alert("{{ add_success }}");  //因为后端是用render，所以成功添加之后，跳转到另一个页面之后，正确信息没有打印，所以就把信息在当前页打印
+        {% endif %}
+        function myalert(str) {
+            var div = '<div class="mymark"></div>';
+            $('body').append(div);
+            $('.mymark').html(str);
+            $('.mymark').show();
+            setTimeout(function () {
+                $('.mymark').fadeTo(2800, 0.01, function () {//fade
+                    $(this).remove();
+                });
+            })
+        }
+
+        window.onload = function () {
+            {% if add_error %}
+                myalert('{{ add_error }}');  //添加管理员失败，就会又回到这个页面，这儿是打印错误信息
+            {% endif %}
+
+        };
+
     </script>
 {% endblock %}
 
 左侧导航条
 
-{% block nav %}
-    <ul class="nav nav-pills nav-stacked custom-nav">
-        <li>
-            <a href="{% url 'index' %}"><i class="icon-note"></i> <span>主页</span></a>
-        </li>
-
-        <li class="menu-list nav-active">
-            <a href="#"><i class="icon-envelope-open"></i> <span>管理员管理</span></a>
-            <ul class="sub-menu-list">
-                {% if user_type == "Hospital" %}
-                <li>
-                    <a href="{% url 'listadmin' %}"> 管理员列表</a>
-                </li>
-                <li class="active">
-                    <a href="{% url 'addadmin' %}"> 添加管理员</a>
-                </li>
-                {% endif %}
-                <li>
-                    <a href="{% url 'modify' %}">编辑信息</a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="menu-list">
-            <a href="#"><i class="icon-home"></i> <span>医生管理</span></a>
-            <ul class="sub-menu-list">
-                <li>
-                    <a href="{% url 'listdoctor' %}"> 医生列表 </a>
-                </li>
-                <li>
-                    <a href="{% url 'adddoctor' %}"> 添加医生 </a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="menu-list">
-            <a href="#"><i class="icon-layers"></i> <span>心电图管理</span></a>
-            <ul class="sub-menu-list">
-                <li>
-                    <a href="{% url 'listecg_table' %}"> 列表查看模式</a>
-                </li>
-                <li>
-                    <a href="{% url 'listecg_img' %}"> 图片查看模式</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a href="{% url 'recycle' %}"><i class="icon-note"></i> <span>心电图回收站</span></a>
-        </li>
-
-    </ul>
-
-{% endblock %}
 
 
 {#右侧定位标题#}
@@ -114,7 +109,7 @@
 
                 <div class="form-group clearfix">
                     <label for="confirm1" class="col-md-2  control-label">确认密码 *</label>
-                    <div class="col-md-10">
+                    <div class="col-md-8">
                         <input id="confirm1" name="confirm1" type="text" class="required form-control"
                                placeholder="请输入">
                     </div>
@@ -126,18 +121,6 @@
                                placeholder="请输入">
                     </div>
                 </div>
-                <!-- 这一块感觉不用，因为目前所在的就是相应的医院所在后台，肯定只能为本医院添加管理员，所以医院已经默认了。
-                <div class="form-group clearfix">
-                    <label class="col-md-2  control-label" for="fromwhere">所属医院 *</label>
-                    <div class="col-md-8">
-                        <select class="required form-control" style="color:#999999;" name="fromwhere" id="status">
-                            <option value="" style="display: none;">请选择您任职医院(若无选项可能您的医院尚未注册)</option>
-                                <option value="数据库中1">数据库中1</option>
-                                <option value="数据库中2">数据库中2</option>
-                        </select>
-                    </div>
-                </div>
-                -->
                 <div class="form-group clearfix">
                     <label for="truename" class="col-md-2  control-label">真实姓名 *</label>
                     <div class="col-md-8">
@@ -191,6 +174,9 @@
     <script src="{% static 'admins/assets/pages/jquery.validate.min.js' %}"></script>
     <script src="{% static 'admins/assets/pages/validation-custom.js' %}"></script>
     <script>
+        $('#admin_manage').addClass('nav-active');
+        $('#add_admin').addClass('active');  //导航栏的样式
+
         //steps with form
         var form = $("#example-form");
         form.validate({

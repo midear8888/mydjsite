@@ -3,20 +3,53 @@ from .helper import *
 from django.utils.decorators import method_decorator
 
 
-@method_decorator(admin_auth, name='dispatch')
-class Index(View):
+class Login(View):
+
     def get(self, request):
-        return render(request, 'admins/index.html', INFO)
+        try:
+            is_login = request.session.get('admin').get('is_login')
+        except Exception as er:
+            print("用户请求登录, ", er)
+            return render(request, 'commons/login.html', {"status": True})
+        if is_login:
+            return redirect('/admins/index/')  # 若用户已经是登录的用户，那么就返回的是主页，否则就返回登录页面
+        return render(request, 'commons/login.html', {"status": True})
 
     def post(self, request):
-        return render(request, 'admins/index.html', INFO)
+        response = login_handle(request)
+        return response
+
+
+@method_decorator(admin_auth, name='dispatch')
+class Index(View):
+    """主页"""
+    def get(self, request):
+        status = request.COOKIES.get('status')
+        data = get_truename(request, status)
+        info = {
+            "hospital": data.get('hospital'),
+            "truename": data.get('truename'),
+            "user_type": status
+        }
+        return render(request, 'admins/index.html', info)
+
+    def post(self, request):
+        return render(request, 'admins/index.html')
 
 
 @method_decorator(admin_auth, name='dispatch')
 class AddAdmin(View):
     """添加管理员"""
     def get(self, request):
-        return render(request, 'admins/addadmin.html', INFO)
+        status = request.COOKIES.get('status')
+        data = get_truename(request, status)
+        info = {
+            "hospital": data.get('hospital'),
+            "truename": data.get('truename'),
+            "user_type": status,
+            "status": True  # 保证get请求时，不会将错误信息显示
+        }
+        return render(request, 'admins/addadmin.html', info)
 
     def post(self, request):
         response = add_admin_handle(request)
@@ -25,8 +58,17 @@ class AddAdmin(View):
 
 @method_decorator(admin_auth, name='dispatch')
 class AddDoctor(View):
+    """添加医生"""
     def get(self, request):
-        return render(request, 'admins/adddoctor.html', INFO)
+        status = request.COOKIES.get('status')
+        data = get_truename(request, status)
+        info = {
+            "hospital": data.get('hospital'),
+            "truename": data.get('truename'),
+            "user_type": status,
+            "status": True,
+        }
+        return render(request, 'admins/adddoctor.html', info)
 
     def post(self, request):
         response = add_doctor_handle(request)
@@ -35,8 +77,16 @@ class AddDoctor(View):
 
 @method_decorator(admin_auth, name='dispatch')
 class EditAdmin(View):
+    """这个编辑是医院在管理员列表点击编辑来修改的方法"""
     def get(self, request):
-        return render(request, 'admins/modify.html', INFO)
+        status = request.COOKIES.get('status')
+        data = get_truename(request, status)
+        info = {
+            "hospital": data.get('hospital'),
+            "truename": data.get('truename'),
+            "user_type": status
+        }
+        return render(request, 'admins/modify.html', info)
 
     def post(self, request):
         response = edit_admin_handle(request)
@@ -47,7 +97,14 @@ class EditAdmin(View):
 class EditDoctor(View):
 
     def get(self, request):
-        return render(request, 'admins/editdoctor.html', INFO)
+        status = request.COOKIES.get('status')
+        data = get_truename(request, status)
+        info = {
+            "hospital": data.get('hospital'),
+            "truename": data.get('truename'),
+            "user_type": status
+        }
+        return render(request, 'admins/editdoctor.html', info)
 
     def post(self, request):
         response = edit_doctor_handle(request)
@@ -71,12 +128,19 @@ class Modify(View):
 class ListAdmin(View):
     """显示管理员列表"""
     def get(self, request):
+        # print('get请求listAdmin')
         response = list_admin_handle(request)
         return response
 
     def post(self, request):
-        INFO["user_type"] = request.COOKIES.get("user_type")
-        return render(request, 'admins/listadmin.html', INFO)
+        status = request.COOKIES.get('status')
+        data = get_truename(request, status)
+        info = {
+            "hospital": data.get('hospital'),
+            "truename": data.get('truename'),
+            "user_type": status
+        }
+        return render(request, 'admins/listadmin.html', info)
 
 
 @method_decorator(admin_auth, name='dispatch')
@@ -99,7 +163,14 @@ class ListEcgImg(View):
         return response
 
     def post(self, request):
-        return render(request, 'admins/listecg_img.html', INFO)
+        status = request.COOKIES.get('status')
+        data = get_truename(request, status)
+        info = {
+            "hospital": data.get('hospital'),
+            "truename": data.get('truename'),
+            "user_type": request.COOKIES.get('status')
+        }
+        return render(request, 'admins/listecg_img.html', info)
 
 
 @method_decorator(admin_auth, name='dispatch')
@@ -131,7 +202,14 @@ class Recycle(View):
 @method_decorator(admin_auth, name='dispatch')
 class DelAdmin(View):
     def get(self, request):
-        return render(request, 'admins/listadmin.html', INFO)
+        status = request.COOKIES.get('status')
+        data = get_truename(request, status)
+        info = {
+            "hospital": data.get('hospital'),
+            "truename": data.get('truename'),
+            "user_type": status
+        }
+        return render(request, 'admins/listadmin.html', info)
 
     def post(self, request):
         # 这儿是ajax提交的， 网页并没有刷新，可以不用user_type
@@ -145,7 +223,14 @@ class DelDoctor(View):
         """
         应该不会有用户直接输入这个网址来访问，即便有，那么也是返回医生列表，让他选择相应的医生删除，所以get请求直接返回医生列表给用户
         """
-        return render(request, 'admins/listdoctor.html', INFO)
+        status = request.COOKIES.get('status')
+        data = get_truename(request, status)
+        info = {
+            "hospital": data.get('hospital'),
+            "truename": data.get('truename'),
+            "user_type": status
+        }
+        return render(request, 'admins/listdoctor.html', info)
 
     def post(self, request):
         response = del_doctor(request)
@@ -158,8 +243,7 @@ class Logout(View):
     def get(self, request):
         response = redirect('/login/')  # 重定向
         response.delete_cookie('status', path='/')
-        response.delete_cookie('username', path='/')
-        response.delete_cookie('user_type', path='/')
+        del request.session["admin"]  # 删除所有的session
         print("用户注销")
         return response
 

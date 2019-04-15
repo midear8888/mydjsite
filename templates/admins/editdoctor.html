@@ -12,60 +12,6 @@
 
 左侧导航条
 
-{% block nav %}
-    <ul class="nav nav-pills nav-stacked custom-nav">
-        <li>
-            <a href="{% url 'index' %}"><i class="icon-note"></i> <span>主页</span></a>
-        </li>
-
-        <li class="menu-list">
-            <a href="#"><i class="icon-envelope-open"></i> <span>管理员管理</span></a>
-            <ul class="sub-menu-list">
-                {% if user_type == "Hospital" %}
-                <li>
-                    <a href="{% url 'listadmin' %}"> 管理员列表</a>
-                </li>
-                <li>
-                    <a href="{% url 'addadmin' %}"> 添加管理员</a>
-                </li>
-                {% endif %}
-                <li class="active">
-                    <a href="{% url 'modify' %}"> 编辑信息</a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="menu-list nav-active">
-            <a href="{% url 'index' %}"><i class="icon-home"></i> <span>医生管理</span></a>
-            <ul class="sub-menu-list">
-                <li>
-                    <a href="{% url 'listdoctor' %}"> 医生列表 </a>
-                </li>
-                <li>
-                    <a href="{% url 'adddoctor' %}"> 添加医生 </a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="menu-list">
-            <a href="#"><i class="icon-layers"></i> <span>心电图管理</span></a>
-            <ul class="sub-menu-list">
-                <li>
-                    <a href="{% url 'listecg_table' %}"> 列表查看模式</a>
-                </li>
-                <li>
-                    <a href="{% url 'listecg_img' %}"> 图片查看模式</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a href="{% url 'recycle' %}"><i class="icon-note"></i> <span>心电图回收站</span></a>
-        </li>
-
-    </ul>
-
-{% endblock %}
-
 {#右侧定位标题#}
 {% block contenttitle %}
     <h4 class="page-title">医生管理</h4>
@@ -184,7 +130,8 @@
     <script src="{% static 'admins/assets/pages/jquery.validate.min.js' %}"></script>
     <script src="{% static 'admins/assets/pages/validation-custom.js' %}"></script>
     <script>
-
+        $('#doctor_manage').addClass('nav-active');
+        $('#').addClass('active');  //导航栏样式
         //steps with form
         var form = $("#example-form");
         form.validate({

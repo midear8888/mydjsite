@@ -27,7 +27,53 @@
 			/*.doctortab{
 				display: none;
 			}*/
+            .mymark {
+                display: none;
+                position: fixed;
+                top: -400px;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                margin: auto;
+                z-index: 999;
+                height: 40px;
+                line-height: 0.88rem;
+                width: 200px;
+                text-align: center;
+                font-size: 16px;
+                line-height: 40px;
+                color: #fff;
+                background: rgb(248, 106, 94);
+                border-radius: 0.1rem;
+                box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.3);
+            }
 		</style>
+
+        <!--注册失败-->
+    <script>
+        //*{% if not status %}
+        //alert("注册失败：{{ error }}");
+        //{% endif %}*/
+
+        {% if not status %}
+        function myalert(str) {
+            var div = '<div class="mymark"></div>';
+            $('body').append(div);
+            $('.mymark').html(str);
+            $('.mymark').show();
+            setTimeout(function () {
+                $('.mymark').fadeTo(2800, 0.01, function () {//fade
+                    $(this).remove();
+                });
+            })
+        }
+
+        window.onload = function () {
+            myalert('{{ error }}')
+        };
+
+        {% endif %}
+    </script>
 	</head>
 
 	<body class="sticky-header">
@@ -59,9 +105,6 @@
 											<option value="2">我是医生级</option>
 											<option value="3">我是患者用户</option>
 										</select>
-                                        {% if status == "0" %}
-                                            <p style="color: red;" id="show_error">{{ error }}</p>
-                                        {% endif %}
 									</div>
 
 								</div>
@@ -109,9 +152,7 @@
 								    <p>(*) 强制填写</p>
 								</div>
 									
-								
-								
-								
+
 								<!--医生-->
 								<div id="doctortab" class="doctortab">
 								<div class="form-group clearfix">
@@ -175,6 +216,12 @@
 									<label for="d_age" class="col-md-2">年 龄 *</label>
 									<div class="col-md-10">
 										<input id="d_age" name="d_age" type="text" class="required form-control">
+									</div>
+								</div>
+                                <div class="form-group clearfix">
+									<label for="d_position" class="col-md-2">职 位 *</label>
+									<div class="col-md-10">
+										<input id="d_position" name="d_position" type="text" class="required form-control">
 									</div>
 								</div>
 								<div class="form-group clearfix">
@@ -252,31 +299,16 @@
 									</div>
 								</div>
 
-                                <!--<div class="form-group clearfix">
-									<label class="col-md-2" for="address">家庭住址 *</label>
-									<div class="col-md-10">
-										<input id="address" name="address" type="text" class="required form-control">
-									</div>
-								</div>感觉家庭住址并不需要-->
-
 								<div class="form-group">
 		                            <label class="col-md-2 control-label" for="details">自我描述</label>
 		                            <div class="col-md-10">
-		                              <textarea name="details" class="form-control" rows="5"></textarea>
+                                        <textarea name="details" class="form-control" rows="5"></textarea>
 		                            </div>
 		                        </div>
 								<p>(*) 为必须填写</p>
 								</div>
 							</section>
-							
-							<!--<h3>详细信息2</h3>
-                                    <section>
-                                        <ul>
-                                            <li>Foo</li>
-                                            <li>Bar</li>
-                                            <li>Foobar</li>
-                                        </ul>
-                                    </section>-->
+
 							<h3>完 成</h3>
 							<section>
 								<input id="acceptTerms" name="acceptTerms" type="checkbox" class="required">
@@ -346,9 +378,9 @@
 	                    minlength: 11,
 	                    phone: true
 	                },
-					'confirm': {
+					'd_confirm': {
 						minlength:6,
-						equalTo: "#password"
+						equalTo: "#d_password"
 					},
 					'confirm1': {
 						minlength:6,
@@ -358,7 +390,7 @@
 						minlength:6,
 						equalTo: "#password2"
 					},
-					'password': {
+					'd_password': {
 						minlength:6,
 					},
 					'password1': {
@@ -373,17 +405,15 @@
 				    'username': {
 	                    {#havename: '此用户名已存在'#}
 	                },
+                    'd_password': {
+						minlength:'不可少于6位',
+                        equalTo:'输入密码不一致'
+					},
 					'phone': {
 	                    minlength: '手机格式不正确，请输入11位手机号',
 	                    phone: '手机格式不正确，非真正的手机号码'
 	                }
 	            },
-                {#methods: {#}
-				{#    havename: function (e,i,s) {#}
-				{#        #}
-                {#        #}
-                {#    }#}
-                {#}#}
 			});
 			form.children("div").steps({
 				headerTag: "h3",

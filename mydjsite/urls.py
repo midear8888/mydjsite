@@ -29,7 +29,7 @@ from django.views.static import serve  # 导入相关静态文件处理的views�
 # ]
 urlpatterns = [
     path('', include('users.urls')),
-    path('', include('admins.urls')),
+    path('admins/', include('admins.urls')),
     path('admin/', admin.site.urls),
     url(r'media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
