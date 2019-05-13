@@ -5,7 +5,6 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage, Invali
 from django.contrib.auth.hashers import make_password, check_password
 from django.shortcuts import redirect
 
-
 INFO = {
     "head_title": "心电图管理仓库",
 }
@@ -48,32 +47,59 @@ def get_truename(request, status):
             return {"truename": None}
 
 
+def get_pagination_data(paginator, page_obj, around_count=2):
+    # 1,2,[3],4,5
+    page_range = paginator.page_range
+    current_page = page_obj.number
+    left_has_more = False
+    right_has_more = False
+    num_pages = paginator.num_pages
+
+    if current_page <= around_count + 2:
+        left_pages = range(1, current_page)
+    else:
+        left_pages = range(current_page - around_count, current_page)
+        left_has_more = True
+
+    if current_page >= num_pages - around_count - 1:
+        right_pages = range(current_page + 1, num_pages + 1)
+    else:
+        right_pages = range(current_page + 1, current_page + around_count + 1)
+        right_has_more = True
+    return {
+        'left_pages': left_pages,
+        'right_pages': right_pages,
+        'left_has_more': left_has_more,
+        'right_has_more': right_has_more,
+        'current_page': current_page,
+        'num_pages': paginator.num_pages
+    }
+
+
 def get_page(request, data, page_count):
-    """
-    分页共用函数
-    :param request:
-    :param data: 数据库读取的，要显示在前端的内容，是一个list，
-    :param page_count: 每页最多显示多少内容
-    :return:
-    """
-    after_range_num = 3  # 当前页前最多显示三页
-    before_range_num = 3  # 当前页后最多显示三页
+    after_range_num = 2  # 当前页前最多显示2页
+    before_range_num = 2  # 当前页后最多显示2页
     try:
         page = int(request.GET.get('page', '1'))
         if page < 1:
             page = 1
     except ValueError:
         page = 1
-    paginator = Paginator(data, page_count)  # 每页显示page_count条数据
+    paginator = Paginator(data, page_count)  # 按数据分页每页page_count条
+    print("getpage:", paginator)
+    page_obj = paginator.page(page)
+    new_page_data = get_pagination_data(paginator, page_obj, around_count=1)
     try:
         results = paginator.page(page)
     except (EmptyPage, InvalidPage, PageNotAnInteger):
         results = paginator.page(1)
-    if page >= after_range_num:
-        page_range = paginator.page_range[page - after_range_num:page + before_range_num]  # 没有这句，那么page_range表示的就是所有页的列表
-    else:
-        page_range = paginator.page_range[0:int(page) + before_range_num]
-    return results, page_range
+    # if page >= after_range_num:
+    #     page_range = paginator.page_range[page - after_range_num:page + before_range_num]
+    #     # 没有这句，那么page_range表示的就是所有页的列表
+    # else:
+    #     page_range = paginator.page_range[0:int(page) + before_range_num]
+    page_range = paginator.page_range
+    return results, page_range, new_page_data
 
 
 def all_hospital():
@@ -86,26 +112,21 @@ def all_hospital():
 
 
 def set_user_info(request, status, username):
-    """
-    设置登录用户的信息，cookie等;
-    index: 模板文件
-    status: 用户类型
-    user: 用户名
-    """
+    print("设置信息")
     try:
         if status in ["0", "1"]:
-            # 后台人员
+            # 后台管理员
             info = {}
             if status == "0":
-                # 管理员
-                response = redirect('/admins/index/')  # 重定向
+                # 普通管理员
+                response = redirect('/admins/index/')
                 obj = HospitalAdmin.objects.filter(username=username).first()
                 hospital = Hospital.objects.filter(id=obj.hid).first()
                 info["hospital_id"] = hospital.id  # 医院id
                 response.set_cookie('status', '0')
             else:
-                # 医院
-                response = redirect('/admins/index/')  # 医院，所以重定向到Index
+                # 超级管理员
+                response = redirect('/admins/index/')
                 obj = Hospital.objects.filter(username=username).first()
                 info["hospital_id"] = obj.id  # 医院id
                 response.set_cookie('status', "1")
@@ -113,7 +134,7 @@ def set_user_info(request, status, username):
             info["is_login"] = True
             request.session["admin"] = info  # 当前登录的用户的类型
         else:
-            # 前台人员
+            # 前台用户
             info = {}
             if status == "2":
                 # 医生
@@ -270,7 +291,7 @@ def patient_signup(request):
 
 
 def login_handle(request):
-    username = request.POST.get("username")  # 用户名就是手机号
+    username = request.POST.get("username")
     password = request.POST.get("password")
     status = request.POST.get("status")
     try:
@@ -278,17 +299,19 @@ def login_handle(request):
             print("医院或者医院管理员登录")
             obj = Hospital.objects.filter(username=username).first()
             if obj:
-                print("医院请求登录")
+                print("医院登录")
                 # obj = obj.filter(password=password)
                 if not check_password(password, obj.password):
                     # 密码错误
+                    print("密码验证失败")
                     return render(request, 'commons/login.html', {"status": False, "error": "用户名或密码错误"})
                 else:
                     # 用户名和密码都正确，允许登录
+                    print("密码验证通过，设置信息")
                     response = set_user_info(request, status, username)
                     return response
             else:
-                print("不是医院，开始验证是否是管理员")
+                print("医院不存在，开始验证是否是管理员")
                 obj = HospitalAdmin.objects.filter(username=username).first()
                 if not obj:
                     # 医院和管理中都找不到，说明没有注册
@@ -298,8 +321,8 @@ def login_handle(request):
                     }
                     return render(request, "commons/login.html", info)
                 if check_password(password, obj.password):
-                    """密码验证通过，说明是管理员"""
-                    status = "0"  # 让0代表管理员
+                    print("密码验证通过")
+                    status = "0"  # 0：管理员
                     response = set_user_info(request, status, username)
                     return response
                 else:
@@ -317,7 +340,7 @@ def login_handle(request):
                 # 用户未注册
                 info = {
                     "status": False,
-                    "error": "该用户尚未注册"
+                    "error": "您尚未注册"
                 }
                 return render(request, "commons/login.html", info)
             # 用户名存在，验证密码
@@ -339,7 +362,7 @@ def login_handle(request):
                 # 用户未注册
                 info = {
                     "status": False,
-                    "error": "该用户尚未注册"
+                    "error": "您尚未注册"
                 }
                 return render(request, 'commons/login.html', info)
             # 用户名存在，验证密码

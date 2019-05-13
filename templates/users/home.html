@@ -20,11 +20,6 @@
     <link href="{% static 'users/css/style.css' %}" type="text/css" rel="stylesheet" media="all">
     <!-- font-awesome icons -->
     <link href="{% static 'users/css/fontawesome-all.min.css' %}" rel="stylesheet">
-    <!-- //Custom Theme files -->
-    <!-- online-fonts -->
-    <!-- <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
-    <link href="http://fonts.googleapis.com/css?family=EB+Garamond:400,400i,500,500i,600,600i,700,700i,800,800i" rel="stylesheet"> -->
-    <!-- //online-fonts -->
 </head>
 <body>
     <!-- banner -->
@@ -65,7 +60,7 @@
                                 <a class="dropdown-item" href="{% url 'history' %}">Historys</a>
                                 <a class="dropdown-item" href="{% url 'gallery' %}">Gallery</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="{% url 'upload' %}">Analysis</a>
+                                <a class="dropdown-item" href="{% url 'upload' %}">Upload</a>
                             </div>
                         </li>
                         <li class="nav-item dropdown mr-lg-3">
@@ -124,7 +119,7 @@
                         <li>
                             <div class="slider-info">
                                <h3>Enjoy Convient For This Help</h3>
-								<a class="btn btn-primary mt-3" href="{% url 'upload' %}" role="button">Read more</a>
+								<a class="btn btn-primary mt-3" href="{% url 'about' %}" role="button">Read more</a>
                             </div>
                         </li>
                     </ul>
@@ -154,16 +149,21 @@
                         <h4>Team
                         </h4>
                         <span></span>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius eum inventore consectetur. </p>
+                        <p>Linweiwei</p>
+                        <p>just me ,so this system may still have problem,hope for your suggetion</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <div class="agileits-services-grids mt-lg-0 mt-md-0 mt-5">
                        <i class="fas fa-balance-scale"></i>
-                        <h4>Convient
+                        <h4>How
                         </h4>
                         <span></span>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius eum inventore consectetur. </p>
+                        <p>Click upload -></p>
+                        <p>Upload ECG -></p>
+                        <p>Crop ECG -></p>
+                        <p>Start picture process -> </p>
+                        <p>Save -> History</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
@@ -172,16 +172,20 @@
                         <h4>Techonology
                         </h4>
                         <span></span>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius eum inventore consectetur.</p>
+                        <p>Python</p>
+                        <p>Django (Python Web)</p>
+                        <p>OpenCV (python-opencv)</p>
+                        <p>Bootstrap </p>
+                        <p>Ajax (portion uses) </p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6  mt-lg-0 mt-5">
                     <div class="agileits-services-grids">
                        <i class="fas fa-bell"></i>
-                        <h4>Bell
+                        <h4>Product
                         </h4>
                         <span></span>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius eum inventore consectetur.</p>
+                        <p>Digital and preserve your paper ECG in order to form your own ECG warehouse. You can download them anywhere.</p>
                     </div>
                 </div>
             </div>
@@ -317,11 +321,12 @@
 		<div class="row footer-top">
 			<div class="col-lg-4 col-md-6 col-sm-6 footer-grid_section_1its_w3">
 				<div class="footer-title">
-					<h3>About Us</h3>
+					<h3>About Me</h3>
 				</div>
 				<div class="footer-text">
-					<p>Curabitur non nulla sit amet nislinit tempus convallis quis ac lectus. lac inia eget consectetur sed, convallis at tellus.
-						Nulla porttitor accumsana tincidunt. Vestibulum ante ipsum primis tempus convallis.</p>
+					<p>If you have problem about how to preserve paper ECG, </p><br>
+                    <p>if you want get data for paper ECG.</p><br>
+                    <p>And you can choose me!</p>
 
 				</div>
 			</div>
@@ -333,7 +338,7 @@
 				<ul class="links">
 					<li><a href="{% url 'home' %}">Home</a></li>
 					<li><a href="{% url 'about' %}">About</a></li>
-					<li><a href="{% url 'upload' %}">Services</a></li>
+					<li><a href="{% url 'service' %}">Services</a></li>
 					<li><a href="{% url 'gallery' %}">Gallery</a></li>
 					<li><a href="{% url 'contact' %}">Contact Us</a></li>
 				</ul>
@@ -360,13 +365,13 @@
 		</div>
 		<div class="row mt-md-5">
 			<div class="col-md-4 phn_w3l">
-				<h6 class="text-btm text-white">Phone : +2534894364</h6>
+				<h6 class="text-btm text-white">Phone : 18072961667</h6>
 			</div>
 			<div class="col-md-4 fax_w3l">
-				<h6 class="text-btm text-white">Fax : +2534894364</h6>
+				<h6 class="text-btm text-white">Fax :  -------None------</h6>
 			</div>
 			<div class="col-md-4 ema-w3l">
-				<h6 class="text-btm text-white">Email : <a href="mailto:info@example.com">info@example.com</a></h6>
+				<h6 class="text-btm text-white">Email : <a href="mailto:747388326@qq.com">747388326@qq.com</a></h6>
 			</div>
 		</div>
 	</div>
@@ -375,97 +380,10 @@
 <!-- //footer -->
 
     <div class="cpy-right text-center  py-3">
-        <p class="text-white">Copyright &copy; 2019.Company "VV0 31501142" All rights reserved.</p>
+        <p class="text-white">Copyright &copy; 2019.ZUCC "VV0 31501142" All rights reserved.</p>
     </div>
     <!-- //footer -->
 
-    <!-- login  -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Login</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="#" method="post">
-                        <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Username</label>
-                            <input type="text" class="form-control" placeholder=" " name="Name" id="recipient-name" required="">
-                        </div>
-                        <div class="form-group">
-                            <label for="password" class="col-form-label">Password</label>
-                            <input type="password" class="form-control" placeholder=" " name="Password" id="password" required="">
-                        </div>
-                        <div class="right-w3l">
-                            <input type="submit" class="form-control serv_bottom" value="Login">
-                        </div>
-                        <div class="row sub-w3l my-3">
-                            <div class="col sub-agile">
-                                <input type="checkbox" id="brand1" value="">
-                                <label for="brand1" class="text-secondary">
-                                    <span></span>Remember me?</label>
-                            </div>
-                            <div class="col forgot-w3l text-right">
-                                <a href="#" data-toggle="modal" data-target="#exampleModal2" class="text-dark font-weight-bold">Forgot Password?</a>
-                            </div>
-                        </div>
-                        <p class="text-center text-secondary">Don't have an account?
-                            <a href="#" data-toggle="modal" data-target="#exampleModal1" class="text-dark font-weight-bold">
-                                Register Now</a>
-                        </p>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- // login -->
-    <!-- register -->
-    <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content" style="margin-left:-9px">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel1">Register</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="#" method="post">
-                        <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Username</label>
-                            <input type="text" class="form-control" placeholder=" " name="Name" id="recipient-rname" required="">
-                        </div>
-                        <div class="form-group">
-                            <label for="recipient-email" class="col-form-label">Email</label>
-                            <input type="email" class="form-control" placeholder=" " name="Email" id="recipient-email" required="">
-                        </div>
-                        <div class="form-group">
-                            <label for="password1" class="col-form-label">Password</label>
-                            <input type="password" class="form-control" placeholder=" " name="Password" id="password1" required="">
-                        </div>
-                        <div class="form-group">
-                            <label for="password2" class="col-form-label">Confirm Password</label>
-                            <input type="password" class="form-control" placeholder=" " name="Confirm Password" id="password2" required="">
-                        </div>
-                        <div class="sub-w3l">
-                            <div class="sub-agile">
-                                <input type="checkbox" id="brand2" value="">
-                                <label for="brand2" class="mb-3">
-                                    <span></span>I Accept to the Terms & Conditions</label>
-                            </div>
-                        </div>
-                        <div class="right-w3l">
-                            <input type="submit" class="form-control serv_bottom" value="Register">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- // register -->
     <!-- forget -->
     <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
         <div class="modal-dialog" role="document">

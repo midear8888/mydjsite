@@ -10,9 +10,9 @@
 				background: url({% static 'admins/assets/images/bg2.jpg' %}) no-repeat 0px 0px;
 				background-size: cover;
 			}
-			/*.doctortab{
-				display: none;
-			}*/
+			.error{
+                color: #dc1a1a;
+            }
             .mymark {
                 display: none;
                 position: fixed;
@@ -34,30 +34,7 @@
                 box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.3);
             }
 	</style>
-    <script>
-        {% if add_success %}
-            alert("{{ add_success }}");  //因为后端是用render，所以成功添加之后，跳转到另一个页面之后，正确信息没有打印，所以就把信息在当前页打印
-        {% endif %}
-        function myalert(str) {
-            var div = '<div class="mymark"></div>';
-            $('body').append(div);
-            $('.mymark').html(str);
-            $('.mymark').show();
-            setTimeout(function () {
-                $('.mymark').fadeTo(2800, 0.01, function () {//fade
-                    $(this).remove();
-                });
-            })
-        }
 
-        window.onload = function () {
-            {% if add_error %}
-                myalert('{{ add_error }}');  //添加管理员失败，就会又回到这个页面，这儿是打印错误信息
-            {% endif %}
-
-        };
-
-    </script>
 {% endblock %}
 
 左侧导航条
@@ -94,15 +71,15 @@
                     <div class="col-md-8">
                         <input id="phone" name="phone" type="text" class="required form-control" placeholder="请输入">
                     </div>
-                    {% if status == 0 %}
-                    <p style="color: red;">{{ add_error }}</p>  <!--用户名被占用时显示-->
-                    {% endif %}
+{#                    {% if status == 0 %}#}
+{#                    <p style="color: red;">{{ add_error }}</p>  <!--用户名被占用时显示-->#}
+{#                    {% endif %}#}
                 </div>
 
                 <div class="form-group clearfix">
                     <label for="password1" class="col-md-2  control-label">密 码 *</label>
                     <div class="col-md-8">
-                        <input id="password1" name="password1" type="text" class="required form-control"
+                        <input id="password1" name="password1" type="password" class="required form-control"
                                placeholder="请输入">
                     </div>
                 </div>
@@ -110,7 +87,7 @@
                 <div class="form-group clearfix">
                     <label for="confirm1" class="col-md-2  control-label">确认密码 *</label>
                     <div class="col-md-8">
-                        <input id="confirm1" name="confirm1" type="text" class="required form-control"
+                        <input id="confirm1" name="confirm1" type="password" class="required form-control"
                                placeholder="请输入">
                     </div>
                 </div>
@@ -161,7 +138,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-8 col-md-offset-2">
-                        <button class="btn  btn-primary" type="submit">确认修改</button>
+                        <button class="btn  btn-primary" type="submit">确认添加</button>
                     </div>
                 </div>
             </form>
@@ -174,10 +151,34 @@
     <script src="{% static 'admins/assets/pages/jquery.validate.min.js' %}"></script>
     <script src="{% static 'admins/assets/pages/validation-custom.js' %}"></script>
     <script>
+        {% if add_success %}
+            alert("{{ add_success }}");
+        {% endif %}
+        function myalert(str) {
+            var div = '<div class="mymark"></div>';
+            $('body').append(div);
+            $('.mymark').html(str);
+            $('.mymark').show();
+            setTimeout(function () {
+                $('.mymark').fadeTo(2800, 0.01, function () {//fade
+                    $(this).remove();
+                });
+            })
+        }
+
+        window.onload = function () {
+            {% if add_error %}
+                myalert('{{ add_error }}');  //添加管理员失败，就会又回到这个页面，这儿是打印错误信息
+            {% endif %}
+
+        };
+
+    </script>
+    <script>
         $('#admin_manage').addClass('nav-active');
         $('#add_admin').addClass('active');  //导航栏的样式
 
-        //steps with form
+        //表单
         var form = $("#example-form");
         form.validate({
             errorPlacement: function (error, e) {
@@ -196,7 +197,10 @@
                     required: true,
                     email: true
                 },
-
+                'phone':{
+                    required: true,
+                    phone:true
+                },
                 'password1': {
                     minlength: 6,
                 },

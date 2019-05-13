@@ -3,7 +3,7 @@ from django.urls import path
 
 
 urlpatterns = [
-    path('login/', views.Login.as_view(), name="admin/login"),
+    path('login/', views.Login.as_view(), name="admins/login"),
     path('index/', views.Index.as_view(), name="index"),  # 主页
     path('addadmin/', views.AddAdmin.as_view(), name="addadmin"),  # 增加管理员
     path('adddoctor/', views.AddDoctor.as_view(), name="adddoctor"),  # 增加医生

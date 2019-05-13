@@ -40,6 +40,7 @@ class PatientFile(models.Model):
     filename = models.CharField(max_length=50)  # 文件名
     upload_time = models.DateTimeField(auto_now_add=True)  # 上传时间
     upload_to = models.CharField(max_length=100)  # 图片上传路径
+    data = models.CharField(max_length=100, default="")  # 数据路径
     result_to = models.CharField(max_length=100, default="")  # 图片保存路径
     confirm_del = models.IntegerField(default=0)  # 默认为0,说明并没有被放入回收站
     details = models.TextField(default="")  # 默认为空

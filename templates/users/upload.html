@@ -8,7 +8,7 @@
             height: 700px;
         }
     </style>
-
+    <link rel="stylesheet" href="{% static 'users/css/jquery.Jcrop.css' %}" type="text/css"/>
 {% endblock %}
 
 {% block currentname %}upload{% endblock %}
@@ -30,57 +30,82 @@
                 <!-- progressbar -->
                 <ul id="progressbar">
                     <li class="active">上传原图</li>
-                    <li>信息录入</li>
+                    <li>裁剪图片</li>
                     <li>确认数字化</li>
                     <li>结果</li>
                 </ul>
-                <form class="form-horizontal" role="form" action="{% url 'upload' %}" enctype="multipart/form-data" method="post">
+                <form id="tf" class="form-horizontal" role="form" action="{% url 'upload' %}"
+                      enctype="multipart/form-data"
+                      method="post">
                     <!-- fieldsets -->
                     <fieldset>
                         <h2 class="fs-title">上传原图</h2>
                         <h3 class="fs-subtitle">上传您需要存储的心电图</h3>
+                        <div class="row">
 
-                        <input type="file" placeholder="" value="选择上传" name="avatar" id="avatar">
-                        <input type="button" name="next" class="next action-button" value="下一步"/>
+                            <label for="username" class="col-md-2 control-label">患者姓名：</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="username" placeholder="请输入名字">
+                            </div>
+
+                        </div>
+                        <div class="row">
+
+                            <label for="details" class="col-md-2 control-label">患者状况：</label>
+                            <div class="col-md-10">
+                                <textarea name="details" class="form-control" rows="3" id="details"></textarea>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <label for="details" class="col-md-2 control-label">图片上传：</label>
+                            <div class="col-md-10">
+                                <input type="file" placeholder="" value="选择上传" name="avatar" id="avatar">
+                            </div>
+                        </div>
+
+                        <input type="button" name="next" class="next action-button" value="下一步" id="submit"/>
                     </fieldset>
 
                     <fieldset>
-                        <h2 class="fs-title">信息录入</h2>
-                        <h3 class="fs-subtitle">输入该心电图患者信息</h3>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group clearfix">
-                                    <label for="username" class="col-md-2 control-label">患者姓名</label>
-                                    <div class="col-md-10">
-                                        <input type="text" class="form-control" id="username" placeholder="请输入名字">
-                                    </div>
-                                </div>
-                                <div class="form-group clearfix">
-                                    <label for="details" class="col-md-2 control-label">患者状况</label>
-                                    <div class="col-md-10">
-                                        <textarea name="details" class="form-control" rows="3" id="details"></textarea>
-                                    </div>
-                                </div>
+                        <h2 class="fs-title">裁剪图片</h2>
+                        <h3 class="fs-subtitle">图片已经校正，请裁剪波形区域</h3>
+
+                        <img src="#" id="target" alt=""/>
+                        <div class="inline-labels">
+                            <div class="row" hidden="hidden">
+                                <label class="col-md-2">X1
+                                    <input type="text" size="4" id="x1" name="x1" class="coordinate"/>
+                                </label>
+                                <label class="col-md-2">Y1 <input type="text" size="4" id="y1" name="y1"/></label>
+                                <label class="col-md-2">X2 <input type="text" size="4" id="x2" name="x2"/></label>
+                                <label class="col-md-2">Y2 <input type="text" size="4" id="y2" name="y2"/></label>
+                                <label class="col-md-2">W <input type="text" size="4" id="w" name="w"/></label>
+                                <label class="col-md-2">H <input type="text" size="4" id="h" name="h"/></label>
                             </div>
+
                         </div>
                         <input type="button" name="previous" class="previous action-button" value="上一步"/>
-                        <input type="button" name="next" class="next action-button" value="下一步" id="submit"/>
+                        <input type="button" name="next" class="process next action-button" value="确定裁剪" id="cut"/>
+
                     </fieldset>
 
                     <fieldset>
                         <h2 class="fs-title">确认数字化</h2>
                         <h3 class="fs-subtitle"></h3>
-                        <img src="#" class="img-thumbnail" id="img_src" width="100%">
+                        <img src="" class="img-thumbnail" id="img_src" width="100%">
                         <input type="button" name="previous" class="previous action-button" value="上一步"/>
-                        <input type="button" name="next" class="process next action-button" value="下一步" id="process"/>
+                        <input type="button" name="next" class="process next action-button" value="确认数字化" id="process"/>
 
                     </fieldset>
+
                     <fieldset>
                         <h2 class="fs-title">结果</h2>
                         <h3 class="fs-subtitle"></h3>
                         <img src="#" class="img-thumbnail" id="process_src" width="100%">
                         <input type="button" name="previous" class="previous action-button" value="上一步"/>
-                        <a href="{% url 'history' %}"><input type="button" name="submit" class="action-button" value="确认保存"/></a>
+                        <a href="{% url 'history' %}"><input type="button" name="submit" class="action-button"
+                                                             value="确认保存"/></a>
 
                     </fieldset>
                 </form>
@@ -90,7 +115,7 @@
 {% endblock %}
 
 {% block js %}
-
+    <script src="{% static 'users/js/jquery.Jcrop.js' %}"></script>
     <script>
         $('#Data').addClass('active');  //给当页的Data添加颜色
 
@@ -142,24 +167,63 @@
             });
 
             var tag1 = $(this);  //触发提交的按钮所在的标签
-            if (tag1.attr("id") == "submit"){
-                //alert("触发了操作，提交文件并存储原图，并显示在页面");
-                //第二步触发操作：提交文件并存储原图，并显示在第三步页面
-                var formdata=new FormData();
-                formdata.append("avatar",$("#avatar")[0].files[0]);
+            if (tag1.attr("id") == "submit") {
+                // 上传图片与信息
+                var formdata = new FormData();
+                {#var formdata = new FormData(document.getElementById("tf"));#}
+                formdata.append("avatar", $("#avatar")[0].files[0]);
+                formdata.append("username", $('#username').val());
+                formdata.append("details", $('#details').val());
                 $.ajax({
-                    url:"{% url 'upload' %}",
-                    type:"POST",
-                    contentType:false, //加2个参数，只要有formdata就要有这两个参数。意思是不做编码了，对文件不做处理。
-                    processData:false,
-                    data:formdata,  //把整个formdata对象放到data里边
+                    url: "{% url 'upload' %}",
+                    type: "POST",
+                    contentType: false, //formdata需要的两个参数----不做编码了，对文件不做处理。
+                    processData: false,
+                    data: formdata,  //把整个formdata对象放到data里边
                     success: function (arg) {
                         arg = JSON.parse(arg);
                         console.log(arg);
-                        if (arg['upload_status']){
-                            $('#img_src').attr('src', arg['result']);  //将src的值换成后台传过来的处理后的二值化图片的地址
-                        }
-                        else{
+                        if (arg['upload_status']) {
+                            $('#target').attr('src', arg['result']);
+                            {# 图片裁剪#}
+                            jQuery(function ($) {
+
+                                var jcrop_api;
+
+                                $('#target').Jcrop({
+                                    onChange: showCoords,
+                                    onSelect: showCoords,
+                                    onRelease: clearCoords
+                                }, function () {
+                                    jcrop_api = this;
+                                });
+
+                                $('#coords').on('change', 'input', function (e) {
+                                    var x1 = $('#x1').val(),
+                                        x2 = $('#x2').val(),
+                                        y1 = $('#y1').val(),
+                                        y2 = $('#y2').val();
+                                    jcrop_api.setSelect([x1, y1, x2, y2]);
+                                });
+
+                            });
+                            // Simple event handler, called from onChange and onSelect
+                            // event handlers, as per the Jcrop invocation above
+                            function showCoords(c) {
+                                $('#x1').val(c.x);
+                                $('#y1').val(c.y);
+                                $('#x2').val(c.x2);
+                                $('#y2').val(c.y2);
+                                $('#w').val(c.w);
+                                $('#h').val(c.h);
+                            };
+
+                            function clearCoords() {
+                                $('#coords input').val('');
+                            };
+                            {#图片裁剪结束#}
+
+                        } else {
                             alert(arg['upload_error']);  //显示错误信息
                         }
 
@@ -167,41 +231,74 @@
                 })
             }
 
-            var tag2 = $(this);
-            if (tag2.attr("id") == "process"){
-                //alert("触发了操作，请求处理图片");
+            $("#cut").click(function () {
                 // 第三步触发操作：让后台处理这张图片，顺便要返回处理后的图片，并显示在第四步页面
-
-                var img_user = $('#username').val();
-                var img_details = $('#details').val();
-                console.log("用户名是："+img_user);
-                var pic_path = $('#img_src').attr('src'); //获取图片的路径，返回给服务器，让服务器知道要处理哪张图片
+                {#alert("触发了cut操作");#}
+                var x1 = $('#x1').val();
+                var x2 = $('#x2').val();
+                var y1 = $('#y1').val();
+                var y2 = $('#y2').val();
+                var w = $('#w').val();
+                var h = $('#h').val();
+                var pic_path = $('#target').attr('src'); //获取图片的路径，返回给服务器，让服务器知道要处理哪张图片
                 var data = {
-                    "status": "1", //
+                    "status": "1",
                     "img_path": pic_path,   //原图的地址，这样可以直接将该原图地址传给图像处理的函数，方便处理
-                    "img_user": img_user,                  //图片中患者的姓名
-                    "img_details": img_details,            //图片描述
+                    "x1": x1,
+                    "x2": x2,
+                    "y1": y1,
+                    "y2": y2,
+                    "w": w,
+                    "h": h,
                 };
+                console.log(data)
                 $.ajax({
-                    url:"{% url 'process' %}",
-                    type:"POST",
+                    url: "{% url 'cutimg' %}",
+                    type: "POST",
                     data: data,   //
                     success: function (arg) {
-                        var tag1 = document.getElementById("process_href");
-                        var tag2 = document.getElementById("process_src");
                         arg = JSON.parse(arg);
                         console.log(arg);
-                        if (arg["process_status"]){
-                            console.log("成功处理了图片");
-                            $('#process_src').attr('src', arg['result']);
-                        }
-                        else{
+                        if (arg["cut_status"]) {
+                            console.log("截取图片成功", arg['cutimg']);
+                            $('#img_src').attr('src', arg['cutimg']);
+                        } else {
                             //console.log("处理图片失败");
-                            alert(arg["process_error"]);
+                            alert(arg["cut_error"]);
                         }
                     }
                 })
-            }
+            })
+        });
+
+        $("#process").click(function () {
+            //alert("触发了操作，请求处理图片");
+            // 第三步触发操作：让后台处理这张图片，顺便要返回处理后的图片，并显示在第四步页面
+
+
+            var pic_path = $('#img_src').attr('src'); //获取图片的路径，返回给服务器，让服务器知道要处理哪张图片
+            var data = {
+                "status": "1", //
+                "img_path": pic_path,   //原图的地址，这样可以直接将该原图地址传给图像处理的函数，方便处理
+            };
+            $.ajax({
+                url: "{% url 'process' %}",
+                type: "POST",
+                data: data,   //
+                success: function (arg) {
+                    var tag1 = document.getElementById("process_href");
+                    var tag2 = document.getElementById("process_src");
+                    arg = JSON.parse(arg);
+                    console.log(arg);
+                    if (arg["process_status"]) {
+                        console.log("成功处理了图片");
+                        $('#process_src').attr('src', arg['result']);
+                    } else {
+                        //console.log("处理图片失败");
+                        alert(arg["process_error"]);
+                    }
+                }
+            })
         });
 
         $(".previous").click(function () {
@@ -245,10 +342,6 @@
                 easing: 'easeInOutBack'
             });
         });
-/*
-        $(".submit").click(function () {
-            return false;
-        })*/
     </script>
 {% endblock %}
 

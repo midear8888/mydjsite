@@ -179,7 +179,7 @@
                 <table class="table table-striped text-center">
                     <thead class="bg-info text-white">
                     <tr>
-                        <th>序号</th>
+{#                        <th>序号</th>#}
                         <th>图片名</th>
                         <th>图片编号</th>
                         <th>上传日期</th>
@@ -190,7 +190,7 @@
                     <tbody>
                     {% for item in results.object_list %}
                         <tr id="{{ forloop.counter }}">
-                            <td>{{ forloop.counter }}</td>
+{#                            <td>{{ forloop.counter }}</td>#}
                             <td>{{ item.filename }}</td>
                             <td>{{ item.number }}</td>
                             <td>{{ item.upload_time }}</td>
@@ -209,13 +209,13 @@
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
                                             <div class="modal-header">
+                                                <h4 class="modal-title">详情查看</h4>
                                                 <button type="button" class="close" data-dismiss="modal">&times;
                                                 </button>
-                                                <h4 class="modal-title">详情查看</h4>
                                             </div>
                                             <div class="modal-body">
 
-                                                <img src="{{ item.upload_to }}" class="img-responsive" alt="img" width="100%">
+                                                <img src="{{ item.result_to }}" class="img-responsive" alt="img" width="100%">
                                                 <div class="white-box">
                                                     <h2 class="header-title">描述</h2>
                                                     {% if item.img_user %}
@@ -244,44 +244,51 @@
                                 <button type="button" class="btn btn-outline-info" onclick="DelHistory('{{ forloop.counter }}')">
                                     删除
                                 </button>
-                                <button type="button" class="btn btn-outline-info"><a href="{{ item.upload_to }}" download="">下载</a></button>
+{#                                <button type="button" class="btn btn-outline-info"><a href="{{ item.data }}" download="">下载</a></button>#}
                             </td>
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
 
-                <!--分页开始-->
                 <ul class="pagination">
-                    {% if results.has_previous %}  <!--判断是否有上一页-->
-                        <li><a href="./?page=1">首页</a></li> <!--链接到首页-->
-                        <li><a href="?page={{ results.previous_page_number }}" title="上一页">上一页</a></li>
-                        <!--<li><a>...</a></li>-->
+                    {% if results.has_previous %}
+                        <li><a href="?page={{ results.previous_page_number }}">上一页</a></li>
                     {% else %}
-                        <li class="disabled"><a href="javascript:void(0);" title="上一页">上一页</a></li>
+                        <li class="disabled"><a href="javascript:void(0);">上一页</a></li>
                     {% endif %}
 
-                    {% for page in page_range %}
-                        {% ifequal page results.number %}  <!--当前页-->
-                            <li class="active"><a href="javascript:void(0);">{{ page }}</a></li>
-                        {% else %}
-                            <li><a href="?page={{ page }}" title="第{{ page }}页">{{ page }}</a></li>
-                        {% endifequal %}
+                    {# 是否要出现...#}
+                    {% if left_has_more %}
+                        <li><a href="./?page=1">1</a></li>
+                        <li><a href="javascript:void(0);">...</a></li>
+                    {% endif %}
+
+                    {#左边的页#}
+                    {% for page in left_pages %}
+                       <li><a href="?page={{ page }}">{{ page }}</a></li>
                     {% endfor %}
 
-                    {% if results.has_next %}  <!--判断是否有下一页-->
-                        <!--<li><a>...</a></li>  <!--如果还有下一页，那么说明页数超过当前显示的页码数，那么就用省略号提示-->
-                        <li><a href="?page={{ results.next_page_number }}" title="下一页">下一页</a></li>
-                        <li><a>{{ results.number }}/{{ page_range | length | add:"1" }}</a></li>
-{#                        <li><a>{{ results.number }}/{{ page_range.stop }}</a></li>#}
-                        <li><a href="./?page={{ page_range | length | add:"1"}}">尾页</a></li> <!--链接到尾页-->
+                    {#当前的页#}
+                    <li class="active"><a href="javascript:void(0);">{{ current_page }}</a></li>
 
+                    {#右边的页#}
+                    {% for page in right_pages %}
+                       <li><a href="?page={{ page }}">{{ page }}</a></li>
+                    {% endfor %}
+
+                    {#右边是否出现...#}
+                    {% if right_has_more %}
+                        <li><a href="javascript:void(0);">...</a></li>
+                        <li><a href="?page={{ num_pages}}">{{ num_pages }}</a></li>
+                    {% endif %}
+
+                    {% if results.has_next %}
+                        <li><a href="?page={{ results.next_page_number }}">下一页</a></li>
                     {% else %}
-                        <li class="disabled"><a href="javascript:void(0);" title="下一页">下一页</a></li>
+                        <li class="disabled"><a href="javascript:void(0);">下一页</a></li>
                     {% endif %}
                 </ul>
-                <!--分页结束-->
-
             {% else %}
                 <p>您尚未上传过任何图片</p>
             {% endif %}

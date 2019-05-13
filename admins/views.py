@@ -9,10 +9,10 @@ class Login(View):
         try:
             is_login = request.session.get('admin').get('is_login')
         except Exception as er:
-            print("用户请求登录, ", er)
+            print("用户请求登录异常, ", er)
             return render(request, 'commons/login.html', {"status": True})
         if is_login:
-            return redirect('/admins/index/')  # 若用户已经是登录的用户，那么就返回的是主页，否则就返回登录页面
+            return redirect('/admins/index/')
         return render(request, 'commons/login.html', {"status": True})
 
     def post(self, request):
@@ -77,7 +77,7 @@ class AddDoctor(View):
 
 @method_decorator(admin_auth, name='dispatch')
 class EditAdmin(View):
-    """这个编辑是医院在管理员列表点击编辑来修改的方法"""
+    """编辑医院"""
     def get(self, request):
         status = request.COOKIES.get('status')
         data = get_truename(request, status)
@@ -241,7 +241,7 @@ class DelDoctor(View):
 class Logout(View):
     """注销"""
     def get(self, request):
-        response = redirect('/login/')  # 重定向
+        response = redirect('admins/login/')  # 重定向
         response.delete_cookie('status', path='/')
         del request.session["admin"]  # 删除所有的session
         print("用户注销")

@@ -17,6 +17,7 @@ urlpatterns = [
     path('upload/', views.Upload.as_view(), name="upload"),  # 上传图片
     path('process/', views.Process.as_view(), name="process"),  # 处理图片
     path('logout/', views.Logout.as_view(), name="logout"),  # 注销
+    path('cutimg/', views.cutimg, name="cutimg"),  # 注销
     # url(r'^analyse')
 
 ]

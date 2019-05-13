@@ -23,8 +23,8 @@
         <!--for循环count次col-md-4的内容,count为后端传上来的get值,可参照分页方法-->
         {% for result in results %}
         <div class="col-md-4" id="del{{ forloop.counter }}">
-            <div class="white-box">
-                <img src="{{ result.upload_to }}" class="img-responsive" alt="img" width="100%">
+            <div class="white-box" style="height: 270px;">
+                <img src="{{ result.result_to }}" class="img-responsive" alt="img" width="100%">
                 <div class="text-center">{{ result.upload_time }} {{ result.owner }}</div>
                 <div class="row" style="margin: 15px 0px 0px 0px ;">
                     <div class="col-md-4">
@@ -42,7 +42,7 @@
                                     </div>
                                     <div class="modal-body">
 
-                                        <img src="{{ result.upload_to }}" class="img-responsive" alt="img"
+                                        <img src="{{ result.result_to }}" class="img-responsive" alt="img"
                                              width="100%">
                                         <div class="white-box">
                                             <h2 class="header-title">描述</h2>
@@ -68,13 +68,11 @@
                     </div>
                     <!--删除按钮-->
                     <div class="col-md-4">
-                        <!--可以把删除的data设为{{img_id}}  然后看底部js中的delID获取的是data值-->
-                        <!--可以把删除的id设为sa-delete{{img_id}}或者自增长的sa-delete{{i}} 就是保证id同-->
                         <button class="btn btn-primary" onclick="DelEcgImg('{{ forloop.counter }}')" id="sa-delete1">删除</button>
                     </div>
                     <!--下载按钮-->
                     <div class="col-md-4">
-                        <a class="btn btn-primary" type="button" id="download" href="{{ result.upload_to }}" download="">下载图片</a>
+                        <a class="btn btn-primary" type="button" id="download" href="{{ result.data }}" download="">下载结果</a>
                     </div>
                 </div>
             </div>

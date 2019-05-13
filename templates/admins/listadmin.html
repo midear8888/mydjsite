@@ -3,7 +3,8 @@
 {#标题#}
 {% block title %}管理员列表{% endblock %}
 {% block css %}
-    <link href="{% static 'admins/assets/plugins/datatables/css/jquery.dataTables.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'admins/assets/plugins/datatables/css/jquery.dataTables.min.css' %}" rel="stylesheet"
+          type="text/css"/>
     <link href="{% static 'admins/assets/plugins/datatables/css/jquery.dataTables-custom.css' %}" rel="stylesheet"
           type="text/css"/>
     <link href="{% static 'admins/assets/plugins/sweetalert/sweetalert.css' %}" rel="stylesheet"/>
@@ -13,34 +14,35 @@
         $('#admin_list').addClass('active');
     </script>
     <style>
-			body {
-				background: url({% static 'admins/assets/images/bg2.jpg' %}) no-repeat 0px 0px;
-				background-size: cover;
-			}
-			/*.doctortab{
-				display: none;
-			}*/
-            .mymark {
-                display: none;
-                position: fixed;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                left: 0;
-                margin: auto;
-                z-index: 999;
-                height: 40px;
-                line-height: 0.88rem;
-                width: 200px;
-                text-align: center;
-                font-size: 16px;
-                line-height: 40px;
-                color: #fff;
-                background: rgb(248, 106, 94);
-                border-radius: 0.1rem;
-                box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.3);
-            }
-	</style>
+        body {
+            background: url({% static 'admins/assets/images/bg2.jpg' %}) no-repeat 0px 0px;
+            background-size: cover;
+        }
+
+        /*.doctortab{
+            display: none;
+        }*/
+        .mymark {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            margin: auto;
+            z-index: 999;
+            height: 40px;
+            line-height: 0.88rem;
+            width: 200px;
+            text-align: center;
+            font-size: 16px;
+            line-height: 40px;
+            color: #fff;
+            background: rgb(248, 106, 94);
+            border-radius: 0.1rem;
+            box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.3);
+        }
+    </style>
     <script>
         {% if add_true %}
             myalert('{{ add_success }}');  //添加管理员成功之后就会跳到这个页面，这儿是显示添加成功
@@ -113,7 +115,9 @@
                                 <th>
                                     <!--编辑功能所在模态框开始-->
                                     {% if user_type == "1" %}  <!--只有医院才有权编辑-->
-                                        <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#myModal{{ forloop.counter }}">编辑</button>
+                                        <button type="button" class="btn btn-outline-info" data-toggle="modal"
+                                                data-target="#myModal{{ forloop.counter }}">编辑
+                                        </button>
                                     {% endif %}
 
                                     <div class="modal fade" id="myModal{{ forloop.counter }}">
@@ -121,46 +125,115 @@
                                             <div class="modal-content">
                                                 <!-- 模态框头部 -->
                                                 <div class="modal-header">
-                                                    <h4 class="modal-title text-center">头在这儿</h4>
-                                                    <br /><button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <button type="button" class="close" data-dismiss="modal">&times;
+                                                    </button>
+                                                    <h4 class="modal-title">编辑管理员"{{ admin.name }}"</h4>
+
                                                 </div>
 
                                                 <!-- 模态框主体内容 -->
                                                 <div class="modal-body">
-                                                    <form action="{% url 'edit_admin' %}" method="post">
-                                                    <div style="line-height: 28px;margin:0 auto;width:400px">
+                                                    <form action="{% url 'edit_admin' %}" method="post"
+                                                          class="js-validation-bootstrap form-horizontal">
+                                                        <div style="line-height: 28px;margin:0 auto;width:400px">
 
-                                                        <label style="display: none;">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
-                                                            <input type="text" name="number" id="number{{ forloop.counter }}" value="{{ admin.id }}"></label>
-                                                        <br>  <!--该标签只是为了存取当前选中的管理员的id，以便返回返回到后台时可以用这个id找到该用户，进行资料的修改。但是该标签无法修改，也不能显示给用户看-->
-                                                        <label>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：
-                                                            <input type="text" name="name" id="name{{ forloop.counter }}" value="{{ admin.name }}"></label>
-                                                        <br>
-                                                        <label>电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：
-                                                            <input type="text" name="phone" id="phone{{ forloop.counter }}" value="{{ admin.username }}"></label>
-                                                        <br>
-                                                        <label>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码：
-                                                            <input type="password" name="pwd" id="pwd{{ forloop.counter }}" onmouseout = "mouseout('{{ forloop.counter }}')" placeholder=""></label>
-                                                        <br>
-                                                        <label class="" id="is_show{{ forloop.counter }}" style="display: none;">确认密码：
-                                                            <input type="password" name="pwd_again" id="pdw_again{{ forloop.counter }}" placeholder=""><br></label>
-                                                        <label>职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位：
-                                                            <input type="text" name="position" id="position{{ forloop.counter }}" value="{{ admin.position }}"></label>
-                                                        <br>
-                                                        <label>邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱：
-                                                            <input type="email" name="email" id="email{{ forloop.counter }}" value="{{ admin.email }}"></label>
-                                                        <br>
-                                                        <label>自我介绍：
-                                                            <textarea type="text" name="details" id="details{{ forloop.counter }}" placeholder="{{ admin.details }}"></textarea></label>
-                                                        <br>
-                                                        <button type="button" class="btn btn-dark" onclick="Modify({{ forloop.counter }})">确定修改</button>
-                                                    </div>
+                                                            <label style="display: none;">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
+                                                                <input type="text" name="number"
+                                                                       id="number{{ forloop.counter }}"
+                                                                       value="{{ admin.id }}"></label>
+                                                            <div class="form-group clearfix">
+                                                                <label for="name"
+                                                                       class="col-md-4  control-label">姓&nbsp;名:
+                                                                </label>
+                                                                <div class="col-md-8">
+                                                                    <input type="text"
+                                                                           name="name"
+                                                                           class="form-control"
+                                                                           id="name{{ forloop.counter }}"
+                                                                           value="{{ admin.name }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group clearfix">
+                                                                <label for="phone"
+                                                                       class="col-md-4  control-label">电&nbsp;话:
+                                                                </label>
+                                                                <div class="col-md-8">
+                                                                    <input type="text"
+                                                                           name="phone"
+                                                                           class="form-control"
+                                                                           id="phone{{ forloop.counter }}"
+                                                                           value="{{ admin.username }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group clearfix">
+                                                                <label for="pwd"
+                                                                       class="col-md-4  control-label">密&nbsp;码:
+                                                                </label>
+                                                                <div class="col-md-8">
+                                                                    <input type="password"
+                                                                           name="pwd"
+                                                                           class="form-control"
+                                                                           id="pwd{{ forloop.counter }}"
+                                                                           onmouseout="mouseout('{{ forloop.counter }}')"
+                                                                           placeholder="">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group clearfix"
+                                                                 id="is_show{{ forloop.counter }}"
+                                                                 style="display: none;">
+                                                                <label for="pwd_again"
+                                                                       class="col-md-4  control-label">确认密码:
+                                                                </label>
+                                                                <div class="col-md-8">
+                                                                    <input type="password" name="pwd_again"
+                                                                           class="form-control"
+                                                                           id="pdw_again{{ forloop.counter }}"
+                                                                           placeholder="">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group clearfix">
+                                                                <label for="position"
+                                                                       class="col-md-4  control-label">职&nbsp;位:
+                                                                </label>
+                                                                <div class="col-md-8">
+                                                                    <input type="text" name="position"
+                                                                           class="form-control"
+                                                                           id="position{{ forloop.counter }}"
+                                                                           value="{{ admin.position }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group clearfix">
+                                                                <label for="email"
+                                                                       class="col-md-4  control-label">邮&nbsp;箱:
+                                                                </label>
+                                                                <div class="col-md-8">
+                                                                    <input type="email"
+                                                                           name="email"
+                                                                           class="form-control"
+                                                                           id="email{{ forloop.counter }}"
+                                                                           value="{{ admin.email }}">
+                                                                </div>
+                                                            </div>
+                                                            <label for="details"
+                                                                   class="col-md-4  control-label">自我介绍:</label>
+                                                            <textarea type="text" name="details"
+                                                                      id="details{{ forloop.counter }}"
+                                                                      style="margin: 0px; width: 237px; height: 71px;"
+                                                                      placeholder="{{ admin.details }}">
+
+                                                            </textarea>
+
+                                                        </div>
                                                     </form>
                                                 </div>
 
                                                 <!-- 模态框底部 -->
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-info" data-dismiss="modal">关闭</button>
+                                                    <button type="button" class="btn btn-primary"
+                                                            onclick="Modify({{ forloop.counter }})">确定修改
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">关闭
+                                                    </button>
                                                 </div>
 
                                             </div>
@@ -168,7 +241,8 @@
                                     </div>
                                     <!--编辑功能模态框功能结束-->
                                     <!--可用下方script里注释的ajax的方法，data里是字典型数据-->
-                                    <button class="btn btn-primary" onclick="DelAdmin({{ forloop.counter }})">删除</button>
+                                    <button class="btn btn-primary" onclick="DelAdmin({{ forloop.counter }})">删除
+                                    </button>
                                 </th>
                             </tr>
                         {% endfor %}
@@ -184,19 +258,20 @@
     <script src="{% static 'admins/assets/plugins/datatables/js/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'admins/assets/pages/table-data.js' %}"></script>
     <script src="{% static 'admins/assets/plugins/sweetalert/sweet-alert.js' %}"></script>
+    <script src="{% static 'admins/assets/pages/jquery.validate.min.js' %}"></script>
+    <script src="{% static 'admins/assets/pages/validation-custom.js' %}"></script>
     <script>
         $('#admin_manage').addClass('nav-active');
         $('#admin_list').addClass('active');  //导航栏样式
 
-        function mouseout(pid){
-            if ($('#pwd'+pid).val()){
+        function mouseout(pid) {
+            if ($('#pwd' + pid).val()) {
                 //如果用户在密码框内输入了内容，那么就显示确认密码框
                 //$('.no_show').removeAttr('class');   //当鼠标离开密码框时，触发就显示确认密码框
-                $('#is_show'+pid).css("display", "block")
-            }
-            else{
+                $('#is_show' + pid).css("display", "block")
+            } else {
                 //密码没有内容，说明用户不修改密码
-                $('#is_show'+pid).css('display', 'none');
+                $('#is_show' + pid).css('display', 'none');
             }
         }
 
@@ -221,22 +296,21 @@
                         async: false,  // 同步：也就是只有后端返回了数据时才显示后面的内容
                         type: "POST",
                         data: {
-                            "id": $('#number'+a_id).val(),  //用户id，后台修改谁的信息，就是依赖这个值去确定的。
-                            "name": $('#name'+a_id).val(),
-                            "phone": $('#phone'+a_id).val(),
-                            "pwd": $('#pwd'+a_id).val(),
-                            "position": $("#position"+a_id).val(),
-                            "email": $('#email'+a_id).val(),
-                            "details": $('#details'+a_id).val(),
+                            "id": $('#number' + a_id).val(),  //用户id，后台修改谁的信息，就是依赖这个值去确定的。
+                            "name": $('#name' + a_id).val(),
+                            "phone": $('#phone' + a_id).val(),
+                            "pwd": $('#pwd' + a_id).val(),
+                            "position": $("#position" + a_id).val(),
+                            "email": $('#email' + a_id).val(),
+                            "details": $('#details' + a_id).val(),
                         },
-                        success: function(arg) {
+                        success: function (arg) {
                             arg = JSON.parse(arg);
-                            if (arg["status"]){
+                            if (arg["status"]) {
                                 //alert("修改成功");
                                 swal("修改", "你已成功修改", "success");
                                 window.location.href = '{% url 'listadmin' %}' //修改成功后跳转到该页
-                            }
-                            else {
+                            } else {
                                 swal("修改", arg["edit_error"], "fails");
                                 //alert("删除管理员失败")
                             }
@@ -244,7 +318,7 @@
                     });
 
                 });
-            }
+        }
 
         function DelAdmin(a_id) {
             var tag = document.getElementById(a_id);
@@ -267,25 +341,59 @@
                         url: "{% url 'del_admin' %}",
                         type: "POST",
                         data: {
-                            "id": $('#number'+a_id).val()  // 要删除的的用户的id
+                            "id": $('#number' + a_id).val()  // 要删除的的用户的id
                         },
-                        fails: function(arg) {
+                        fails: function (arg) {
                             arg = JSON.parse(arg);
                             swal("删除", arg["del_error"], "fails");
                         },
-                        success: function(arg) {
+                        success: function (arg) {
                             arg = JSON.parse(arg);
-                            if (arg["status"]){
+                            if (arg["status"]) {
                                 tag.remove(); // 删去该行数据
                                 swal("删除", "你已成功删除", "success");
-                            }
-                            else {
+                            } else {
                                 swal("删除", arg["del_error"], "fails");
                             }
                         }
                     });
 
                 });
+        }
+    </script>
+    <script>
+        var form = $("#editmodle");
+        form.validate({
+            errorPlacement: function (error, e) {
+                jQuery(e).parents('.form-group > div').append(error);
+            },
+            success: function (e) {
+                jQuery(e).closest('.form-group').removeClass('has-error');
+                jQuery(e).closest('.help-block').remove();
+            },
+            rules: {
+                'name': {
+
+                    minlength: 3,
+                },
+                'email': {
+
+                    email: true
+                },
+                'phone': {
+
+                    minlength: 11,
+                    phone: true
+                }
+
+            },
+            messages: {
+                'phone': {
+                    minlength: '手机格式不正确，请输入11位手机号',
+                    phone: '手机格式不正确，非真正的手机号码'
+                }
             }
+
+        });
     </script>
 {% endblock %}

@@ -18,7 +18,7 @@ INFO = {
 
 
 def admin_auth(func):
-    """用来装饰，验证用户是不是医院"""
+    """装饰器，验证用户是不是医院"""
     def inner(request, *args, **kwargs):
         v = request.COOKIES.get("status")
         print(request.session.get('admin'))
@@ -26,9 +26,10 @@ def admin_auth(func):
         try:
             is_login = request.session.get('admin').get('is_login')  # 获取登录状态
             print("is_login:", is_login)
-            if is_login and v == "1" or v == "0":  # 保证只能是医院或者管理员可以访问
-                print("返回")
+            if is_login and (v == "1" or v == "0"):  # 保证只能是医院或者管理员可以访问
+                print("装饰器验证通过")
                 return func(request, *args, **kwargs)
+            print("非管理员或未登录，装饰器->login")
             return redirect('/admins/login/')  # 重定向
         except Exception as err:
             print("后台用户尚未登录：", err)
@@ -37,7 +38,7 @@ def admin_auth(func):
 
 
 def all_username():
-    """得到后台所有人员的手机号，用户在修改管理员时，验证修改的手机号是否已经存在"""
+    """得到后台所有人员的手机号，修改管理员时，验证修改的手机号是否已经存在"""
     phones = []
     hospital_phones = Hospital.objects.all()
     for phone in hospital_phones:
@@ -67,14 +68,24 @@ def all_doctor(request):
     return obj
 
 
+def all_hospital(request):
+    """所有医院账号"""
+    phones = []
+    hospital_phones = Hospital.objects.all()
+    for phone in hospital_phones:
+        phones.append(phone.username)  # 所有医院的账号
+    return phones
+
+
 def edit_admin_handle(request):
     """编辑管理员信息,只有医院有这个权限"""
     try:
-        uid = int(request.POST.get("id"))  # 该id就是要修改的管理员的id,因为该获取到的值是一个字符串，但是用id查数据表时，这个id得是一个整型，所以这儿要先转化为整数
+        uid = int(request.POST.get("id"))
     except Exception as er:
         print("医生要修改管理员的资料，但是未获取到管理员的id：", er)
         return HttpResponse(json.dumps({"status": False, "edit_error": "未获取到改管理员id"}))
     # print(uid)
+    # uname = Hospital.objects.filter(id=uid).first().username
     name = request.POST.get("name")
     username = request.POST.get("phone")  # 用户名
     password = request.POST.get("pwd")
@@ -82,7 +93,7 @@ def edit_admin_handle(request):
     email = request.POST.get("email")
     details = request.POST.get("details")
     data = {}
-    phones = all_username()  # 获取后台所有人员的账号
+    phones = all_username()  # 所有账号
     if name:
         data["name"] = name  # 姓名
     if username:
@@ -100,10 +111,10 @@ def edit_admin_handle(request):
     try:
         old_username = HospitalAdmin.objects.filter(id=uid).first().username
         phones.remove(old_username)  # 排除当前的账号
+        print("phones:", phones)
         if username in phones:
             # 判断用户修改的这个账号是否是别人的账号，如果是，则报错
-            """该用户名已经存在，不允许这样修改资料"""
-            print("无法修改账号为已经别人的账号")
+            print("修改用户已存在")
             results = {
                 "status": False,
                 "edit_error": "该用户名已经存在",
@@ -160,7 +171,8 @@ def add_admin_handle(request):
     age = request.POST.get('age')  # 年龄
     email = request.POST.get("email")  # 邮箱
     details = request.POST.get("details")  # 描述
-    obj = HospitalAdmin.objects.filter(username=username).first()  # 检查该用户是否已经存在
+    phones = all_username()
+
     hospital = Hospital.objects.filter(id=user_id).first().name  # 医院名
     data = {
         "truename": hospital,  # 该用户是医院，所以真实姓名就是医院
@@ -168,7 +180,7 @@ def add_admin_handle(request):
         "hospital": hospital
     }
     try:
-        if not obj:
+        if username not in phones:
             print("要添加的管理员未被注册过")
             info = {
                 "hid": user_id,  # 医院id
@@ -251,8 +263,7 @@ def add_doctor_handle(request):
             # data["add_error"] = ""  # 添加成功，则没有错误返回给用户
             data["status"] = True
             data["add_true"] = "添加医生成功"
-            # return render(request, 'admins/listdoctor.html', data)
-            return redirect('/admins/listdoctor/')  # 重定向
+            return render(request, 'admins/adddoctor.html', data)
         else:
             """说明用户名已经被占用，不允许再增加"""
             data["status"] = False
@@ -382,9 +393,14 @@ def modify_post_handle(request):
         if address:
             form["address"] = address
         print("form>>", form)
+        print("modify_phones:", phones)
+        oldname = Hospital.objects.filter(id=user_id).first().username
+        print("oldname:", oldname)
+        while oldname in phones:
+            phones.remove(oldname)
+        print("modify_phones1:", phones)
         try:
             if form.get('username') in phones:
-                """用户名已经存在，不允许这样修改"""
                 results = {
                     "status": False,
                     "modify_error": "用户名已经存在，修改失败",
@@ -434,9 +450,12 @@ def modify_post_handle(request):
         if details:
             form["details"] = details
         print("form: ", form)
+        oldname = HospitalAdmin.objects.filter(id=user_id).first().username
+        while oldname in phones:
+            phones.remove(oldname)
+        print("modify_phones2:", phones)
         try:
             if form.get('username') in phones:
-                """该用户已经存在，修改失败"""
                 results = {
                     "status": False,
                     "modify_error": "用户名已经存在，修改失败",
@@ -489,9 +508,10 @@ def ecg_img_handle(request):
                 "position": owner_obj.position,  # 图片所属医生的职位
                 "details": ecg.details,  # 图片描述
                 "number": ecg.number,  # 图片编号
-                "upload_to": ecg.upload_to  # 图片路径
+                "upload_to": ecg.upload_to,  # 图片路径
+                "result_to": ecg.result_to  # 图片路径
             })
-        results, page_range = get_page(request, result, 9)  # 分页，最多显示9条数据
+        results, page_range, page_data = get_page(request, result, 6)  # 分页，最多显示9条数据
         data["status"] = True
         data["results"] = results
         data["page_range"] = page_range
@@ -508,14 +528,15 @@ def ecg_tb_handle(request):
     user_info = get_truename(request, status)
     hospital_id = request.session.get('admin').get('hospital_id')  # 医院id
     hospital = Hospital.objects.filter(id=hospital_id).first().name  # 医院名
-    pic_list = HospitalFile.objects.filter(hid=hospital_id, confirm_del=0)  # 以医院的id去查找与之有关的所有图片,confirm_del=0表示不在回收站中的图片
+    pic_list = HospitalFile.objects.filter(hid=hospital_id, confirm_del=0)
+    # 以医院的id去查找与之有关的所有图片,confirm_del=0表示不在回收站中的图片
     data = []
     for ecg in pic_list:
         try:
             owner_id = ecg.owner_id  # 上传该图片的用户的id
             obj = Doctor.objects.filter(id=owner_id).first()
             name = obj.name  # 上传该图片的用户的姓名
-            phone = obj.username  # 上传该图片的用户的用户名（手机号）
+            phone = obj.username  # 上传该图片用户的用户名（手机号）
             position = obj.position
             result = {
                 "phone": phone,
@@ -623,7 +644,7 @@ def get_recycle_info(request):
                  "upload_to": obj.upload_to  # 图片路径
                  }
             )
-        results, page_range = get_page(request, data, 9)  # 数字代表每页做多显示多少
+        results, page_range, page_data = get_page(request, data, 6)  # 数字代表每页做多显示多少
         result["results"] = results
         result["page_range"] = page_range
         print(result.get('pic_list'))

@@ -49,7 +49,7 @@
                             <th>{{ ecg.position }}</th>
                             <th>{{ ecg.upload_time }}</th>
                             <th>
-                                <img src="{{ ecg.upload_to }}" class="img-thumbnail" alt="img" width="150">
+                                <img src="{{ ecg.result_to }}" class="img-thumbnail" alt="img" width="150">
                             </th>
                             <th>
                                 <button class="btn btn-primary" data-toggle="modal" data-target="#modal{{ forloop.counter }}"
@@ -67,7 +67,7 @@
                                             </div>
                                             <div class="modal-body">
 
-                                                <img src="{{ ecg.upload_to }}" class="img-responsive" alt="img"
+                                                <img src="{{ ecg.result_to }}" class="img-responsive" alt="img"
                                                      width="100%">
                                                 <div class="white-box">
                                                     <h2 class="header-title">描述</h2>

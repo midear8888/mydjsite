@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="JavaScript image cropper.">
+    <meta name="author" content="Chen Fengyuan">
+    <title>Cropper.js</title>
+    <link rel="stylesheet" href="css/cropper.css">
+    <style>
+        img {
+            max-width: 100%; /* This rule is very important, please do not ignore this! */
+        }
+
+        .prev{
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+        <img id="image" src="images/bg.jpg">
+    </div>
+
+    <br><br>
+
+    <!--crop是对剪切窗口的操作，move是对图片的操作-->
+    <div>
+        <input type="button" value="crop" id="btnCrop" />
+        <input type="button" value="move" id="btnMove" />
+        <input type="button" value="16:9" id="169">
+        <input type="button" value="1:1" id="11">
+        <input type="button" value="get" id="getCanvas">
+    </div>
+
+    <br><br>
+
+    <!--图片截取的结果显示在这里-->
+    <div class="prev" style="width: 500px; height: 500px; overflow: hidden"></div>
+    <div class="prev" style="width: 300px; height: 300px; overflow: hidden"></div>
+    <div class="prev" style="width: 200px; height: 200px; overflow: hidden"></div>
+
+    <br><br>
+
+    <div id="getCroppedCanvas" style="width:500px;"></div>
+
+<!-- Scripts -->
+<script src="js/jquery-2.2.3.min.js"></script>
+<script src="js/cropper.min.js"></script>
+<script>
+    $(function(){
+            var image = document.getElementById("image");
+
+            //可以通过$().cropper(options)方法来设置参数。如果想改变全局默认参数，可以使用$.fn.cropper.setDefaults(options)方法。
+            var cropper = new Cropper(image, {
+                aspectRatio: 16 / 9,  //宽高比
+                preview: '.prev',  //预览窗口
+                guides: false,  //裁剪框的虚线
+                autoCropArea: 0.5,  //0-1之间的数值，定义自动剪裁区域的大小，默认0.8
+                dragCrop: true,  //是否允许移除当前的剪裁框，并通过拖动来新建一个剪裁框区域
+                movable: true,  //是否允许移动剪裁框
+                resizable: true,  //是否允许改变裁剪框的大小
+                zoomable: true,  //是否允许缩放图片大小
+                mouseWheelZoom: true,  //是否允许通过鼠标滚轮来缩放图片
+                touchDragZoom: true,  //是否允许通过触摸移动来缩放图片
+                rotatable: true,  //是否允许旋转图片
+                minContainerWidth: 200,  //容器的最小宽度
+                minContainerHeight: 200,  //容器的最小高度
+                minCanvasWidth: 0,  //canvas 的最小宽度（image wrapper）
+                minCanvasHeight: 0,  //canvas 的最小高度（image wrapper）
+                strict: true,
+                crop: function(e) {  //当改变剪裁容器或图片时的事件函数
+                    console.log(e.detail.x);
+                    console.log(e.detail.y);
+                    console.log(e.detail.width);
+                    console.log(e.detail.height);
+                    console.log(e.detail.rotate);
+                    console.log(e.detail.scaleX);
+                    console.log(e.detail.scaleY);
+                },
+                build: function () {
+                    console.log('build');
+                },
+                built: function () {
+                    console.log('built');
+                },
+                cropstart: function (e) {
+                    console.log('cropstart', e.detail.action);
+                },
+                cropmove: function (e) {
+                    console.log('cropmove', e.detail.action);
+                },
+                cropend: function (e) {
+                    console.log('cropend', e.detail.action);
+                }
+            });
+
+            $("#btnCrop").on("click", function(){
+                cropper.setDragMode("crop");
+            });
+
+            $("#btnMove").on("click", function(){
+                cropper.setDragMode("move");
+            });
+
+            $("#11").on("click", function(){
+                cropper.setAspectRatio(1,1);
+            });
+            $("#169").on("click", function(){
+                cropper.setAspectRatio(16,9);
+            });
+
+            $("#getCanvas").on("click", function(){
+                $("#getCroppedCanvas").html(cropper.getCroppedCanvas());
+            });
+        });
+</script>
+</body>
+</html>

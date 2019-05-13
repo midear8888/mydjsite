@@ -36,6 +36,7 @@ class HospitalFile(models.Model):
     number = models.CharField(max_length=50, default="0")  # 图片编号，利用hash得到
     filename = models.CharField(max_length=50)  # 文件名
     upload_to = models.CharField(max_length=100)  # 图片上传路径
+    data = models.CharField(max_length=100, default="")  # 数据路径
     result_to = models.CharField(max_length=100, default="")  # 处理后的图片存储路径，因为一开始上传后，并没有立刻开始处理，所以这个值无法写入，所以必须要可以为空，
     img_user = models.CharField(max_length=50, default="")  # 图片中的患者的名字，和当前登录者可能不是同一个人，所以另建一个字段
     upload_time = models.DateTimeField(auto_now_add=True)  # 上传时间

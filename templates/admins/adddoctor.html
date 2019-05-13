@@ -17,6 +17,9 @@
 			/*.doctortab{
 				display: none;
 			}*/
+            .error{
+                color: #dc1a1a;
+            }
             .mymark {
                 display: none;
                 position: fixed;
@@ -52,10 +55,11 @@
             })
         }
         window.onload = function () {
+            {% if add_true %}
+                myalert('{{ add_true }}');  //添加管理员成功，显示正确信息
+            {% endif %}
             {% if add_error %}
                 myalert('{{ add_error }}');
-            {% elif result %}
-                myalert('{{ result }}');
             {% endif %}
         };
     </script>
@@ -106,7 +110,7 @@
                     <div class="form-group clearfix">
                         <label for="password1" class="col-md-2  control-label">密 码 *</label>
                         <div class="col-md-8">
-                            <input id="password1" name="password1" type="text" class="required form-control"
+                            <input id="password1" name="password1" type="password" class="required form-control"
                                   placeholder="请输入密码">
                         </div>
                     </div>
@@ -114,7 +118,7 @@
                     <div class="form-group clearfix">
                         <label for="confirm1" class="col-md-2  control-label">确认密码 *</label>
                         <div class="col-md-8">
-                            <input id="confirm1" name="confirm1" type="text" class="required form-control"
+                            <input id="confirm1" name="confirm1" type="password" class="required form-control"
                                    placeholder="请确认密码">
                         </div>
                     </div>
@@ -202,7 +206,11 @@
                     required: true,
                     email: true
                 },
-
+                'phone':{
+                    required: true,
+                    minlength: 11,
+                    phone:true
+                },
                 'password1': {
                     minlength: 6,
                 },

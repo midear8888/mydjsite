@@ -1,8 +1,9 @@
 {% extends 'users/base_a.html' %}
 
-{% block title %}Gallery{%  endblock %}
+{% block title %}Gallery{% endblock %}
 {% block css %} <!-- gallery smoothbox  -->
-    <link rel="stylesheet" href="{%  static 'users/css/smoothbox.css' %}" type='text/css' media="all" />{% endblock %}
+    <link rel="stylesheet" href="{% static 'users/css/smoothbox.css' %}" type='text/css' media="all"/>
+
     <style>
         .pagination {
             display: inline-block;
@@ -159,76 +160,90 @@
             background-color: #fff
         }
     </style>
+{% endblock %}
 
 {% block currentname %}gallery{% endblock %}
 
 {% block content %}
-<!-- gallery -->
+    <!-- gallery -->
     <div class="agileits-services py-sm-5" id="gallery">
         <div class="container py-lg-5 pt-3 pb-5">
 
             <div class="w3ls-titles text-center mb-3">
-				<h3 class="title">Gallery</h3>
-				<span class="btmspn">
+                <h3 class="title">Gallery</h3>
+                <span class="btmspn">
 					<i class="fas fa-heartbeat"></i>
 				</span>
-				<p class="mt-2 mx-auto">All storage</p>
-			</div>
+                <p class="mt-2 mx-auto">All storage</p>
+            </div>
             <div class="w3ls_gallery_grids pt-md-5 pt-3">
                 {% if status %}
                     <div class="row agileits_w3layouts_gallery_grid">
                         {% for img in results.object_list %}
-                        <div class="col-sm-4  agileits_w3layouts_gallery_grid1 w3layouts_gallery_grid1 hover14">
-                            <div class="w3_agile_gallery_effect">
-                                {% if img.img_user %}
-                                    <a href="{{ img.upload_to }}" class="sb" title="于{{ img.upload_time }}上传'{{ img.img_user }}'的心电图">
-                                {% else %}
-                                    <a href="{{ img.upload_to }}" class="sb" title="于{{ img.upload_time }}上传'未命名'的心电图">
-                                {% endif %}
+                            <div class="col-sm-4  agileits_w3layouts_gallery_grid1 w3layouts_gallery_grid1 hover14">
+                                <div class="w3_agile_gallery_effect">
+                                    {% if img.img_user %}
+                                        <a href="{{ img.result_to }}" class="sb"
+                                           title="于{{ img.upload_time }}上传'{{ img.img_user }}'的心电图">
+                                    {% else %}
+                                        <a href="{{ img.result_to }}" class="sb"
+                                           title="于{{ img.upload_time }}上传'未命名'的心电图">
+                                    {% endif %}
                                     <figure>
-                                        <img src="{{ img.upload_to }}" alt="图片不存在了" height="280" width="280" class="img-fluid" />
+                                        <img src="{{ img.result_to }}" alt="图片不存在了" height="280" width="280"
+                                             class="img-fluid"/>
                                     </figure>
-                                </a>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
                         {% endfor %}
                     </div>
 
                 {% else %}
                     <p>您尚未上传过任何图片</p>
                 {% endif %}
-                </div>
             </div>
-            <!--分页开始-->
-                <ul class="pagination">
-                    {% if results.has_previous %}  <!--判断是否有上一页-->
-                        <li><a href="./?page=1">首页</a></li> <!--链接到首页-->
-                        <li><a href="?page={{ results.previous_page_number }}" title="上一页">上一页</a></li>
-                        <!--<li><a>...</a></li>-->
-                    {% else %}
-                        <li class="disabled"><a href="javascript:void(0);" title="上一页">上一页</a></li>
-                    {% endif %}
 
-                    {% for page in page_range %}
-                        {% ifequal page results.number %}  <!--当前页-->
-                            <li class="active"><a href="javascript:void(0);">{{ page }}</a></li>
-                        {% else %}
-                            <li><a href="?page={{ page }}" title="第{{ page }}页">{{ page }}</a></li>
-                        {% endifequal %}
-                    {% endfor %}
+            <ul class="pagination">
+                {% if results.has_previous %}
+                    <li><a href="?page={{ results.previous_page_number }}">上一页</a></li>
+                {% else %}
+                    <li class="disabled"><a href="javascript:void(0);">上一页</a></li>
+                {% endif %}
 
-                    {% if results.has_next %}  <!--判断是否有下一页-->
-                        <!--<li><a>...</a></li>  <!--如果还有下一页，那么说明页数超过当前显示的页码数，那么就用省略号提示-->
-                        <li><a href="?page={{ results.next_page_number }}" title="下一页">下一页</a></li>
-                    {% else %}
-                        <li class="disabled"><a href="javascript:void(0);" title="下一页">下一页</a></li>
-                    {% endif %}
-                    <li><a>{{ results.number }}/{{ page_range | length | add:"1" }}</a></li>
-                    <li><a href="./?page={{ page_range | length | add:"1" }}">尾页</a></li> <!--链接到尾页-->
-                </ul>
-                <!--分页结束-->
+                {# 是否要出现...#}
+                {% if left_has_more %}
+                    <li><a href="./?page=1">1</a></li>
+                    <li><a href="javascript:void(0);">...</a></li>
+                {% endif %}
+
+                {#左边的页#}
+                {% for page in left_pages %}
+                    <li><a href="?page={{ page }}">{{ page }}</a></li>
+                {% endfor %}
+
+                {#当前的页#}
+                <li class="active"><a href="javascript:void(0);">{{ current_page }}</a></li>
+
+                {#右边的页#}
+                {% for page in right_pages %}
+                    <li><a href="?page={{ page }}">{{ page }}</a></li>
+                {% endfor %}
+
+                {#右边是否出现...#}
+                {% if right_has_more %}
+                    <li><a href="javascript:void(0);">...</a></li>
+                    <li><a href="?page={{ num_pages }}">{{ num_pages }}</a></li>
+                {% endif %}
+
+                {% if results.has_next %}
+                    <li><a href="?page={{ results.next_page_number }}">下一页</a></li>
+                {% else %}
+                    <li class="disabled"><a href="javascript:void(0);">下一页</a></li>
+                {% endif %}
+            </ul>
         </div>
-
+    </div>
 {% endblock %}
 
 {% block js %}

@@ -2,10 +2,12 @@ from django.shortcuts import HttpResponse, render_to_response, redirect
 from django.core.mail import send_mail
 from mydjsite.settings import EMAIL_FROM
 from mydjsite.public_helper import *
+from mydjsite.imgdeal import *
 import os
 import time
 import json
 import re
+import cv2
 from django.contrib.auth.decorators import login_required
 
 """
@@ -23,19 +25,21 @@ INFO = {
 
 
 def user_auth(func):
-    """用来装饰，在每一个类之上，用于验证用户是否已经登录过，并且还判断用户类型"""
-
+    """用来装饰，在每一个类之上，用于验证用户是否已经登录过，
+    并且还判断用户类型
+    """
     def inner(request, *args, **kwargs):
         v = request.COOKIES.get('flag')
         try:
             is_login = request.session.get('user').get('is_login')  # 查看登录状态
             print("is_login: ", is_login)
+            print("v: ", v)
             if is_login and v == "2" or v == "3":
                 # 前台，所以只允许医生和患者登录
                 return func(request, *args, **kwargs)
             return render(request, 'commons/login.html', {"status": False, "error": "请先登录"})
         except Exception as er:
-            print("用户尚未登录: ", er)
+            print("抛出异常用户尚未登录: ", er)
             return render(request, 'commons/login.html', {"status": False, "error": "请先登录"})
     return inner
 
@@ -66,13 +70,14 @@ def gallery_handle(request):
         else:
             # 患者
             ecg_obj = PatientFile.objects.filter(pid=user_id)  # list, 患者的所有ecg图片
-        results, page_range = get_page(request, ecg_obj, 6)  # 最多显示9张图
+        results, page_range, page_data = get_page(request, ecg_obj, 6)
         response = {
             "results": results,
             "page_range": page_range,
             "truename": truename,
             "status": True
         }
+        response.update(page_data)
         return render(request, 'users/gallery.html', response)
     except Exception as err:
         print("用户获取画廊信息失败: ", err)
@@ -94,7 +99,7 @@ def history_get_handle(request):
     if flag == "2":
         # 医生
         print("显示医生的上传历史")
-        pic_obj = HospitalFile.objects.filter(owner_id=user_id)  # 获取该医生上传的所有图片对象
+        pic_obj = HospitalFile.objects.filter(owner_id=user_id)  # 该医生上传的所有图片对象
         data = pic_obj
         user_obj = Doctor.objects.filter(id=user_id).first()  # 用户对象
         position = user_obj.position
@@ -103,16 +108,21 @@ def history_get_handle(request):
         print("显示患者的上传历史")
         pic_obj = PatientFile.objects.filter(pid=user_id)  # 得到图片库中该用户的所有图片,list
         data = pic_obj
-    results, page_range = get_page(request, data, 8)  # 最多显示10条数据
+    results, page_range, page_data = get_page(request, data, 2)
     info = {
         "truename": truename,
         "results": results,
         "page_range": page_range,
+        "page_data": page_data,
         "status": True,
         "user_type": request.COOKIES.get('flag'),
         "position": position  # 职位，只有医生有这个字段，患者的没有
     }
-    # print(info)
+    info.update(page_data)
+    print(info)
+    print("result:", info.get('results'))
+    print("pagerange:", info.get('page_range'))
+    print("page_data:", info.get('page_data'))
     return render(request, 'users/history.html', info)
 
 
@@ -147,7 +157,7 @@ def history_base(pic_obj, command, pic_number, flag):
 
 
 def history_post_handle(request):
-    """控制用户post请求历史记录。即可能是要查看图片详情，也可能是要删除某张图片"""
+    """控制用户post请求历史记录"""
     pic_number = request.POST.get("pic_number")  # 返回图片的编号
     command = request.POST.get("command")  # 根据这个结果来判断是要显示还是删除图片
     flag = request.COOKIES.get("flag")
@@ -163,8 +173,10 @@ def history_post_handle(request):
 
 
 def upload_handle(request):
-    """接收第一步的操作，并存储上传的原图，并返回路径，在用户界面显示"""
-    file_obj = request.FILES.get("avatar")  # 把文件下载来
+    img_user = request.POST.get("username")  # 图片中患者的姓名
+    img_details = request.POST.get("details")  # 图片描述
+    file_obj = request.FILES.get("avatar")
+    print("用户名{}，详情{}，文件名{}".format(img_user, img_details, file_obj.name))
     if file_obj:
         # username = request.COOKIES.get("username")  # 登录者的用户名
         user_id = request.session.get('user').get('user_id')  # 用户id
@@ -173,10 +185,10 @@ def upload_handle(request):
         if flag == "2":
             # 医生
             try:
-                obj = Doctor.objects.filter(id=user_id).first()  # 根据用户名找到他所在的医院id
-                username = obj.username  # 获取用户名
-                file_number = username + str(now_time) + file_obj.name  # 文件的初始编号，用户名+当前时间+文件名
-                number = str(hash(file_number))[1:]  # 上传文件的编号，因为有时候结果中会含有负号，所以不管是否有负号，统一去掉第一个字符
+                obj = Doctor.objects.filter(id=user_id).first()
+                username = obj.username
+                file_number = username + str(now_time) + file_obj.name
+                number = str(hash(file_number))[1:]
                 print("hash的结果为：", hash(file_number), type(number), number)
                 hospt_id = obj.hid  # 得到医院id
                 try:
@@ -184,21 +196,32 @@ def upload_handle(request):
                     filename = number+hz
                 except Exception as er:
                     print("获取文件名{}的后缀失败{} ".format(file_obj.name, er))
-                    filename = number+'.jpg'  # 默认转化为jpg
+                    filename = number+'.jpg'
                 info = {
-                    "hid": hospt_id,  # 医生上传的图片，归医院所有，该hid就是医院的id
-                    "owner_id": user_id,  # 上传者id
-                    "number": number,  # 图片编号
+                    "hid": hospt_id,  # 医院的id
+                    "owner_id": user_id,
+                    "number": number,
                     "filename": file_obj.name,
-                    "upload_to": r"/media/upload/"+filename,  # 只记录相对路径就可以
-                    "img_user": "",   # 图片患者姓名
-                    "details": ""  # 图片详细信息
+                    "upload_to": r"/media/upload/"+filename,
+                    "img_user": img_user,
+                    "details": img_details,
+                    "result_to": "",
+                    "data": ""
                 }
                 HospitalFile.objects.create(**info)  # 存入数据
                 save_path = os.path.join(BASE_DIR, r'media/upload/'+filename)
-                with open(save_path, "wb") as f:    # 在数据存入数据库成功后再写入文件，避免中途出错，致使两个地方的数据不一致
+                with open(save_path, "wb") as f:    # 数据存入数据库成功后再写入文件
                     for block in file_obj.chunks():
                         f.write(block)  # 分块写入文件
+
+                # 图片校正
+                readpath = save_path.replace('\\', '/')
+                img = cv2.imread(readpath)
+                print(readpath)
+                # cv2.imshow("origin", img)
+                houghimg = hough(img)
+                cv2.imwrite(readpath, houghimg)
+
                 return HttpResponse(json.dumps({"upload_status": True, "result": r'/media/upload/'+filename}))
             except Exception as er:
                 print("医生上传文件失败: ", er)
@@ -216,20 +239,32 @@ def upload_handle(request):
                     filename = number + hz
                 except Exception as er:
                     print("获取文件名{}的后缀失败{} ".format(file_obj.name, er))
-                    filename = number + 'jpg'  # 默认转化为jpg
+                    filename = number + '.jpg'  # 默认转化为jpg
                 info = {
                     "pid": user_id,
                     "number": number,
                     "filename": file_obj.name,
                     "upload_to": r'/media/upload/'+filename,
-                    "img_user": "",
-                    "details": ""
+                    "img_user": username,
+                    "details": img_details,
+                    "result_to": "1",
+                    "data": "2"
                 }
                 PatientFile.objects.create(**info)  # 存入数据
                 save_path = os.path.join(BASE_DIR, r'media/upload/' + filename)
                 with open(save_path, "wb") as f:  # 在数据存入数据库成功后再写入文件，避免中途出错，致使两个地方的数据不一致
                     for block in file_obj.chunks():
                         f.write(block)  # 分块写入文件
+
+                # 图片校正
+                readpath = save_path.replace('\\', '/')
+                img = cv2.imread(readpath)
+                print(readpath)
+                # cv2.imshow("origin", img)
+                houghimg = hough(img)
+                houghimg = resize(houghimg)
+                cv2.imwrite(readpath, houghimg)
+
                 return HttpResponse(json.dumps({"upload_status": True, "result": r'/media/upload/'+filename}))
             except Exception as err:
                 print("患者上传文件失败: ", err)
@@ -238,41 +273,76 @@ def upload_handle(request):
     else:
         print("上传图片不能为空")
         return HttpResponse(json.dumps({"upload_status": False, "upload_error": "上传图片不能为空"}))
+    # return HttpResponse(json.dumps({"upload_status": False, "upload_error": "上传图片不能为空"}))
 
 
 def process_handle(request):
     """处理图片，并返回处理后的图片的路径"""
-    img_user = request.POST.get("img_user")  # 图片中患者的姓名
-    img_details = request.POST.get("img_details")  # 图片描述
     img_path = request.POST.get("img_path")  # 原图地址
     flag = request.COOKIES.get('flag')
-    print("查看结果：", img_user, img_path, img_details)
-    if not img_user:
-        img_user = ""
-    if not img_details:
-        img_details = ""
-    if not img_path:
-        img_path = ""
-    # 上面三个if判断是防止有些数据没有获取到，即值为None，存入数据库出错
-    info = {
-        "img_user": img_user,
-        "details": img_details
-    }
+    print("查看结果：", img_path, flag)
     try:
-        if flag == "2":
-            HospitalFile.objects.filter(upload_to=img_path).update(**info)
-            # 为什么不是用.first()获取到一个值，然后在进行upload呢？原因请对比数据库命令: upload HospitalFile set **info where upload_to=img_path
-            print("数据库更新成功")
-        if flag == "3":
-            PatientFile.objects.filter(upload_to=img_path).update(**info)
-            # obj.update(**info)
-            print("数据库更新成功")
-        print("img_path: ", img_path)
         if img_path:
             print("原图路径存在: ", img_path)
-            """这儿调用程序并返回处理后的图片, 处理后的图片理应是已经保存了，所以算法函数应该还要返回相应的路径，文件名等信息"""
-            img = r"\media\result\599307627"
-            return HttpResponse(json.dumps({"process_status": True, "result": img}))
+            # 路径
+            # filename = re.search('\d+', img_path)[0]  # 图片名
+            filename = img_path[12:]  # 图片名
+            # print("filename", filename)
+            result_to = r'media/result/' + filename  # 结果路径
+            origin_path = os.path.join(BASE_DIR, img_path[1:])  # 图片绝对路径
+            print("filename:{}\norigin_path:{}\nresult:{}".format(filename, origin_path, result_to))
+            origin_path = origin_path.replace('\\', '/')
+            print("newpath", origin_path)
+
+            # 图像处理
+            img = cv2.imread(origin_path)
+            result, datas = start(img)
+
+            # 数据写入文件
+            # data_file = re.search('\d+', img_path)[0]
+            data_file = img_path[12:-4]
+            print("文件名", data_file)
+            data_path = os.path.join(BASE_DIR, r'media/data/'+data_file+'.csv')
+            data_path = data_path.replace('\\', '/')
+            print("数据保存路径", data_path)
+            with open(data_path, "w") as f:
+                for data in datas:
+                    f.write(str(data[0][0]))
+                    f.write(',')
+                    f.write(str(data[0][1]))
+                    f.write('\n')
+
+            # 结果图片保存
+            result_path = os.path.join(BASE_DIR, r'media/result/'+data_file+'.jpg')
+            result_path = result_path.replace('\\', '/')
+            print("图片保存路径", result_path)
+            cv2.imwrite(result_path, result)
+            data_to = r'media/data/'+data_file+'.csv'
+            print("data_to", data_to)
+
+            # 数据库存储
+            print("result_to", result_to)
+            info = {"result_to": result_to,
+                    "data": data_to}
+            # print("info:", info)
+            # 数据库更新
+            upload_path = r'/media/upload/'+filename
+            if flag == "2":
+                obj = HospitalFile.objects.filter(upload_to=upload_path)
+                print("img_path:{}\nobj:\n{}".format(upload_path, obj))
+                HospitalFile.objects.filter(upload_to=upload_path).update(**info)
+                print("数据库更新成功")
+            if flag == "3":
+                PatientFile.objects.filter(upload_to=upload_path).update(**info)
+                # obj.update(**info)
+                print("数据库更新成功")
+            # print("img_path: ", img_path)
+            if os.path.isfile(origin_path):
+                os.remove(origin_path)
+                print("删除了临时图片存放")
+            else:
+                print("图不存在")
+            return HttpResponse(json.dumps({"process_status": True, "result": result_to}))
         else:
             return HttpResponse(json.dumps({"process_status": False, "process_error": "原图路径丢失"}))
     except Exception as er:
@@ -321,7 +391,7 @@ def get_userinfo(request):
 
 
 def post_userinfo(request):
-    """用户请求修改个人资料"""
+    """用户修改个人资料"""
     name = request.POST.get("name")
     age = request.POST.get("age")
     username = request.POST.get("phone")
@@ -388,7 +458,6 @@ def post_userinfo(request):
             }
             return render(request, 'users/user_center.html', info)
     except Exception as er:
-        """正常来说，应该是要先验证旧密码，如果正确才修改，但现在还没有增加这个功能，所以出错的信息也就不完整，只能先用'修改失败来敷衍了'"""
         print("用户修改资料出错：", er)
         user_obj = get_userinfo(request)
         info = {

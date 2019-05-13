@@ -40,6 +40,11 @@
                         <div class="form-group clearfix">
                             <label for="name" class="col-md-2 control-label">医院名称 *</label>
                             <div class="col-md-8">
+{#                                <select class="required form-control" style="color:#999999;" name="fromwhere" id="status">#}
+{#                                    <option value="" style="display: none;">请选择您任职医院(若无选项可能您的医院尚未注册)</option>#}
+{#                                        <option value="数据库中1">数据库中1</option>#}
+{#                                        <option value="数据库中2">数据库中2</option>#}
+{#                                </select>#}
                                 <input id="name" name="name" type="text" class="required form-control"
                                 value="{{ results.name }}">
                             </div>
