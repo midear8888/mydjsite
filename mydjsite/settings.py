@@ -162,10 +162,10 @@ MEDIA_URL = '/media/'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.qq.com'
 EMAIL_PORT = 25
-EMAIL_HOST_USER = '2925487981@qq.com'  # 你的 QQ 账号
+EMAIL_HOST_USER = 'xxxxxxxxxxxx@qq.com'  # 你的 QQ 账号
 EMAIL_HOST_PASSWORD = '刚刚复制的授权码（不是你的 QQ 密码！！！）'
 EMAIL_USE_TLS = True  # 这里必须是 True，否则发送不成功
-EMAIL_FROM = '2925487981@qq.com'  # 你的 QQ 账号
+EMAIL_FROM = 'xxxxxxxxxxx@qq.com'  # 你的 QQ 账号
 
 
 LOGIN_URL = "/login/"
